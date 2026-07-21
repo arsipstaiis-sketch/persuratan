@@ -3,34 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Arsip SK 25-26</title>
+    <title>Sistem Arsip SK STAIIS</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #f4f7f6; color: #333; margin: 0; padding: 20px; }
-        .container { max-width: 1000px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        h2 { border-bottom: 2px solid #e1e4e8; padding-bottom: 10px; margin-top: 0; }
+        /* Gaya Minimalis & Ringan (Terinspirasi dari referensi Brutalist-Lite) */
+        :root {
+            --bg-color: #f7f6f2; /* Warna krem lembut dari referensi web */
+            --staiis-green: #128246; /* Hijau utama dari logo */
+            --staiis-gold: #f1c40f; /* Kuning dari buku pada logo */
+            --text-main: #2b2b2b;
+            --text-muted: #666;
+            --border-color: #d1d0c9;
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            margin: 0; 
+            padding: 40px 20px;
+            /* Efek pendaran halus (menggantikan pendaran merah pada referensi web dengan warna hijau STAIIS) */
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(18, 130, 70, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 20%, rgba(241, 196, 15, 0.04) 0%, transparent 30%);
+            background-attachment: fixed;
+        }
+
+        .container { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            position: relative;
+            z-index: 1;
+        }
+
+        h2 { 
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            color: var(--staiis-green);
+            border-bottom: 1px solid var(--staiis-green); 
+            padding-bottom: 15px; 
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
         
-        /* Form Input */
-        form { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+        /* Form Input: Garis tipis tanpa sudut membulat (sharp edges) */
+        form { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr 1fr; 
+            gap: 25px; 
+            margin-bottom: 50px; 
+        }
+        
         .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #555; }
-        input { padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
+        
+        .form-group label { 
+            font-size: 10px; 
+            font-weight: bold; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px; 
+            color: var(--text-muted); 
+        }
+
+        input { 
+            padding: 12px; 
+            background: transparent;
+            border: 1px solid var(--border-color); 
+            font-size: 14px; 
+            color: var(--text-main);
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            border-color: var(--staiis-green);
+        }
+
         .full-width { grid-column: 1 / -1; }
         
-        /* Input khusus untuk nomor otomatis */
-        #nomor { background-color: #e9ecef; font-weight: bold; color: #0056b3; cursor: not-allowed; }
+        /* Input khusus nomor otomatis */
+        #nomor { 
+            background-color: rgba(18, 130, 70, 0.03); 
+            color: var(--staiis-green); 
+            font-weight: 600;
+            border-color: rgba(18, 130, 70, 0.3);
+            cursor: not-allowed; 
+        }
         
-        button { background: #28a745; color: white; border: none; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px;}
-        button:disabled { background: #6c757d; cursor: not-allowed; }
+        button { 
+            background: transparent; 
+            color: var(--staiis-green); 
+            border: 1px solid var(--staiis-green); 
+            padding: 15px; 
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: bold; 
+            cursor: pointer; 
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover:not(:disabled) { 
+            background: var(--staiis-green); 
+            color: white; 
+        }
+
+        button:disabled { 
+            border-color: #aaa; 
+            color: #aaa;
+            cursor: wait; 
+        }
         
-        /* Tabel Data */
-        table { width: 100%; border-collapse: collapse; font-size: 14px; }
-        th, td { border: 1px solid #e1e4e8; padding: 10px; text-align: left; }
-        th { background: #f8f9fa; }
-        a { color: #007bff; text-decoration: none; font-weight: bold; }
-        a:hover { text-decoration: underline; }
+        /* Tabel Data Minimalis */
+        #status {
+            font-size: 12px;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            font-size: 13px; 
+        }
+
+        th, td { 
+            border-bottom: 1px solid var(--border-color); 
+            padding: 15px 10px; 
+            text-align: left; 
+        }
+
+        th { 
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 1px;
+            color: var(--text-muted); 
+        }
+
+        a { 
+            color: var(--staiis-green); 
+            text-decoration: none; 
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        a:hover { 
+            border-bottom: 1px solid var(--staiis-green); 
+        }
         
+        /* Responsivitas Layar Kecil */
         @media (max-width: 768px) {
-            form { grid-template-columns: 1fr; }
+            form { grid-template-columns: 1fr; gap: 15px; }
             table { display: block; overflow-x: auto; white-space: nowrap; }
         }
     </style>
@@ -38,53 +165,51 @@
 <body>
 
     <div class="container">
-        <h2>Tambah Data SK 25-26</h2>
+        <h2>Penomoran Surat SK 25-26</h2>
         <form id="formInput">
-            <!-- Baris 1: Tanggal & Komponen Nomor -->
             <div class="form-group">
                 <label>Tanggal Surat</label>
                 <input type="date" id="tanggal" required onchange="generateNomorOtomatis()">
             </div>
             <div class="form-group">
                 <label>Nomor Urut</label>
-                <input type="text" id="nomor_urut" placeholder="Contoh: 001" required oninput="generateNomorOtomatis()">
+                <input type="text" id="nomor_urut" placeholder="001" required oninput="generateNomorOtomatis()">
             </div>
             <div class="form-group">
                 <label>Kode Divisi</label>
-                <input type="text" id="divisi" placeholder="Contoh: Ket" required oninput="generateNomorOtomatis()">
+                <input type="text" id="divisi" placeholder="Ket" required oninput="generateNomorOtomatis()">
             </div>
             <div class="form-group">
-                <label>Kode/Jenis Surat</label>
-                <input type="text" id="jenis" placeholder="Contoh: SK" required oninput="generateNomorOtomatis()">
+                <label>Kode Surat</label>
+                <input type="text" id="jenis" placeholder="SK" required oninput="generateNomorOtomatis()">
             </div>
 
-            <!-- Baris 2: Hasil Nomor Otomatis -->
-            <div class="form-group full-width">
-                <label>Nomor Surat (Otomatis)</label>
-                <input type="text" id="nomor" placeholder="Nomor akan terisi otomatis di sini..." readonly>
+            <!-- Hasil Nomor Otomatis -->
+            <div class="form-group" style="grid-column: span 2;">
+                <label>Nomor Arsip Tersusun</label>
+                <input type="text" id="nomor" placeholder="Terisi otomatis..." readonly>
             </div>
 
-            <!-- Baris 3: Keterangan & Link -->
             <div class="form-group full-width">
-                <label>Keterangan</label>
-                <input type="text" id="keterangan" placeholder="Keterangan tambahan (Opsional)">
+                <label>Keterangan Tambahan</label>
+                <input type="text" id="keterangan" placeholder="Isi jika diperlukan...">
             </div>
             <div class="form-group full-width">
-                <label>Link PDF Dokumen</label>
-                <input type="url" id="link" placeholder="https://drive.google.com/...">
+                <label>Tautan Dokumen (PDF)</label>
+                <input type="text" id="link" placeholder="https://...">
             </div>
 
-            <button type="submit" id="btnSubmit" class="full-width">Simpan ke Spreadsheet</button>
+            <button type="submit" id="btnSubmit" class="full-width">Simpan Arsip</button>
         </form>
 
-        <h2>Arsip Dokumen SK 25-26</h2>
-        <div id="status">Memuat data...</div>
+        <h2>Pangkalan Data Arsip</h2>
+        <div id="status">Mensinkronisasi data...</div>
         <table id="tabelData" style="display:none;">
             <thead>
                 <tr>
                     <th>Tanggal</th>
-                    <th>Nama Divisi</th>
-                    <th>Jenis Surat</th>
+                    <th>Divisi</th>
+                    <th>Jenis</th>
                     <th>Nomor Surat</th>
                     <th>Keterangan</th>
                     <th>Dokumen</th>
@@ -95,9 +220,9 @@
     </div>
 
     <script>
+        // Ganti URL ini dengan URL Web App Apps Script Anda yang valid
         const urlAPI = "https://script.google.com/macros/s/AKfycbyKRnIKopECo_pADMEP_Cw5soGivDREjgO_2TtmaJkbA2Ru-7mDz6bSlimcVi7FPLh_HQ/exec";
 
-        // Fungsi menyusun nomor surat dengan format terbaru
         function generateNomorOtomatis() {
             const tglVal = document.getElementById('tanggal').value;
             const noUrut = document.getElementById('nomor_urut').value;
@@ -114,37 +239,29 @@
                 tahun = dateObj.getFullYear();
             }
 
-            // 1. Menggabungkan Divisi dan Kode dengan tanda strip (-)
-            let gabunganDivisiKode = [];
-            if (divisi) gabunganDivisiKode.push(divisi);
-            if (jenis) gabunganDivisiKode.push(jenis);
-            let stringDivisiKode = gabunganDivisiKode.join('-');
-
-            // 2. Menyusun kerangka nomor dengan tanda miring (/)
+            let stringDivisiKode = [divisi, jenis].filter(Boolean).join('-');
             let komponenNomor = [];
             
             if (noUrut) komponenNomor.push(noUrut);
             if (stringDivisiKode) komponenNomor.push(stringDivisiKode);
             
-            // 3. Menambahkan teks statis STAIIS dan waktu (Hanya jika form mulai diisi)
             if (noUrut || stringDivisiKode || tglVal) {
                 komponenNomor.push("STAIIS");
                 if (bulanRomawi) komponenNomor.push(bulanRomawi);
                 if (tahun) komponenNomor.push(tahun);
             }
 
-            // Hasil akhir: 001/Divisi-Kode/STAIIS/VII/2026
             document.getElementById('nomor').value = komponenNomor.join('/');
         }
 
-       async function muatData() {
+        async function muatData() {
             try {
                 const res = await fetch(urlAPI);
                 const hasil = await res.json();
                 
                 if (hasil.status === "success") {
                     const htmlBaris = hasil.data.map(item => {
-                        // Fitur pencegah error 404 Vercel
+                        // Mencegah error 404 Vercel pada tautan
                         let linkAman = item.link;
                         if (linkAman && !linkAman.startsWith('http://') && !linkAman.startsWith('https://')) {
                             linkAman = 'https://' + linkAman;
@@ -157,7 +274,7 @@
                                 <td>${item.jenis}</td>
                                 <td><strong>${item.nomor}</strong></td>
                                 <td>${item.keterangan}</td>
-                                <td>${linkAman ? `<a href="${linkAman}" target="_blank">Buka PDF</a>` : '-'}</td>
+                                <td>${linkAman ? `<a href="${linkAman}" target="_blank">Unduh</a>` : '-'}</td>
                             </tr>
                         `;
                     }).join('');
@@ -167,7 +284,7 @@
                     document.getElementById('tabelData').style.display = 'table';
                 }
             } catch (err) {
-                document.getElementById('status').innerText = "Gagal memuat data dari Spreadsheet.";
+                document.getElementById('status').innerText = "Gagal terhubung ke pusat data.";
             }
         }
 
@@ -175,7 +292,7 @@
             e.preventDefault(); 
             
             const tombol = document.getElementById('btnSubmit');
-            tombol.innerText = "Menyimpan data...";
+            tombol.innerText = "Memproses...";
             tombol.disabled = true;
 
             const dataBaru = {
@@ -193,19 +310,18 @@
                     body: JSON.stringify(dataBaru)
                 });
                 
-                alert("Data berhasil tersimpan dengan Nomor Surat: " + dataBaru.nomor);
                 this.reset(); 
-                document.getElementById('nomor').value = ""; // Kosongkan nomor otomatis setelah tersimpan
+                document.getElementById('nomor').value = ""; 
                 
                 document.getElementById('status').style.display = 'block';
-                document.getElementById('status').innerText = "Memperbarui tabel...";
+                document.getElementById('status').innerText = "Memperbarui data...";
                 document.getElementById('tabelData').style.display = 'none';
                 muatData();
 
             } catch (err) {
                 alert("Kesalahan jaringan saat menyimpan data.");
             } finally {
-                tombol.innerText = "Simpan ke Spreadsheet";
+                tombol.innerText = "Simpan Arsip";
                 tombol.disabled = false;
             }
         });
