@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Arsip SK STAIIS</title>
+    <title>Sistem Penomoran STAIIS</title>
     <style>
         :root {
             --staiis-green: #128246;
@@ -23,15 +23,31 @@
             padding: 40px 20px;
         }
 
-        .container { max-width: 960px; margin: 0 auto; }
+        .container { max-width: 800px; margin: 0 auto; }
 
-        .header-section { text-align: center; margin-bottom: 50px; }
-        .header-section h1 { font-size: 2.8rem; font-weight: 800; margin: 0 0 10px 0; }
+        .header-section { text-align: center; margin-bottom: 30px; }
+        .header-section h1 { font-size: 2.5rem; font-weight: 800; margin: 0 0 10px 0; }
         .header-section h1 span { color: var(--staiis-green); }
         .header-section p { font-size: 1.1rem; color: var(--text-gray); margin: 0; }
         
-        .form-card { background: var(--bg-light); border: 1px solid var(--border-light); border-radius: 16px; padding: 35px; margin-bottom: 50px; }
-        form { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        /* Navigasi Tab */
+        .tab-container { display: flex; border-bottom: 2px solid var(--border-light); margin-bottom: 30px; }
+        .tab-btn {
+            background: none; border: none; padding: 15px 30px; font-size: 16px; font-weight: 700;
+            color: var(--text-gray); cursor: pointer; transition: all 0.3s ease; position: relative;
+        }
+        .tab-btn.active { color: var(--staiis-green); }
+        .tab-btn.active::after {
+            content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 3px;
+            background-color: var(--staiis-green); border-radius: 3px 3px 0 0;
+        }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .form-card { background: var(--bg-light); border: 1px solid var(--border-light); border-radius: 16px; padding: 35px; }
+        form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .form-group { display: flex; flex-direction: column; }
         .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
         
@@ -42,14 +58,12 @@
         input:focus, select:focus { border-color: var(--staiis-green); box-shadow: 0 0 0 3px rgba(18, 130, 70, 0.15); }
         .full-width { grid-column: 1 / -1; }
         
-        /* Modifikasi Elemen Nomor Surat & Icon Salin */
+        /* Elemen Copy Nomor */
         .input-with-icon { position: relative; display: flex; align-items: center; }
-        .input-with-icon input { width: 100%; padding-right: 50px; background-color: #edf2f0; color: var(--staiis-green); font-weight: 700; font-size: 16px; border-color: transparent; cursor: default; }
-        
+        .input-with-icon input { width: 100%; padding-right: 50px; background-color: #edf2f0; color: var(--staiis-green); font-weight: 700; border-color: transparent; cursor: default; }
         .copy-btn {
             position: absolute; right: 5px; background: rgba(18, 130, 70, 0.1); color: var(--staiis-green);
-            border: none; padding: 10px; border-radius: 8px; cursor: pointer; box-shadow: none; margin: 0;
-            display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+            border: none; padding: 10px; border-radius: 8px; cursor: pointer; display: flex; transition: all 0.2s;
         }
         .copy-btn:hover { background: rgba(18, 130, 70, 0.2); transform: scale(1.05); }
         .copy-btn svg { width: 20px; height: 20px; fill: currentColor; }
@@ -60,14 +74,11 @@
         }
         button.btn-primary:hover:not(:disabled) { background: var(--staiis-green-hover); box-shadow: 0 6px 12px rgba(18, 130, 70, 0.3); }
         button.btn-primary:disabled { background: #cbd5e0; cursor: wait; }
-        
-        .table-section h2 { font-size: 1.5rem; border-bottom: 2px solid var(--border-light); padding-bottom: 15px; }
-        #status { font-size: 14px; background: var(--bg-light); padding: 8px 16px; border-radius: 20px; display: inline-block; margin-bottom: 20px; }
-        .table-container { overflow-x: auto; border: 1px solid var(--border-light); border-radius: 12px; }
-        table { width: 100%; border-collapse: collapse; font-size: 14px; }
-        th, td { padding: 16px 20px; text-align: left; border-bottom: 1px solid var(--border-light); }
-        th { font-weight: 600; background: var(--bg-light); font-size: 12px; text-transform: uppercase; }
-        a { color: var(--staiis-green); text-decoration: none; font-weight: 600; background: rgba(18, 130, 70, 0.1); padding: 6px 12px; border-radius: 6px; }
+
+        .file-upload-box { border: 2px dashed var(--border-light); padding: 30px; text-align: center; border-radius: 10px; background: white; }
+        .file-upload-box input[type="file"] { border: none; padding: 0; margin-top: 10px; }
+
+        @media (max-width: 600px) { form { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -75,11 +86,19 @@
     <div class="container">
         <div class="header-section">
             <h1>Sistem Penomoran <span>STAIIS</span></h1>
-            <p>Kelola, buat, dan arsipkan Surat Keputusan dalam satu platform cepat.</p>
+            <p>Aplikasi pembuatan nomor surat dan arsip dokumen digital.</p>
         </div>
 
-        <div class="form-card">
-            <form id="formInput">
+        <!-- Navigasi -->
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="switchTab('penomoran', this)">Ambil Nomor Surat</button>
+            <button class="tab-btn" onclick="switchTab('upload', this)">Upload Berkas Scan</button>
+        </div>
+
+        <!-- TAB 1: AMBIL NOMOR SURAT -->
+        <div id="penomoran" class="tab-content active form-card">
+            <div id="loadingStatus" style="margin-bottom:15px; color:var(--text-gray); font-size:14px;">Memuat data referensi...</div>
+            <form id="formPenomoran">
                 <div class="form-group">
                     <label>Tanggal Surat</label>
                     <input type="date" id="tanggal" required onchange="generateNomorOtomatis()">
@@ -97,118 +116,87 @@
                     </select>
                 </div>
 
-                <!-- Bagian Nomor Surat (Pratinjau dengan Tombol Copy) -->
                 <div class="form-group full-width">
-                    <label>Nomor Surat</label>
+                    <label>Keterangan (Wajib Diisi)</label>
+                    <input type="text" id="keterangan" required placeholder="Catatan perihal surat..." autocomplete="off">
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Nomor Surat (Pratinjau)</label>
                     <div class="input-with-icon">
-                        <input type="text" id="nomor" placeholder="Silakan pilih tanggal dan jenis surat terlebih dahulu..." readonly>
+                        <input type="text" id="nomor" placeholder="Nomor akan terangkai otomatis..." readonly>
                         <button type="button" class="copy-btn" onclick="copyNomor()" title="Salin Nomor Surat">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M16 1H4C2.9 1 2 1.9 2 3v14h2V3h12V1zm3 4H8C6.9 5 6 5.9 6 7v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-                            </svg>
+                            <svg viewBox="0 0 24 24"><path d="M16 1H4C2.9 1 2 1.9 2 3v14h2V3h12V1zm3 4H8C6.9 5 6 5.9 6 7v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                         </button>
                     </div>
                 </div>
 
-                <div class="form-group full-width">
-                    <label>Keterangan Tambahan (Opsional)</label>
-                    <input type="text" id="keterangan" placeholder="Catatan perihal surat..." autocomplete="off">
-                </div>
-                <div class="form-group full-width">
-                    <label>Tautan Google Drive (PDF)</label>
-                    <input type="text" id="link" placeholder="Salin link dokumen di sini..." autocomplete="off">
-                </div>
-
-                <button type="submit" id="btnSubmit" class="btn-primary full-width">Simpan ke Basis Data</button>
+                <button type="submit" id="btnSubmitPenomoran" class="btn-primary full-width">Ambil & Simpan Nomor</button>
             </form>
         </div>
 
-        <div class="table-section">
-            <h2>Arsip Dokumen Aktif</h2>
-            <div id="status">Mensinkronisasi data...</div>
-            <div class="table-container" style="display:none;" id="tabelContainer">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Tanggal</th>
-                            <th>Divisi</th>
-                            <th>Jenis</th>
-                            <th>Nomor Referensi</th>
-                            <th>Keterangan</th>
-                            <th>Berkas</th>
-                        </tr>
-                    </thead>
-                    <tbody id="badanTabel"></tbody>
-                </table>
-            </div>
+        <!-- TAB 2: UPLOAD BERKAS SCAN -->
+        <div id="upload" class="tab-content form-card">
+            <form id="formUpload">
+                <div class="form-group full-width">
+                    <label>Nomor Surat (Tanpa Spasi)</label>
+                    <!-- Validasi Regex untuk mencegah pengetikan spasi -->
+                    <input type="text" id="upload_nomor" required placeholder="Contoh: 001/Ket-SK/STAIIS/VII/2026" 
+                           pattern="[^\s]+" title="Tidak boleh ada spasi" oninput="this.value = this.value.replace(/\s/g, '')">
+                </div>
+
+                <div class="form-group full-width file-upload-box">
+                    <label>Upload Hasil Scan (Format PDF)</label>
+                    <input type="file" id="upload_file" accept=".pdf" required>
+                </div>
+
+                <button type="submit" id="btnSubmitUpload" class="btn-primary full-width">Upload & Hubungkan Dokumen</button>
+            </form>
         </div>
+
     </div>
 
     <script>
-        // Ganti URL ini dengan URL Web App Anda yang baru di-deploy
+        // MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
         const urlAPI = "https://script.google.com/macros/s/AKfycbyKRnIKopECo_pADMEP_Cw5soGivDREjgO_2TtmaJkbA2Ru-7mDz6bSlimcVi7FPLh_HQ/exec";
-        
-        // Simpan arsip secara global agar bisa dikalkulasi ulang
         window.arsipGlobal = [];
 
-        async function muatData() {
+        // Fungsi berpindah Tab Navigasi
+        function switchTab(tabId, btnElement) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.add('active');
+        }
+
+        async function muatDataReferensi() {
             try {
                 const res = await fetch(urlAPI);
                 const hasil = await res.json();
                 
                 if (hasil.status === "success") {
-                    window.arsipGlobal = hasil.data; // Menyimpan histori untuk kalkulasi auto-number
+                    window.arsipGlobal = hasil.data;
 
-                    // 1. Mengisi Dropdown Divisi
                     const selDivisi = document.getElementById('divisi');
                     selDivisi.innerHTML = `<option value="" disabled selected>-- Pilih Divisi --</option>` + 
                         hasil.kode_divisi.map(item => `<option value="${item.kode}">${item.nama}</option>`).join('');
 
-                    // 2. Mengisi Dropdown Jenis Surat
                     const selJenis = document.getElementById('jenis');
                     selJenis.innerHTML = `<option value="" disabled selected>-- Pilih Jenis Surat --</option>` + 
                         hasil.kode_surat.map(item => `<option value="${item.kode}">${item.nama}</option>`).join('');
 
-                    // 3. Mengisi Tabel HTML
-                    const htmlBaris = hasil.data.map(item => {
-                        let linkAman = item.link;
-                        if (linkAman && !linkAman.startsWith('http')) linkAman = 'https://' + linkAman;
-                        return `
-                            <tr>
-                                <td>${item.tanggal}</td>
-                                <td>${item.divisi}</td>
-                                <td>${item.jenis}</td>
-                                <td><strong>${item.nomor}</strong></td>
-                                <td>${item.keterangan}</td>
-                                <td>${linkAman ? `<a href="${linkAman}" target="_blank">Lihat PDF</a>` : '-'}</td>
-                            </tr>
-                        `;
-                    }).join('');
-                    
-                    document.getElementById('badanTabel').innerHTML = htmlBaris;
-                    document.getElementById('status').style.display = 'none';
-                    document.getElementById('tabelContainer').style.display = 'block';
-
-                    // Pemicu kalkulasi ulang jika dropdown sudah terisi
+                    document.getElementById('loadingStatus').style.display = 'none';
                     generateNomorOtomatis();
                 }
             } catch (err) {
-                document.getElementById('status').innerText = "Gagal terhubung ke pusat data.";
+                document.getElementById('loadingStatus').innerText = "Gagal memuat data referensi. Periksa jaringan Anda.";
             }
         }
 
-        // Fungsi Salin (Copy) Nomor Surat
         function copyNomor() {
             const noVal = document.getElementById('nomor').value;
-            if (!noVal) {
-                alert("Nomor surat belum terbentuk.");
-                return;
-            }
-            navigator.clipboard.writeText(noVal).then(() => {
-                alert("Disalin: " + noVal);
-            }).catch(err => {
-                alert("Gagal menyalin nomor.");
-            });
+            if (!noVal) return alert("Nomor surat belum terbentuk.");
+            navigator.clipboard.writeText(noVal).then(() => alert("Disalin: " + noVal));
         }
 
         function generateNomorOtomatis() {
@@ -216,25 +204,17 @@
             const divisiKode = document.getElementById('divisi').value;
             const jenisKode = document.getElementById('jenis').value;
             
-            if (!tglVal) {
-                document.getElementById('nomor').value = "";
-                return;
-            }
+            if (!tglVal) return document.getElementById('nomor').value = "";
 
-            // Menganalisa Tanggal Input untuk mengetahui Tahun Akademik saat ini
             const inputDate = new Date(tglVal);
             const inputYear = inputDate.getFullYear();
             const inputMonth = inputDate.getMonth() + 1;
-            
-            // Logika Periode (1 Sept - 31 Agst)
             const labelTarget = inputMonth >= 9 ? `${inputYear}-${inputYear+1}` : `${inputYear-1}-${inputYear}`;
             
-            // Konversi bulan menjadi Romawi untuk disisipkan ke nomor surat
             const romanMap = { "I":1, "II":2, "III":3, "IV":4, "V":5, "VI":6, "VII":7, "VIII":8, "IX":9, "X":10, "XI":11, "XII":12 };
             const arrayRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
             const inputRomawi = arrayRomawi[inputMonth - 1];
 
-            // Mencari Nilai Maksimal dari urutan di tahun akademik yang sama
             let maxUrutan = 0;
             window.arsipGlobal.forEach(item => {
                 const parts = (item.nomor || "").split('/');
@@ -246,72 +226,106 @@
 
                     if (!isNaN(seq) && !isNaN(tahunLama) && bulanLamaInt) {
                         const labelLama = bulanLamaInt >= 9 ? `${tahunLama}-${tahunLama+1}` : `${tahunLama-1}-${tahunLama}`;
-                        if (labelLama === labelTarget && seq > maxUrutan) {
-                            maxUrutan = seq;
-                        }
+                        if (labelLama === labelTarget && seq > maxUrutan) maxUrutan = seq;
                     }
                 }
             });
 
-            // Menyusun format final (Contoh: 001)
             const urutanSelanjutnya = String(maxUrutan + 1).padStart(3, '0');
             const stringDivisiKode = [divisiKode, jenisKode].filter(Boolean).join('-');
             
-            let komponenNomor = [];
-            komponenNomor.push(urutanSelanjutnya);
+            let komponenNomor = [urutanSelanjutnya];
             if (stringDivisiKode) komponenNomor.push(stringDivisiKode);
-            komponenNomor.push("STAIIS");
-            komponenNomor.push(inputRomawi);
-            komponenNomor.push(inputYear);
+            komponenNomor.push("STAIIS", inputRomawi, inputYear);
 
-            // Tampilkan ke layar
             document.getElementById('nomor').value = komponenNomor.join('/');
         }
 
-        document.getElementById('formInput').addEventListener('submit', async function(e) {
+        // SUBMIT TAB 1 (Pengambilan Nomor)
+        document.getElementById('formPenomoran').addEventListener('submit', async function(e) {
             e.preventDefault(); 
-            
-            const tombol = document.getElementById('btnSubmit');
+            const tombol = document.getElementById('btnSubmitPenomoran');
             tombol.innerText = "Menyimpan Dokumen...";
             tombol.disabled = true;
 
-            // Mengambil TEKS (NAMA) dari dropdown yang terpilih untuk disimpan di Spreadsheet, 
-            // sementara Kode-nya tetap digunakan pada kolom "nomor" di atas.
             const elDivisi = document.getElementById('divisi');
-            const namaDivisi = elDivisi.options[elDivisi.selectedIndex].text;
-            
             const elJenis = document.getElementById('jenis');
-            const namaJenis = elJenis.options[elJenis.selectedIndex].text;
 
             const dataBaru = {
+                action: "create",
                 tanggal: document.getElementById('tanggal').value,
-                divisi: namaDivisi, 
-                jenis: namaJenis,
+                divisi: elDivisi.options[elDivisi.selectedIndex].text, 
+                jenis: elJenis.options[elJenis.selectedIndex].text,
                 nomor: document.getElementById('nomor').value, 
-                keterangan: document.getElementById('keterangan').value,
-                link: document.getElementById('link').value
+                keterangan: document.getElementById('keterangan').value
             };
 
             try {
                 await fetch(urlAPI, { method: "POST", body: JSON.stringify(dataBaru) });
-                this.reset(); 
+                alert("Berhasil! Nomor Surat Anda: " + dataBaru.nomor);
+                this.reset();
                 document.getElementById('nomor').value = ""; 
-                document.getElementById('status').style.display = 'inline-block';
-                document.getElementById('status').innerText = "Memperbarui arsip...";
-                document.getElementById('tabelContainer').style.display = 'none';
-                
-                // Segarkan data
-                muatData();
+                muatDataReferensi(); // Muat ulang untuk memperbarui maxUrutan
             } catch (err) {
                 alert("Terjadi kesalahan jaringan.");
             } finally {
-                tombol.innerText = "Simpan ke Basis Data";
+                tombol.innerText = "Ambil & Simpan Nomor";
                 tombol.disabled = false;
             }
         });
 
-        // Panggil sistem di awal mula
-        muatData();
+        // SUBMIT TAB 2 (Upload File)
+        document.getElementById('formUpload').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const tombol = document.getElementById('btnSubmitUpload');
+            const fileInput = document.getElementById('upload_file');
+            const file = fileInput.files[0];
+
+            if (!file) return alert("Pilih file PDF terlebih dahulu.");
+
+            tombol.innerText = "Mengupload File (Mohon Tunggu)...";
+            tombol.disabled = true;
+
+            // Mengubah file menjadi format Base64 untuk dikirim lewat JSON
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = async function () {
+                const base64String = reader.result.split(',')[1]; // Memisahkan header dari data base64
+                
+                const uploadPayload = {
+                    action: "upload",
+                    nomor: document.getElementById('upload_nomor').value,
+                    filename: file.name,
+                    mimeType: file.type,
+                    base64: base64String
+                };
+
+                try {
+                    const response = await fetch(urlAPI, { method: "POST", body: JSON.stringify(uploadPayload) });
+                    const result = await response.json();
+
+                    if (result.status === "success") {
+                        alert("Berkas berhasil diupload dan ditautkan ke arsip!");
+                        document.getElementById('formUpload').reset();
+                    } else {
+                        alert("Gagal: " + result.message);
+                    }
+                } catch (err) {
+                    alert("Kesalahan jaringan saat mengupload file. Pastikan ukuran file tidak terlalu besar.");
+                } finally {
+                    tombol.innerText = "Upload & Hubungkan Dokumen";
+                    tombol.disabled = false;
+                }
+            };
+            reader.onerror = function (error) {
+                alert("Gagal membaca file.");
+                tombol.innerText = "Upload & Hubungkan Dokumen";
+                tombol.disabled = false;
+            };
+        });
+
+        // Panggil saat web dimuat
+        muatDataReferensi();
     </script>
 </body>
 </html>
