@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kode Persuratan & Divisi</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --bg-color: #f5f6fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            margin-top: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #e8f4f8;
+        }
+
+        /* Styling untuk status loading */
+        #loading {
+            text-align: center;
+            font-size: 18px;
+            color: #e67e22;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        /* Sembunyikan tabel sebelum data dimuat */
+        #data-container {
+            display: none;
+        }
+
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Sistem Referensi Kode Surat</h1>
+        
+        <!-- Indikator Loading -->
+        <div id="loading">Memuat data dari Google Sheets, harap tunggu...</div>
+
+        <!-- Container Data -->
+        <div id="data-container">
+            <h2>Daftar Kode Surat</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Surat</th>
+                        <th>Kode Surat</th>
+                    </tr>
+                </thead>
+                <tbody id="tabel-surat">
+                    <!-- Data akan dimuat di sini oleh JavaScript -->
+                </tbody>
+            </table>
+
+            <h2>Daftar Kode Divisi</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Divisi</th>
+                        <th>Kode Divisi</th>
+                    </tr>
+                </thead>
+                <tbody id="tabel-divisi">
+                    <!-- Data akan dimuat di sini oleh JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Masukkan URL Web App Google Apps Script Anda di sini
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbyKRnIKopECo_pADMEP_Cw5soGivDREjgO_2TtmaJkbA2Ru-7mDz6bSlimcVi7FPLh_HQ/exec";
+
+        // Fungsi untuk mengambil dan menampilkan data
+        async function fetchData() {
+            try {
+                const response = await fetch(scriptUrl);
+                const result = await response.json();
+
+                if (result.status === "success") {
+                    // Menyembunyikan text loading dan menampilkan container
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('data-container').style.display = 'block';
+
+                    // Mengisi Tabel Surat
+                    const tbodySurat = document.getElementById('tabel-surat');
+                    let htmlSurat = '';
+                    result.data_surat.forEach((item, index) => {
+                        htmlSurat += `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${item.nama_surat}</td>
+                                <td><strong>${item.kode_surat}</strong></td>
+                            </tr>
+                        `;
+                    });
+                    tbodySurat.innerHTML = htmlSurat;
+
+                    // Mengisi Tabel Divisi
+                    const tbodyDivisi = document.getElementById('tabel-divisi');
+                    let htmlDivisi = '';
+                    result.data_divisi.forEach((item, index) => {
+                        htmlDivisi += `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${item.nama_divisi}</td>
+                                <td><strong>${item.kode_divisi}</strong></td>
+                            </tr>
+                        `;
+                    });
+                    tbodyDivisi.innerHTML = htmlDivisi;
+
+                } else {
+                    document.getElementById('loading').innerHTML = `<p class="error">Gagal memuat data: ${result.message}</p>`;
+                }
+            } catch (error) {
+                console.error("Error fetching data: ", error);
+                document.getElementById('loading').innerHTML = `<p class="error">Terjadi kesalahan jaringan atau CORS. Pastikan Web App disetel ke "Anyone" (Semua orang).</p>`;
+            }
+        }
+
+        // Panggil fungsi saat halaman dimuat
+        window.onload = fetchData;
+    </script>
+</body>
+</html>
