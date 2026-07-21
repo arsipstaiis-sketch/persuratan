@@ -301,7 +301,13 @@
                 };
 
                 try {
-                    const response = await fetch(urlAPI, { method: "POST", body: JSON.stringify(uploadPayload) });
+                    // PERBAIKAN: Menambahkan headers text/plain agar tidak diblokir peramban
+                    const response = await fetch(urlAPI, { 
+                        method: "POST", 
+                        headers: { "Content-Type": "text/plain;charset=utf-8" },
+                        body: JSON.stringify(uploadPayload) 
+                    });
+                    
                     const result = await response.json();
 
                     if (result.status === "success") {
@@ -311,7 +317,7 @@
                         alert("Gagal: " + result.message);
                     }
                 } catch (err) {
-                    alert("Kesalahan jaringan saat mengupload file. Pastikan ukuran file tidak terlalu besar.");
+                    alert("Kesalahan jaringan saat mengupload file. Pastikan URL Apps Script sudah benar.");
                 } finally {
                     tombol.innerText = "Upload & Hubungkan Dokumen";
                     tombol.disabled = false;
