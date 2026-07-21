@@ -23,7 +23,7 @@
             background-color: #ffffff; color: var(--text-dark); margin: 0; padding: 40px 20px;
         }
 
-        .container { max-width: 900px; margin: 0 auto; }
+        .container { max-width: 950px; margin: 0 auto; }
         .header-section { text-align: center; margin-bottom: 30px; }
         .header-section h1 { font-size: 2.5rem; font-weight: 800; margin: 0 0 10px 0; }
         .header-section h1 span { color: var(--staiis-green); }
@@ -57,15 +57,6 @@
         input:focus, select:focus { border-color: var(--staiis-green); box-shadow: 0 0 0 3px rgba(18, 130, 70, 0.15); }
         .full-width { grid-column: 1 / -1; }
         
-        .input-with-icon { position: relative; display: flex; align-items: center; }
-        .input-with-icon input { width: 100%; padding-right: 50px; background-color: #edf2f0; color: var(--staiis-green); font-weight: 700; border-color: transparent; }
-        .copy-btn {
-            position: absolute; right: 5px; background: rgba(18, 130, 70, 0.1); color: var(--staiis-green);
-            border: none; padding: 10px; border-radius: 8px; cursor: pointer; display: flex; transition: all 0.2s;
-        }
-        .copy-btn:hover { background: rgba(18, 130, 70, 0.2); transform: scale(1.05); }
-        .copy-btn svg { width: 20px; height: 20px; fill: currentColor; }
-
         button.btn-primary { 
             background: var(--staiis-green); color: white; border: none; padding: 16px; border-radius: 10px;
             font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: all 0.2s;
@@ -75,13 +66,12 @@
 
         .file-upload-box { border: 2px dashed var(--border-light); padding: 30px; text-align: center; border-radius: 10px; background: white; }
         
-        /* Notifikasi Pengingat Halus */
         .reminder-box {
             display: none; background: var(--warning-bg); border: 1px solid var(--warning-border);
             color: var(--warning-text); padding: 15px 20px; border-radius: 10px; margin-bottom: 25px; font-size: 14px; line-height: 1.5;
         }
 
-        /* Toast Notification (Simpel & Elegan) */
+        /* Toast Notification */
         #toast {
             visibility: hidden; min-width: 250px; background-color: #212529; color: #fff; text-align: center;
             border-radius: 8px; padding: 14px 20px; position: fixed; z-index: 1000; left: 50%; bottom: 30px;
@@ -89,14 +79,34 @@
         }
         #toast.show { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        /* Tabel Arsip */
-        .table-container { overflow-x: auto; border: 1px solid var(--border-light); border-radius: 12px; background: white; margin-top: 15px; }
-        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        /* Bagian Arsip & Kontrol Modern */
+        .archive-controls {
+            display: grid; grid-template-columns: 1fr auto auto auto; gap: 12px; margin-bottom: 20px; align-items: center;
+        }
+        .search-box input { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-light); font-size: 14px; background: var(--bg-light); }
+        .icon-btn {
+            background: var(--bg-light); border: 1px solid var(--border-light); padding: 12px 15px; border-radius: 10px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; color: var(--text-dark);
+        }
+        .icon-btn:hover { background: #edf2f7; border-color: #cbd5e0; }
+        .icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+        .table-container { overflow-x: auto; border: 1px solid var(--border-light); border-radius: 12px; background: white; }
+        table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
         th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-light); }
         th { font-weight: 600; background: var(--bg-light); font-size: 12px; text-transform: uppercase; color: var(--text-gray); }
         tr:hover td { background-color: #fafafa; }
-        .btn-action { color: #007bff; background: none; border: none; cursor: pointer; font-weight: 600; text-decoration: underline; padding: 0; }
-        .link-badge { display: inline-block; background: rgba(18,130,70,0.1); color: var(--staiis-green); padding: 5px 10px; border-radius: 5px; text-decoration: none; font-weight: 600; font-size: 12px; }
+        
+        /* Ikon Modern di Tabel */
+        .action-icon-btn { background: none; border: none; cursor: pointer; color: var(--text-gray); padding: 6px; border-radius: 6px; transition: all 0.2s; }
+        .action-icon-btn:hover { background: var(--bg-light); color: var(--staiis-green); }
+        .action-icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
+        
+        .badge-pdf { display: inline-flex; align-items: center; justify-content: center; background: rgba(18,130,70,0.1); color: var(--staiis-green); width: 32px; height: 32px; border-radius: 8px; transition: transform 0.2s; }
+        .badge-pdf:hover { transform: scale(1.1); background: rgba(18,130,70,0.2); }
+        .badge-pdf svg { width: 16px; height: 16px; fill: currentColor; }
+
+        .badge-empty { display: inline-block; background: #fff5f5; color: #e53e3e; padding: 4px 8px; border-radius: 6px; font-weight: 600; font-size: 11px; border: 1px solid #fed7d7; }
 
         /* Modal Edit */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; justify-content: center; align-items: center; }
@@ -105,7 +115,10 @@
         .modal-header h3 { margin: 0; }
         .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-gray); }
 
-        @media (max-width: 600px) { form { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            form { grid-template-columns: 1fr; }
+            .archive-controls { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -134,17 +147,17 @@
             <form id="formPenomoran">
                 <div class="form-group">
                     <label>Tanggal Surat</label>
-                    <input type="date" id="tanggal" required onchange="generateNomorOtomatis()">
+                    <input type="date" id="tanggal" required>
                 </div>
                 <div class="form-group">
                     <label>Nama Divisi</label>
-                    <select id="divisi" required onchange="generateNomorOtomatis()">
+                    <select id="divisi" required>
                         <option value="" disabled selected>Memuat referensi...</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Jenis Surat</label>
-                    <select id="jenis" required onchange="generateNomorOtomatis()">
+                    <select id="jenis" required>
                         <option value="" disabled selected>Memuat referensi...</option>
                     </select>
                 </div>
@@ -154,17 +167,7 @@
                     <input type="text" id="keterangan" required placeholder="Catatan perihal surat..." autocomplete="off">
                 </div>
 
-                <div class="form-group full-width">
-                    <label>Nomor Surat (Pratinjau)</label>
-                    <div class="input-with-icon">
-                        <input type="text" id="nomor" placeholder="Pilih tanggal, divisi, dan jenis surat..." readonly>
-                        <button type="button" class="copy-btn" onclick="copyNomor()" title="Salin Nomor Surat">
-                            <svg viewBox="0 0 24 24"><path d="M16 1H4C2.9 1 2 1.9 2 3v14h2V3h12V1zm3 4H8C6.9 5 6 5.9 6 7v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-                        </button>
-                    </div>
-                </div>
-
-                <button type="submit" id="btnSubmitPenomoran" class="btn-primary full-width">Ambil & Simpan Nomor</button>
+                <button type="submit" id="btnSubmitPenomoran" class="btn-primary full-width">Buat Nomor</button>
             </form>
         </div>
 
@@ -180,21 +183,35 @@
                     <label>Upload Hasil Scan (Format PDF)</label>
                     <input type="file" id="upload_file" accept=".pdf" required>
                 </div>
-                <button type="submit" id="btnSubmitUpload" class="btn-primary full-width">Upload & Hubungkan Dokumen</button>
+                <button type="submit" id="btnSubmitUpload" class="btn-primary full-width">Upload</button>
             </form>
         </div>
 
         <!-- TAB 3: ARSIP DOKUMEN -->
         <div id="arsip" class="tab-content">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h2 style="margin:0; font-size:1.3rem;">Basis Data Arsip</h2>
-                <button onclick="muatDataReferensi()" style="background:var(--bg-light); border:1px solid var(--border-light); padding:8px 15px; border-radius:6px; cursor:pointer;">🔄 Segarkan</button>
+            <!-- Kontrol Arsip Modern: Pencarian, Filter, Sort, & Refresh -->
+            <div class="archive-controls">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Cari nomor surat atau keterangan..." oninput="renderTabelArsip()">
+                </div>
+                <select id="filterDivisi" onchange="renderTabelArsip()" style="padding: 12px; border-radius: 10px; border: 1px solid var(--border-light); background: var(--bg-light);">
+                    <option value="">Semua Divisi</option>
+                </select>
+                <select id="sortOrder" onchange="renderTabelArsip()" style="padding: 12px; border-radius: 10px; border: 1px solid var(--border-light); background: var(--bg-light);">
+                    <option value="terbaru">Terbaru</option>
+                    <option value="terlama">Terlama</option>
+                </select>
+                <button class="icon-btn" onclick="muatDataReferensi()" title="Segarkan Data">
+                    <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                </button>
             </div>
+
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
                             <th>Tanggal</th>
+                            <th>Tahun Akademik</th>
                             <th>Divisi</th>
                             <th>Jenis</th>
                             <th>Nomor Surat</th>
@@ -204,14 +221,14 @@
                         </tr>
                     </thead>
                     <tbody id="badanTabel">
-                        <tr><td colspan="7" style="text-align:center;">Memuat data...</td></tr>
+                        <tr><td colspan="8" style="text-align:center;">Memuat data...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <!-- ELEMEN TOAST NOTIFICATION -->
+    <!-- TOAST NOTIFICATION -->
     <div id="toast">Pesan notifikasi</div>
 
     <!-- MODAL EDIT DOKUMEN -->
@@ -251,8 +268,8 @@
     <script>
         const urlAPI = "https://script.google.com/macros/s/AKfycbyKRnIKopECo_pADMEP_Cw5soGivDREjgO_2TtmaJkbA2Ru-7mDz6bSlimcVi7FPLh_HQ/exec";
         window.arsipGlobal = [];
+        window.divisiListGlobal = [];
 
-        // Fungsi Menampilkan Notifikasi Simpel (Toast)
         function showToast(pesan) {
             const toast = document.getElementById("toast");
             toast.innerText = pesan;
@@ -267,60 +284,96 @@
             btnElement.classList.add('active');
         }
 
+        // Kalkulasi Tahun Akademik (1 Sept - 31 Agst)
+        function hitungTahunAkademik(tanggalStr) {
+            if (!tanggalStr) return "-";
+            const dateObj = new Date(tanggalStr);
+            if (isNaN(dateObj)) return "-";
+            const tahun = dateObj.getFullYear();
+            const bulan = dateObj.getMonth() + 1;
+            return bulan >= 9 ? `${tahun}/${tahun + 1}` : `${tahun - 1}/${tahun}`;
+        }
+
         async function muatDataReferensi() {
-            document.getElementById('badanTabel').innerHTML = '<tr><td colspan="7" style="text-align:center;">Memuat ulang data...</td></tr>';
             try {
                 const res = await fetch(urlAPI);
                 const hasil = await res.json();
                 
                 if (hasil.status === "success") {
-                    window.arsipGlobal = hasil.data.reverse();
+                    window.arsipGlobal = hasil.data;
+                    window.divisiListGlobal = hasil.kode_divisi;
 
                     const selDivisi = document.getElementById('divisi');
                     selDivisi.innerHTML = `<option value="" disabled selected>-- Pilih Divisi --</option>` + 
                         hasil.kode_divisi.map(item => `<option value="${item.kode}">${item.nama}</option>`).join('');
 
+                    const filterDivisi = document.getElementById('filterDivisi');
+                    filterDivisi.innerHTML = `<option value="">Semua Divisi</option>` + 
+                        hasil.kode_divisi.map(item => `<option value="${item.nama}">${item.nama}</option>`).join('');
+
                     const selJenis = document.getElementById('jenis');
                     selJenis.innerHTML = `<option value="" disabled selected>-- Pilih Jenis Surat --</option>` + 
                         hasil.kode_surat.map(item => `<option value="${item.kode}">${item.nama}</option>`).join('');
 
-                    const htmlBaris = window.arsipGlobal.map(item => {
-                        let linkAman = item.link;
-                        if (linkAman && !linkAman.startsWith('http')) linkAman = 'https://' + linkAman;
-                        
-                        return `
-                            <tr>
-                                <td>${item.tanggal}</td>
-                                <td>${item.divisi}</td>
-                                <td>${item.jenis}</td>
-                                <td><strong>${item.nomor}</strong></td>
-                                <td>${item.keterangan}</td>
-                                <td>${linkAman ? `<a href="${linkAman}" target="_blank" class="link-badge">Buka PDF</a>` : '<span style="color:#aaa; font-size:12px;">Belum ada</span>'}</td>
-                                <td><button class="btn-action" onclick="bukaModalEdit('${item.nomor}')">Edit</button></td>
-                            </tr>
-                        `;
-                    }).join('');
-                    
-                    document.getElementById('badanTabel').innerHTML = htmlBaris || '<tr><td colspan="7" style="text-align:center;">Belum ada data.</td></tr>';
                     document.getElementById('loadingStatus').style.display = 'none';
-                    generateNomorOtomatis();
+                    renderTabelArsip();
                 }
             } catch (err) {
-                document.getElementById('badanTabel').innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Gagal memuat data.</td></tr>';
+                document.getElementById('badanTabel').innerHTML = '<tr><td colspan="8" style="text-align:center; color:red;">Gagal memuat data.</td></tr>';
             }
         }
 
-        function copyNomor() {
-            const noVal = document.getElementById('nomor').value;
-            if (!noVal) return;
-            navigator.clipboard.writeText(noVal).then(() => showToast("Nomor surat berhasil disalin!"));
+        // Render Tabel dengan Filter, Pencarian, & Sorting Modern
+        function renderTabelArsip() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
+            const filterDivisiVal = document.getElementById('filterDivisi').value;
+            const sortOrder = document.getElementById('sortOrder').value;
+
+            let dataFiltered = window.arsipGlobal.filter(item => {
+                const matchKeyword = (item.nomor || "").toLowerCase().includes(keyword) || (item.keterangan || "").toLowerCase().includes(keyword);
+                const matchDivisi = filterDivisiVal === "" || item.divisi === filterDivisiVal;
+                return matchKeyword && matchDivisi;
+            });
+
+            // Sorting
+            dataFiltered.sort((a, b) => {
+                const dateA = new Date(a.tanggal);
+                const dateB = new Date(b.tanggal);
+                return sortOrder === 'terbaru' ? dateB - dateA : dateA - dateB;
+            });
+
+            const htmlBaris = dataFiltered.map(item => {
+                let linkAman = item.link;
+                if (linkAman && !linkAman.startsWith('http')) linkAman = 'https://' + linkAman;
+                const tahunAkademik = hitungTahunAkademik(item.tanggal);
+                
+                return `
+                    <tr>
+                        <td>${item.tanggal}</td>
+                        <td><span style="font-weight:600; color:var(--text-gray);">${tahunAkademik}</span></td>
+                        <td>${item.divisi}</td>
+                        <td>${item.jenis}</td>
+                        <td><strong>${item.nomor}</strong></td>
+                        <td>${item.keterangan}</td>
+                        <td>${linkAman ? `<a href="${linkAman}" target="_blank" class="badge-pdf" title="Lihat Berkas PDF"><svg viewBox="0 0 24 24"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM9 9.5h1v-1H9v1zM14 9.5h1v-1h-1v1z"/></svg></a>` : '<span class="badge-empty">Belum ada</span>'}</td>
+                        <td>
+                            <button class="action-icon-btn" onclick="bukaModalEdit('${item.nomor}')" title="Edit Arsip">
+                                <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            document.getElementById('badanTabel').innerHTML = htmlBaris || '<tr><td colspan="8" style="text-align:center; color:var(--text-gray); padding:30px;">Tidak ada arsip yang cocok.</td></tr>';
         }
 
-        function generateNomorOtomatis() {
+        // Kalkulasi Nomor Otomatis di Backend-Front Logic
+        function generateNomorOtomatisPreview() {
             const tglVal = document.getElementById('tanggal').value;
             const divisiKode = document.getElementById('divisi').value;
             const jenisKode = document.getElementById('jenis').value;
-            if (!tglVal) return document.getElementById('nomor').value = "";
+            if (!tglVal) return "";
 
             const inputDate = new Date(tglVal);
             const inputYear = inputDate.getFullYear();
@@ -353,7 +406,7 @@
             let komponenNomor = [urutanSelanjutnya];
             if (stringDivisiKode) komponenNomor.push(stringDivisiKode);
             komponenNomor.push("STAIIS", inputRomawi, inputYear);
-            document.getElementById('nomor').value = komponenNomor.join('/');
+            return komponenNomor.join('/');
         }
 
         function bukaModalEdit(nomor) {
@@ -373,39 +426,43 @@
             document.getElementById('modalEdit').style.display = 'none';
         }
 
-        // SUBMIT TAB 1
+        // SUBMIT TAB 1: BUAT NOMOR & SALIN OTOMATIS
         document.getElementById('formPenomoran').addEventListener('submit', async function(e) {
             e.preventDefault(); 
             const tombol = document.getElementById('btnSubmitPenomoran');
-            tombol.innerText = "Menyimpan Dokumen...";
+            tombol.innerText = "Membuat Nomor...";
             tombol.disabled = true;
 
             const elDivisi = document.getElementById('divisi');
             const elJenis = document.getElementById('jenis');
+            const generatedNomor = generateNomorOtomatisPreview();
 
             const dataBaru = {
                 action: "create",
                 tanggal: document.getElementById('tanggal').value,
                 divisi: elDivisi.options[elDivisi.selectedIndex].text, 
                 jenis: elJenis.options[elJenis.selectedIndex].text,
-                nomor: document.getElementById('nomor').value, 
+                nomor: generatedNomor, 
                 keterangan: document.getElementById('keterangan').value
             };
 
             try {
                 await fetch(urlAPI, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(dataBaru) });
                 this.reset();
-                document.getElementById('nomor').value = ""; 
                 
-                // Munculkan Pengingat & Toast Lembut
+                // Salin otomatis ke clipboard
+                navigator.clipboard.writeText(generatedNomor).then(() => {
+                    showToast(`Nomor ${generatedNomor} dibuat & disalin!`);
+                }).catch(() => {
+                    showToast("Nomor berhasil dibuat!");
+                });
+                
                 document.getElementById('reminderBox').style.display = 'block';
-                showToast("Nomor surat berhasil digenerate!");
-                
                 muatDataReferensi();
             } catch (err) {
                 showToast("Terjadi kesalahan jaringan.");
             } finally {
-                tombol.innerText = "Ambil & Simpan Nomor";
+                tombol.innerText = "Buat Nomor";
                 tombol.disabled = false;
             }
         });
@@ -446,14 +503,14 @@
             }
         });
 
-        // SUBMIT TAB 2 (Upload File)
+        // SUBMIT TAB 2: UPLOAD
         document.getElementById('formUpload').addEventListener('submit', async function(e) {
             e.preventDefault();
             const tombol = document.getElementById('btnSubmitUpload');
             const file = document.getElementById('upload_file').files[0];
             if (!file) return showToast("Pilih file PDF terlebih dahulu.");
 
-            tombol.innerText = "Mengupload File...";
+            tombol.innerText = "Mengupload...";
             tombol.disabled = true;
 
             const reader = new FileReader();
@@ -481,7 +538,7 @@
                 } catch (err) {
                     showToast("Kesalahan jaringan saat mengupload file.");
                 } finally {
-                    tombol.innerText = "Upload & Hubungkan Dokumen";
+                    tombol.innerText = "Upload";
                     tombol.disabled = false;
                 }
             };
