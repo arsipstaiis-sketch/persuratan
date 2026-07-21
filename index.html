@@ -13,28 +13,27 @@
             --bg-light: #f7f9fc;
             --border-light: #e1e4e8;
             --input-bg: #ffffff;
+            --warning-bg: #e8f5e9;
+            --warning-text: #1b5e20;
+            --warning-border: #a5d6a7;
         }
 
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, sans-serif;
-            background-color: #ffffff; 
-            color: var(--text-dark); 
-            margin: 0; 
-            padding: 40px 20px;
+            background-color: #ffffff; color: var(--text-dark); margin: 0; padding: 40px 20px;
         }
 
-        .container { max-width: 800px; margin: 0 auto; }
-
+        .container { max-width: 900px; margin: 0 auto; }
         .header-section { text-align: center; margin-bottom: 30px; }
         .header-section h1 { font-size: 2.5rem; font-weight: 800; margin: 0 0 10px 0; }
         .header-section h1 span { color: var(--staiis-green); }
         .header-section p { font-size: 1.1rem; color: var(--text-gray); margin: 0; }
         
-        /* Navigasi Tab */
-        .tab-container { display: flex; border-bottom: 2px solid var(--border-light); margin-bottom: 30px; }
+        /* Tab Navigasi */
+        .tab-container { display: flex; border-bottom: 2px solid var(--border-light); margin-bottom: 30px; overflow-x: auto;}
         .tab-btn {
-            background: none; border: none; padding: 15px 30px; font-size: 16px; font-weight: 700;
-            color: var(--text-gray); cursor: pointer; transition: all 0.3s ease; position: relative;
+            background: none; border: none; padding: 15px 25px; font-size: 15px; font-weight: 700;
+            color: var(--text-gray); cursor: pointer; transition: all 0.3s ease; position: relative; white-space: nowrap;
         }
         .tab-btn.active { color: var(--staiis-green); }
         .tab-btn.active::after {
@@ -58,9 +57,8 @@
         input:focus, select:focus { border-color: var(--staiis-green); box-shadow: 0 0 0 3px rgba(18, 130, 70, 0.15); }
         .full-width { grid-column: 1 / -1; }
         
-        /* Elemen Copy Nomor */
         .input-with-icon { position: relative; display: flex; align-items: center; }
-        .input-with-icon input { width: 100%; padding-right: 50px; background-color: #edf2f0; color: var(--staiis-green); font-weight: 700; border-color: transparent; cursor: default; }
+        .input-with-icon input { width: 100%; padding-right: 50px; background-color: #edf2f0; color: var(--staiis-green); font-weight: 700; border-color: transparent; }
         .copy-btn {
             position: absolute; right: 5px; background: rgba(18, 130, 70, 0.1); color: var(--staiis-green);
             border: none; padding: 10px; border-radius: 8px; cursor: pointer; display: flex; transition: all 0.2s;
@@ -76,7 +74,36 @@
         button.btn-primary:disabled { background: #cbd5e0; cursor: wait; }
 
         .file-upload-box { border: 2px dashed var(--border-light); padding: 30px; text-align: center; border-radius: 10px; background: white; }
-        .file-upload-box input[type="file"] { border: none; padding: 0; margin-top: 10px; }
+        
+        /* Notifikasi Pengingat Halus */
+        .reminder-box {
+            display: none; background: var(--warning-bg); border: 1px solid var(--warning-border);
+            color: var(--warning-text); padding: 15px 20px; border-radius: 10px; margin-bottom: 25px; font-size: 14px; line-height: 1.5;
+        }
+
+        /* Toast Notification (Simpel & Elegan) */
+        #toast {
+            visibility: hidden; min-width: 250px; background-color: #212529; color: #fff; text-align: center;
+            border-radius: 8px; padding: 14px 20px; position: fixed; z-index: 1000; left: 50%; bottom: 30px;
+            transform: translateX(-50%); font-size: 14px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: visibility 0.5s, opacity 0.5s, transform 0.5s; opacity: 0;
+        }
+        #toast.show { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* Tabel Arsip */
+        .table-container { overflow-x: auto; border: 1px solid var(--border-light); border-radius: 12px; background: white; margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-light); }
+        th { font-weight: 600; background: var(--bg-light); font-size: 12px; text-transform: uppercase; color: var(--text-gray); }
+        tr:hover td { background-color: #fafafa; }
+        .btn-action { color: #007bff; background: none; border: none; cursor: pointer; font-weight: 600; text-decoration: underline; padding: 0; }
+        .link-badge { display: inline-block; background: rgba(18,130,70,0.1); color: var(--staiis-green); padding: 5px 10px; border-radius: 5px; text-decoration: none; font-weight: 600; font-size: 12px; }
+
+        /* Modal Edit */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-light); padding-bottom: 10px; }
+        .modal-header h3 { margin: 0; }
+        .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-gray); }
 
         @media (max-width: 600px) { form { grid-template-columns: 1fr; } }
     </style>
@@ -93,10 +120,16 @@
         <div class="tab-container">
             <button class="tab-btn active" onclick="switchTab('penomoran', this)">Ambil Nomor Surat</button>
             <button class="tab-btn" onclick="switchTab('upload', this)">Upload Berkas Scan</button>
+            <button class="tab-btn" onclick="switchTab('arsip', this)">Arsip Dokumen</button>
         </div>
 
         <!-- TAB 1: AMBIL NOMOR SURAT -->
         <div id="penomoran" class="tab-content active form-card">
+            
+            <div id="reminderBox" class="reminder-box">
+                ✨ <strong>Nomor berhasil direkam!</strong> Silakan cetak dan tandatangani surat terlebih dahulu, lalu unggah hasil scan PDF-nya melalui menu <strong>"Upload Berkas Scan"</strong>.
+            </div>
+
             <div id="loadingStatus" style="margin-bottom:15px; color:var(--text-gray); font-size:14px;">Memuat data referensi...</div>
             <form id="formPenomoran">
                 <div class="form-group">
@@ -124,7 +157,7 @@
                 <div class="form-group full-width">
                     <label>Nomor Surat (Pratinjau)</label>
                     <div class="input-with-icon">
-                        <input type="text" id="nomor" placeholder="Nomor akan terangkai otomatis..." readonly>
+                        <input type="text" id="nomor" placeholder="Pilih tanggal, divisi, dan jenis surat..." readonly>
                         <button type="button" class="copy-btn" onclick="copyNomor()" title="Salin Nomor Surat">
                             <svg viewBox="0 0 24 24"><path d="M16 1H4C2.9 1 2 1.9 2 3v14h2V3h12V1zm3 4H8C6.9 5 6 5.9 6 7v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                         </button>
@@ -140,28 +173,93 @@
             <form id="formUpload">
                 <div class="form-group full-width">
                     <label>Nomor Surat (Tanpa Spasi)</label>
-                    <!-- Validasi Regex untuk mencegah pengetikan spasi -->
                     <input type="text" id="upload_nomor" required placeholder="Contoh: 001/Ket-SK/STAIIS/VII/2026" 
                            pattern="[^\s]+" title="Tidak boleh ada spasi" oninput="this.value = this.value.replace(/\s/g, '')">
                 </div>
-
                 <div class="form-group full-width file-upload-box">
                     <label>Upload Hasil Scan (Format PDF)</label>
                     <input type="file" id="upload_file" accept=".pdf" required>
                 </div>
-
                 <button type="submit" id="btnSubmitUpload" class="btn-primary full-width">Upload & Hubungkan Dokumen</button>
             </form>
         </div>
 
+        <!-- TAB 3: ARSIP DOKUMEN -->
+        <div id="arsip" class="tab-content">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h2 style="margin:0; font-size:1.3rem;">Basis Data Arsip</h2>
+                <button onclick="muatDataReferensi()" style="background:var(--bg-light); border:1px solid var(--border-light); padding:8px 15px; border-radius:6px; cursor:pointer;">🔄 Segarkan</button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Divisi</th>
+                            <th>Jenis</th>
+                            <th>Nomor Surat</th>
+                            <th>Keterangan</th>
+                            <th>Berkas</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="badanTabel">
+                        <tr><td colspan="7" style="text-align:center;">Memuat data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ELEMEN TOAST NOTIFICATION -->
+    <div id="toast">Pesan notifikasi</div>
+
+    <!-- MODAL EDIT DOKUMEN -->
+    <div id="modalEdit" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Arsip</h3>
+                <button class="close-btn" onclick="tutupModal()">&times;</button>
+            </div>
+            <form id="formEdit">
+                <input type="hidden" id="edit_old_nomor">
+                <div class="form-group full-width">
+                    <label>Tanggal Surat</label>
+                    <input type="text" id="edit_tanggal" required>
+                </div>
+                <div class="form-group">
+                    <label>Divisi</label>
+                    <input type="text" id="edit_divisi" required>
+                </div>
+                <div class="form-group">
+                    <label>Jenis</label>
+                    <input type="text" id="edit_jenis" required>
+                </div>
+                <div class="form-group full-width">
+                    <label>Nomor Surat</label>
+                    <input type="text" id="edit_nomor" required>
+                </div>
+                <div class="form-group full-width">
+                    <label>Keterangan</label>
+                    <input type="text" id="edit_keterangan" required>
+                </div>
+                <button type="submit" id="btnSubmitEdit" class="btn-primary full-width">Simpan Perubahan</button>
+            </form>
+        </div>
     </div>
 
     <script>
-        // MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
         const urlAPI = "https://script.google.com/macros/s/AKfycbyKRnIKopECo_pADMEP_Cw5soGivDREjgO_2TtmaJkbA2Ru-7mDz6bSlimcVi7FPLh_HQ/exec";
         window.arsipGlobal = [];
 
-        // Fungsi berpindah Tab Navigasi
+        // Fungsi Menampilkan Notifikasi Simpel (Toast)
+        function showToast(pesan) {
+            const toast = document.getElementById("toast");
+            toast.innerText = pesan;
+            toast.className = "show";
+            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+
         function switchTab(tabId, btnElement) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -170,12 +268,13 @@
         }
 
         async function muatDataReferensi() {
+            document.getElementById('badanTabel').innerHTML = '<tr><td colspan="7" style="text-align:center;">Memuat ulang data...</td></tr>';
             try {
                 const res = await fetch(urlAPI);
                 const hasil = await res.json();
                 
                 if (hasil.status === "success") {
-                    window.arsipGlobal = hasil.data;
+                    window.arsipGlobal = hasil.data.reverse();
 
                     const selDivisi = document.getElementById('divisi');
                     selDivisi.innerHTML = `<option value="" disabled selected>-- Pilih Divisi --</option>` + 
@@ -185,25 +284,42 @@
                     selJenis.innerHTML = `<option value="" disabled selected>-- Pilih Jenis Surat --</option>` + 
                         hasil.kode_surat.map(item => `<option value="${item.kode}">${item.nama}</option>`).join('');
 
+                    const htmlBaris = window.arsipGlobal.map(item => {
+                        let linkAman = item.link;
+                        if (linkAman && !linkAman.startsWith('http')) linkAman = 'https://' + linkAman;
+                        
+                        return `
+                            <tr>
+                                <td>${item.tanggal}</td>
+                                <td>${item.divisi}</td>
+                                <td>${item.jenis}</td>
+                                <td><strong>${item.nomor}</strong></td>
+                                <td>${item.keterangan}</td>
+                                <td>${linkAman ? `<a href="${linkAman}" target="_blank" class="link-badge">Buka PDF</a>` : '<span style="color:#aaa; font-size:12px;">Belum ada</span>'}</td>
+                                <td><button class="btn-action" onclick="bukaModalEdit('${item.nomor}')">Edit</button></td>
+                            </tr>
+                        `;
+                    }).join('');
+                    
+                    document.getElementById('badanTabel').innerHTML = htmlBaris || '<tr><td colspan="7" style="text-align:center;">Belum ada data.</td></tr>';
                     document.getElementById('loadingStatus').style.display = 'none';
                     generateNomorOtomatis();
                 }
             } catch (err) {
-                document.getElementById('loadingStatus').innerText = "Gagal memuat data referensi. Periksa jaringan Anda.";
+                document.getElementById('badanTabel').innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Gagal memuat data.</td></tr>';
             }
         }
 
         function copyNomor() {
             const noVal = document.getElementById('nomor').value;
-            if (!noVal) return alert("Nomor surat belum terbentuk.");
-            navigator.clipboard.writeText(noVal).then(() => alert("Disalin: " + noVal));
+            if (!noVal) return;
+            navigator.clipboard.writeText(noVal).then(() => showToast("Nomor surat berhasil disalin!"));
         }
 
         function generateNomorOtomatis() {
             const tglVal = document.getElementById('tanggal').value;
             const divisiKode = document.getElementById('divisi').value;
             const jenisKode = document.getElementById('jenis').value;
-            
             if (!tglVal) return document.getElementById('nomor').value = "";
 
             const inputDate = new Date(tglVal);
@@ -237,11 +353,27 @@
             let komponenNomor = [urutanSelanjutnya];
             if (stringDivisiKode) komponenNomor.push(stringDivisiKode);
             komponenNomor.push("STAIIS", inputRomawi, inputYear);
-
             document.getElementById('nomor').value = komponenNomor.join('/');
         }
 
-        // SUBMIT TAB 1 (Pengambilan Nomor)
+        function bukaModalEdit(nomor) {
+            const dataRow = window.arsipGlobal.find(item => item.nomor === nomor);
+            if(dataRow) {
+                document.getElementById('edit_old_nomor').value = dataRow.nomor;
+                document.getElementById('edit_tanggal').value = dataRow.tanggal;
+                document.getElementById('edit_divisi').value = dataRow.divisi;
+                document.getElementById('edit_jenis').value = dataRow.jenis;
+                document.getElementById('edit_nomor').value = dataRow.nomor;
+                document.getElementById('edit_keterangan').value = dataRow.keterangan;
+                document.getElementById('modalEdit').style.display = 'flex';
+            }
+        }
+
+        function tutupModal() {
+            document.getElementById('modalEdit').style.display = 'none';
+        }
+
+        // SUBMIT TAB 1
         document.getElementById('formPenomoran').addEventListener('submit', async function(e) {
             e.preventDefault(); 
             const tombol = document.getElementById('btnSubmitPenomoran');
@@ -261,15 +393,55 @@
             };
 
             try {
-                await fetch(urlAPI, { method: "POST", body: JSON.stringify(dataBaru) });
-                alert("Berhasil! Nomor Surat Anda: " + dataBaru.nomor);
+                await fetch(urlAPI, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(dataBaru) });
                 this.reset();
                 document.getElementById('nomor').value = ""; 
-                muatDataReferensi(); // Muat ulang untuk memperbarui maxUrutan
+                
+                // Munculkan Pengingat & Toast Lembut
+                document.getElementById('reminderBox').style.display = 'block';
+                showToast("Nomor surat berhasil digenerate!");
+                
+                muatDataReferensi();
             } catch (err) {
-                alert("Terjadi kesalahan jaringan.");
+                showToast("Terjadi kesalahan jaringan.");
             } finally {
                 tombol.innerText = "Ambil & Simpan Nomor";
+                tombol.disabled = false;
+            }
+        });
+
+        // SUBMIT FORM EDIT
+        document.getElementById('formEdit').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const tombol = document.getElementById('btnSubmitEdit');
+            tombol.innerText = "Menyimpan...";
+            tombol.disabled = true;
+
+            const updateData = {
+                action: "edit",
+                old_nomor: document.getElementById('edit_old_nomor').value,
+                tanggal: document.getElementById('edit_tanggal').value,
+                divisi: document.getElementById('edit_divisi').value,
+                jenis: document.getElementById('edit_jenis').value,
+                nomor: document.getElementById('edit_nomor').value,
+                keterangan: document.getElementById('edit_keterangan').value
+            };
+
+            try {
+                const response = await fetch(urlAPI, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(updateData) });
+                const result = await response.json();
+                
+                if (result.status === "success") {
+                    showToast("Perubahan berhasil disimpan!");
+                    tutupModal();
+                    muatDataReferensi();
+                } else {
+                    showToast("Gagal: " + result.message);
+                }
+            } catch (err) {
+                showToast("Kesalahan jaringan.");
+            } finally {
+                tombol.innerText = "Simpan Perubahan";
                 tombol.disabled = false;
             }
         });
@@ -278,59 +450,43 @@
         document.getElementById('formUpload').addEventListener('submit', async function(e) {
             e.preventDefault();
             const tombol = document.getElementById('btnSubmitUpload');
-            const fileInput = document.getElementById('upload_file');
-            const file = fileInput.files[0];
+            const file = document.getElementById('upload_file').files[0];
+            if (!file) return showToast("Pilih file PDF terlebih dahulu.");
 
-            if (!file) return alert("Pilih file PDF terlebih dahulu.");
-
-            tombol.innerText = "Mengupload File (Mohon Tunggu)...";
+            tombol.innerText = "Mengupload File...";
             tombol.disabled = true;
 
-            // Mengubah file menjadi format Base64 untuk dikirim lewat JSON
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = async function () {
-                const base64String = reader.result.split(',')[1]; // Memisahkan header dari data base64
-                
                 const uploadPayload = {
                     action: "upload",
                     nomor: document.getElementById('upload_nomor').value,
                     filename: file.name,
                     mimeType: file.type,
-                    base64: base64String
+                    base64: reader.result.split(',')[1]
                 };
 
                 try {
-                    // PERBAIKAN: Menambahkan headers text/plain agar tidak diblokir peramban
-                    const response = await fetch(urlAPI, { 
-                        method: "POST", 
-                        headers: { "Content-Type": "text/plain;charset=utf-8" },
-                        body: JSON.stringify(uploadPayload) 
-                    });
-                    
+                    const response = await fetch(urlAPI, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(uploadPayload) });
                     const result = await response.json();
 
                     if (result.status === "success") {
-                        alert("Berkas berhasil diupload dan ditautkan ke arsip!");
+                        showToast("Berkas PDF berhasil diupload!");
                         document.getElementById('formUpload').reset();
+                        muatDataReferensi();
                     } else {
-                        alert("Gagal: " + result.message);
+                        showToast("Gagal: " + result.message);
                     }
                 } catch (err) {
-                    alert("Kesalahan jaringan saat mengupload file. Pastikan URL Apps Script sudah benar.");
+                    showToast("Kesalahan jaringan saat mengupload file.");
                 } finally {
                     tombol.innerText = "Upload & Hubungkan Dokumen";
                     tombol.disabled = false;
                 }
             };
-            reader.onerror = function (error) {
-                alert("Gagal membaca file.");
-                tombol.innerText = "Upload & Hubungkan Dokumen";
-                tombol.disabled = false;
-            };
         });
 
-        // Panggil saat web dimuat
         muatDataReferensi();
     </script>
 </body>
