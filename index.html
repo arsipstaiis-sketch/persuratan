@@ -137,22 +137,30 @@
             document.getElementById('nomor').value = komponenNomor.join('/');
         }
 
-        async function muatData() {
+       async function muatData() {
             try {
                 const res = await fetch(urlAPI);
                 const hasil = await res.json();
                 
                 if (hasil.status === "success") {
-                    const htmlBaris = hasil.data.map(item => `
-                        <tr>
-                            <td>${item.tanggal}</td>
-                            <td>${item.divisi}</td>
-                            <td>${item.jenis}</td>
-                            <td><strong>${item.nomor}</strong></td>
-                            <td>${item.keterangan}</td>
-                            <td>${item.link ? `<a href="${item.link}" target="_blank">Buka PDF</a>` : '-'}</td>
-                        </tr>
-                    `).join('');
+                    const htmlBaris = hasil.data.map(item => {
+                        // Fitur pencegah error 404 Vercel
+                        let linkAman = item.link;
+                        if (linkAman && !linkAman.startsWith('http://') && !linkAman.startsWith('https://')) {
+                            linkAman = 'https://' + linkAman;
+                        }
+
+                        return `
+                            <tr>
+                                <td>${item.tanggal}</td>
+                                <td>${item.divisi}</td>
+                                <td>${item.jenis}</td>
+                                <td><strong>${item.nomor}</strong></td>
+                                <td>${item.keterangan}</td>
+                                <td>${linkAman ? `<a href="${linkAman}" target="_blank">Buka PDF</a>` : '-'}</td>
+                            </tr>
+                        `;
+                    }).join('');
                     
                     document.getElementById('badanTabel').innerHTML = htmlBaris;
                     document.getElementById('status').style.display = 'none';
