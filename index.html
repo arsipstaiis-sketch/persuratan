@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Arsip SK STAIIS</title>
     <style>
-        /* Desain Modern SaaS - Ringan & Efisien */
         :root {
             --staiis-green: #128246;
             --staiis-green-hover: #0e6b39;
-            --staiis-gold: #f1c40f;
             --text-dark: #1f2124;
             --text-gray: #5e6b73;
             --bg-light: #f7f9fc;
@@ -18,195 +16,58 @@
         }
 
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, sans-serif;
             background-color: #ffffff; 
             color: var(--text-dark); 
             margin: 0; 
             padding: 40px 20px;
-            -webkit-font-smoothing: antialiased;
         }
 
-        .container { 
-            max-width: 960px; 
-            margin: 0 auto; 
-        }
+        .container { max-width: 960px; margin: 0 auto; }
 
-        /* Tipografi ala SaaS (Tebal & Modern) */
-        .header-section {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .header-section h1 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-            margin: 0 0 10px 0;
-            color: var(--text-dark);
-        }
-
-        .header-section h1 span {
-            color: var(--staiis-green);
-        }
-
-        .header-section p {
-            font-size: 1.1rem;
-            color: var(--text-gray);
-            margin: 0;
-        }
+        .header-section { text-align: center; margin-bottom: 50px; }
+        .header-section h1 { font-size: 2.8rem; font-weight: 800; margin: 0 0 10px 0; }
+        .header-section h1 span { color: var(--staiis-green); }
+        .header-section p { font-size: 1.1rem; color: var(--text-gray); margin: 0; }
         
-        /* Form Card */
-        .form-card {
-            background: var(--bg-light);
-            border: 1px solid var(--border-light);
-            border-radius: 16px;
-            padding: 35px;
-            margin-bottom: 50px;
-        }
-
-        form { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-            gap: 20px; 
-        }
-        
+        .form-card { background: var(--bg-light); border: 1px solid var(--border-light); border-radius: 16px; padding: 35px; margin-bottom: 50px; }
+        form { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
         
-        .form-group label { 
-            font-size: 13px; 
-            font-weight: 600; 
-            margin-bottom: 8px; 
-            color: var(--text-dark); 
+        input, select { 
+            padding: 14px 16px; background: var(--input-bg); border: 1px solid var(--border-light); 
+            border-radius: 10px; font-size: 15px; outline: none; transition: all 0.2s ease; font-family: inherit;
         }
-
-        input { 
-            padding: 14px 16px; 
-            background: var(--input-bg);
-            border: 1px solid var(--border-light); 
-            border-radius: 10px;
-            font-size: 15px; 
-            color: var(--text-dark);
-            transition: all 0.2s ease;
-            outline: none;
-        }
-
-        input::placeholder { color: #a0aec0; }
-
-        input:focus {
-            border-color: var(--staiis-green);
-            box-shadow: 0 0 0 3px rgba(18, 130, 70, 0.15);
-        }
-
+        input:focus, select:focus { border-color: var(--staiis-green); box-shadow: 0 0 0 3px rgba(18, 130, 70, 0.15); }
         .full-width { grid-column: 1 / -1; }
         
-        /* Input khusus nomor otomatis */
-        #nomor { 
-            background-color: #edf2f0; 
-            color: var(--staiis-green); 
-            font-weight: 700;
-            font-size: 16px;
-            border-color: transparent;
-            cursor: not-allowed; 
-        }
+        /* Modifikasi Elemen Nomor Surat & Icon Salin */
+        .input-with-icon { position: relative; display: flex; align-items: center; }
+        .input-with-icon input { width: 100%; padding-right: 50px; background-color: #edf2f0; color: var(--staiis-green); font-weight: 700; font-size: 16px; border-color: transparent; cursor: default; }
         
-        button { 
-            background: var(--staiis-green); 
-            color: white; 
-            border: none; 
-            padding: 16px; 
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 700; 
-            cursor: pointer; 
-            margin-top: 10px;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 6px rgba(18, 130, 70, 0.2);
+        .copy-btn {
+            position: absolute; right: 5px; background: rgba(18, 130, 70, 0.1); color: var(--staiis-green);
+            border: none; padding: 10px; border-radius: 8px; cursor: pointer; box-shadow: none; margin: 0;
+            display: flex; align-items: center; justify-content: center; transition: all 0.2s;
         }
+        .copy-btn:hover { background: rgba(18, 130, 70, 0.2); transform: scale(1.05); }
+        .copy-btn svg { width: 20px; height: 20px; fill: currentColor; }
 
-        button:hover:not(:disabled) { 
-            background: var(--staiis-green-hover); 
-            transform: translateY(-1px);
-            box-shadow: 0 6px 12px rgba(18, 130, 70, 0.3);
+        button.btn-primary { 
+            background: var(--staiis-green); color: white; border: none; padding: 16px; border-radius: 10px;
+            font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: all 0.2s;
         }
-
-        button:disabled { 
-            background: #cbd5e0;
-            box-shadow: none;
-            cursor: wait; 
-            transform: none;
-        }
+        button.btn-primary:hover:not(:disabled) { background: var(--staiis-green-hover); box-shadow: 0 6px 12px rgba(18, 130, 70, 0.3); }
+        button.btn-primary:disabled { background: #cbd5e0; cursor: wait; }
         
-        /* Bagian Tabel */
-        .table-section h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: var(--text-dark);
-            border-bottom: 2px solid var(--border-light);
-            padding-bottom: 15px;
-        }
-
-        #status {
-            font-size: 14px;
-            color: var(--text-gray);
-            margin-bottom: 20px;
-            display: inline-block;
-            background: var(--bg-light);
-            padding: 8px 16px;
-            border-radius: 20px;
-        }
-
-        .table-container {
-            overflow-x: auto;
-            border: 1px solid var(--border-light);
-            border-radius: 12px;
-        }
-
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            font-size: 14px; 
-            background: white;
-        }
-
-        th, td { 
-            padding: 16px 20px; 
-            text-align: left; 
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        th { 
-            font-weight: 600;
-            color: var(--text-gray); 
-            background: var(--bg-light);
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        tr:last-child td { border-bottom: none; }
-
-        tr:hover td { background-color: #fcfcfc; }
-
-        a { 
-            color: var(--staiis-green); 
-            text-decoration: none; 
-            font-weight: 600;
-            background: rgba(18, 130, 70, 0.1);
-            padding: 6px 12px;
-            border-radius: 6px;
-            transition: background 0.2s;
-        }
-
-        a:hover { 
-            background: rgba(18, 130, 70, 0.2); 
-        }
-        
-        @media (max-width: 768px) {
-            .header-section h1 { font-size: 2.2rem; }
-            .form-card { padding: 25px; }
-            form { grid-template-columns: 1fr; }
-        }
+        .table-section h2 { font-size: 1.5rem; border-bottom: 2px solid var(--border-light); padding-bottom: 15px; }
+        #status { font-size: 14px; background: var(--bg-light); padding: 8px 16px; border-radius: 20px; display: inline-block; margin-bottom: 20px; }
+        .table-container { overflow-x: auto; border: 1px solid var(--border-light); border-radius: 12px; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { padding: 16px 20px; text-align: left; border-bottom: 1px solid var(--border-light); }
+        th { font-weight: 600; background: var(--bg-light); font-size: 12px; text-transform: uppercase; }
+        a { color: var(--staiis-green); text-decoration: none; font-weight: 600; background: rgba(18, 130, 70, 0.1); padding: 6px 12px; border-radius: 6px; }
     </style>
 </head>
 <body>
@@ -224,22 +85,29 @@
                     <input type="date" id="tanggal" required onchange="generateNomorOtomatis()">
                 </div>
                 <div class="form-group">
-                    <label>Nomor Urut</label>
-                    <input type="text" id="nomor_urut" placeholder="Misal: 001" required oninput="generateNomorOtomatis()" autocomplete="off">
+                    <label>Nama Divisi</label>
+                    <select id="divisi" required onchange="generateNomorOtomatis()">
+                        <option value="" disabled selected>Memuat referensi...</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label>Kode Divisi</label>
-                    <input type="text" id="divisi" placeholder="Misal: Ket" required oninput="generateNomorOtomatis()" autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label>Kode Surat</label>
-                    <input type="text" id="jenis" placeholder="Misal: SK" required oninput="generateNomorOtomatis()" autocomplete="off">
+                    <label>Jenis Surat</label>
+                    <select id="jenis" required onchange="generateNomorOtomatis()">
+                        <option value="" disabled selected>Memuat referensi...</option>
+                    </select>
                 </div>
 
-                <!-- Hasil Nomor Otomatis -->
+                <!-- Bagian Nomor Surat (Pratinjau dengan Tombol Copy) -->
                 <div class="form-group full-width">
-                    <label>Pratinjau Nomor Arsip</label>
-                    <input type="text" id="nomor" placeholder="Nomor akan terangkai otomatis..." readonly>
+                    <label>Nomor Surat</label>
+                    <div class="input-with-icon">
+                        <input type="text" id="nomor" placeholder="Silakan pilih tanggal dan jenis surat terlebih dahulu..." readonly>
+                        <button type="button" class="copy-btn" onclick="copyNomor()" title="Salin Nomor Surat">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M16 1H4C2.9 1 2 1.9 2 3v14h2V3h12V1zm3 4H8C6.9 5 6 5.9 6 7v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="form-group full-width">
@@ -251,7 +119,7 @@
                     <input type="text" id="link" placeholder="Salin link dokumen di sini..." autocomplete="off">
                 </div>
 
-                <button type="submit" id="btnSubmit" class="full-width">Simpan ke Basis Data</button>
+                <button type="submit" id="btnSubmit" class="btn-primary full-width">Simpan ke Basis Data</button>
             </form>
         </div>
 
@@ -277,39 +145,11 @@
     </div>
 
     <script>
-        // Ganti URL ini dengan URL Web App Apps Script Anda yang valid
+        // Ganti URL ini dengan URL Web App Anda yang baru di-deploy
         const urlAPI = "https://script.google.com/macros/s/AKfycbyKRnIKopECo_pADMEP_Cw5soGivDREjgO_2TtmaJkbA2Ru-7mDz6bSlimcVi7FPLh_HQ/exec";
-
-        function generateNomorOtomatis() {
-            const tglVal = document.getElementById('tanggal').value;
-            const noUrut = document.getElementById('nomor_urut').value;
-            const divisi = document.getElementById('divisi').value;
-            const jenis = document.getElementById('jenis').value;
-            
-            let bulanRomawi = "";
-            let tahun = "";
-
-            if (tglVal) {
-                const dateObj = new Date(tglVal);
-                const arrayRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
-                bulanRomawi = arrayRomawi[dateObj.getMonth()];
-                tahun = dateObj.getFullYear();
-            }
-
-            let stringDivisiKode = [divisi, jenis].filter(Boolean).join('-');
-            let komponenNomor = [];
-            
-            if (noUrut) komponenNomor.push(noUrut);
-            if (stringDivisiKode) komponenNomor.push(stringDivisiKode);
-            
-            if (noUrut || stringDivisiKode || tglVal) {
-                komponenNomor.push("STAIIS");
-                if (bulanRomawi) komponenNomor.push(bulanRomawi);
-                if (tahun) komponenNomor.push(tahun);
-            }
-
-            document.getElementById('nomor').value = komponenNomor.join('/');
-        }
+        
+        // Simpan arsip secara global agar bisa dikalkulasi ulang
+        window.arsipGlobal = [];
 
         async function muatData() {
             try {
@@ -317,12 +157,22 @@
                 const hasil = await res.json();
                 
                 if (hasil.status === "success") {
+                    window.arsipGlobal = hasil.data; // Menyimpan histori untuk kalkulasi auto-number
+
+                    // 1. Mengisi Dropdown Divisi
+                    const selDivisi = document.getElementById('divisi');
+                    selDivisi.innerHTML = `<option value="" disabled selected>-- Pilih Divisi --</option>` + 
+                        hasil.kode_divisi.map(item => `<option value="${item.kode}">${item.nama}</option>`).join('');
+
+                    // 2. Mengisi Dropdown Jenis Surat
+                    const selJenis = document.getElementById('jenis');
+                    selJenis.innerHTML = `<option value="" disabled selected>-- Pilih Jenis Surat --</option>` + 
+                        hasil.kode_surat.map(item => `<option value="${item.kode}">${item.nama}</option>`).join('');
+
+                    // 3. Mengisi Tabel HTML
                     const htmlBaris = hasil.data.map(item => {
                         let linkAman = item.link;
-                        if (linkAman && !linkAman.startsWith('http://') && !linkAman.startsWith('https://')) {
-                            linkAman = 'https://' + linkAman;
-                        }
-
+                        if (linkAman && !linkAman.startsWith('http')) linkAman = 'https://' + linkAman;
                         return `
                             <tr>
                                 <td>${item.tanggal}</td>
@@ -338,10 +188,84 @@
                     document.getElementById('badanTabel').innerHTML = htmlBaris;
                     document.getElementById('status').style.display = 'none';
                     document.getElementById('tabelContainer').style.display = 'block';
+
+                    // Pemicu kalkulasi ulang jika dropdown sudah terisi
+                    generateNomorOtomatis();
                 }
             } catch (err) {
-                document.getElementById('status').innerText = "Gagal terhubung ke pusat data. Periksa jaringan Anda.";
+                document.getElementById('status').innerText = "Gagal terhubung ke pusat data.";
             }
+        }
+
+        // Fungsi Salin (Copy) Nomor Surat
+        function copyNomor() {
+            const noVal = document.getElementById('nomor').value;
+            if (!noVal) {
+                alert("Nomor surat belum terbentuk.");
+                return;
+            }
+            navigator.clipboard.writeText(noVal).then(() => {
+                alert("Disalin: " + noVal);
+            }).catch(err => {
+                alert("Gagal menyalin nomor.");
+            });
+        }
+
+        function generateNomorOtomatis() {
+            const tglVal = document.getElementById('tanggal').value;
+            const divisiKode = document.getElementById('divisi').value;
+            const jenisKode = document.getElementById('jenis').value;
+            
+            if (!tglVal) {
+                document.getElementById('nomor').value = "";
+                return;
+            }
+
+            // Menganalisa Tanggal Input untuk mengetahui Tahun Akademik saat ini
+            const inputDate = new Date(tglVal);
+            const inputYear = inputDate.getFullYear();
+            const inputMonth = inputDate.getMonth() + 1;
+            
+            // Logika Periode (1 Sept - 31 Agst)
+            const labelTarget = inputMonth >= 9 ? `${inputYear}-${inputYear+1}` : `${inputYear-1}-${inputYear}`;
+            
+            // Konversi bulan menjadi Romawi untuk disisipkan ke nomor surat
+            const romanMap = { "I":1, "II":2, "III":3, "IV":4, "V":5, "VI":6, "VII":7, "VIII":8, "IX":9, "X":10, "XI":11, "XII":12 };
+            const arrayRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
+            const inputRomawi = arrayRomawi[inputMonth - 1];
+
+            // Mencari Nilai Maksimal dari urutan di tahun akademik yang sama
+            let maxUrutan = 0;
+            window.arsipGlobal.forEach(item => {
+                const parts = (item.nomor || "").split('/');
+                if (parts.length >= 5) {
+                    const seq = parseInt(parts[0], 10);
+                    const bulanLamaRomawi = parts[parts.length - 2];
+                    const tahunLama = parseInt(parts[parts.length - 1], 10);
+                    const bulanLamaInt = romanMap[bulanLamaRomawi];
+
+                    if (!isNaN(seq) && !isNaN(tahunLama) && bulanLamaInt) {
+                        const labelLama = bulanLamaInt >= 9 ? `${tahunLama}-${tahunLama+1}` : `${tahunLama-1}-${tahunLama}`;
+                        if (labelLama === labelTarget && seq > maxUrutan) {
+                            maxUrutan = seq;
+                        }
+                    }
+                }
+            });
+
+            // Menyusun format final (Contoh: 001)
+            const urutanSelanjutnya = String(maxUrutan + 1).padStart(3, '0');
+            const stringDivisiKode = [divisiKode, jenisKode].filter(Boolean).join('-');
+            
+            let komponenNomor = [];
+            komponenNomor.push(urutanSelanjutnya);
+            if (stringDivisiKode) komponenNomor.push(stringDivisiKode);
+            komponenNomor.push("STAIIS");
+            komponenNomor.push(inputRomawi);
+            komponenNomor.push(inputYear);
+
+            // Tampilkan ke layar
+            document.getElementById('nomor').value = komponenNomor.join('/');
         }
 
         document.getElementById('formInput').addEventListener('submit', async function(e) {
@@ -351,37 +275,42 @@
             tombol.innerText = "Menyimpan Dokumen...";
             tombol.disabled = true;
 
+            // Mengambil TEKS (NAMA) dari dropdown yang terpilih untuk disimpan di Spreadsheet, 
+            // sementara Kode-nya tetap digunakan pada kolom "nomor" di atas.
+            const elDivisi = document.getElementById('divisi');
+            const namaDivisi = elDivisi.options[elDivisi.selectedIndex].text;
+            
+            const elJenis = document.getElementById('jenis');
+            const namaJenis = elJenis.options[elJenis.selectedIndex].text;
+
             const dataBaru = {
                 tanggal: document.getElementById('tanggal').value,
-                divisi: document.getElementById('divisi').value,
-                jenis: document.getElementById('jenis').value,
+                divisi: namaDivisi, 
+                jenis: namaJenis,
                 nomor: document.getElementById('nomor').value, 
                 keterangan: document.getElementById('keterangan').value,
                 link: document.getElementById('link').value
             };
 
             try {
-                await fetch(urlAPI, {
-                    method: "POST",
-                    body: JSON.stringify(dataBaru)
-                });
-                
+                await fetch(urlAPI, { method: "POST", body: JSON.stringify(dataBaru) });
                 this.reset(); 
                 document.getElementById('nomor').value = ""; 
-                
                 document.getElementById('status').style.display = 'inline-block';
                 document.getElementById('status').innerText = "Memperbarui arsip...";
                 document.getElementById('tabelContainer').style.display = 'none';
+                
+                // Segarkan data
                 muatData();
-
             } catch (err) {
-                alert("Terjadi kesalahan jaringan saat mencoba menyimpan data.");
+                alert("Terjadi kesalahan jaringan.");
             } finally {
                 tombol.innerText = "Simpan ke Basis Data";
                 tombol.disabled = false;
             }
         });
 
+        // Panggil sistem di awal mula
         muatData();
     </script>
 </body>
