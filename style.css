@@ -133,7 +133,7 @@ tr:hover td { background-color: #fafafa; }
 .action-icon-btn:hover { background: var(--bg-light); color: var(--staiis-green); }
 .action-icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
 
-.badge-pdf, .badge-empty { display: inline-flex; align-items: center; justify-content: center; width: 75px; height: 26px; border-radius: 6px; font-size: 11px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.badge-pdf, .badge-empty { display: inline-flex; align-items: center; justify-content: center; width: 60px; height: 26px; border-radius: 6px; font-size: 11px; font-weight: 600; text-decoration: none; white-space: nowrap; }
 .badge-pdf { background: var(--staiis-green); color: white; transition: background 0.2s; }
 .badge-empty { background: #fff5f5; color: #e53e3e; border: 1px solid #fed7d7; }
 
