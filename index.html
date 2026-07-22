@@ -645,46 +645,61 @@
             setTimeout(updateProxyWidth, 50);
         }
 
-        function generateNomorOtomatisPreview() {
-            const tglVal = document.getElementById('tanggal').value;
-            const divisiKode = document.getElementById('divisi').value;
-            const jenisKode = document.getElementById('jenis').value;
-            if (!tglVal) return "";
+      function generateNomorOtomatisPreview() {
+    const tglVal = document.getElementById('tanggal').value;
+    const divisiKode = document.getElementById('divisi').value;
+    const jenisKode = document.getElementById('jenis').value;
+    if (!tglVal) return "";
 
-            const inputDate = new Date(tglVal);
-            const inputYear = inputDate.getFullYear();
-            const inputMonth = inputDate.getMonth() + 1;
-            const labelTarget = inputMonth >= 9 ? `${inputYear}-${inputYear+1}` : `${inputYear-1}-${inputYear}`;
+    const inputDate = new Date(tglVal);
+    const inputYear = inputDate.getFullYear();
+    const inputMonth = inputDate.getMonth() + 1;
+    const labelTarget = inputMonth >= 9 ? `${inputYear}-${inputYear+1}` : `${inputYear-1}-${inputYear}`;
+    
+    const romanMap = { "I":1, "II":2, "III":3, "IV":4, "V":5, "VI":6, "VII":7, "VIII":8, "IX":9, "X":10, "XI":11, "XII":12 };
+    const arrayRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
+    const inputRomawi = arrayRomawi[inputMonth - 1];
+
+    let maxUrutan = 0;
+    window.arsipGlobal.forEach(item => {
+        const parts = (item.nomor || "").split('/');
+        
+        if (parts.length >= 5) {
+            const seq = parseInt(parts[0], 10);
+            const bulanLamaRomawi = parts[parts.length - 2];
+            let tahunLama = parseInt(parts[parts.length - 1], 10);
             
-            const romanMap = { "I":1, "II":2, "III":3, "IV":4, "V":5, "VI":6, "VII":7, "VIII":8, "IX":9, "X":10, "XI":11, "XII":12 };
-            const arrayRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
-            const inputRomawi = arrayRomawi[inputMonth - 1];
+            // --- PERBAIKAN: Ubah paksa tahun 2 digit (misal: 26) menjadi 4 digit (2026) agar sinkron ---
+            if (tahunLama < 100) {
+                tahunLama += 2000;
+            }
 
-            let maxUrutan = 0;
-            window.arsipGlobal.forEach(item => {
-                const parts = (item.nomor || "").split('/');
-                if (parts.length >= 5) {
-                    const seq = parseInt(parts[0], 10);
-                    const bulanLamaRomawi = parts[parts.length - 2];
-                    const tahunLama = parseInt(parts[parts.length - 1], 10);
-                    const bulanLamaInt = romanMap[bulanLamaRomawi];
+            const bulanLamaInt = romanMap[bulanLamaRomawi];
 
-                    if (!isNaN(seq) && !isNaN(tahunLama) && bulanLamaInt) {
-                        const labelLama = bulanLamaInt >= 9 ? `${tahunLama}-${tahunLama+1}` : `${tahunLama-1}-${tahunLama}`;
-                        if (labelLama === labelTarget && seq > maxUrutan) maxUrutan = seq;
-                    }
+            if (!isNaN(seq) && !isNaN(tahunLama) && bulanLamaInt) {
+                const labelLama = bulanLamaInt >= 9 ? `${tahunLama}-${tahunLama+1}` : `${tahunLama-1}-${tahunLama}`;
+                
+                if (labelLama === labelTarget && seq > maxUrutan) {
+                    maxUrutan = seq;
                 }
-            });
-
-            const urutanSelanjutnya = String(maxUrutan + 1).padStart(3, '0');
-            const stringDivisiKode = [divisiKode, jenisKode].filter(Boolean).join('-');
-            
-            let komponenNomor = [urutanSelanjutnya];
-            if (stringDivisiKode) komponenNomor.push(stringDivisiKode);
-            komponenNomor.push("STAIIS", inputRomawi, inputYear);
-            return komponenNomor.join('/');
+            }
         }
+    });
 
+    const urutanSelanjutnya = String(maxUrutan + 1).padStart(3, '0');
+    const stringDivisiKode = [divisiKode, jenisKode].filter(Boolean).join('-');
+    
+    let komponenNomor = [urutanSelanjutnya];
+    if (stringDivisiKode) komponenNomor.push(stringDivisiKode);
+    
+    // --- FORMAT TAHUN BARU ---
+    // Menggunakan .slice(-2) agar nomor yang di-generate konsisten berakhiran 2 digit (contoh: /26)
+    // Jika Anda ingin 4 digit, ganti "tahunOutput" di bawah dengan "inputYear"
+    const tahunOutput = String(inputYear).slice(-2);
+    
+    komponenNomor.push("STAIIS", inputRomawi, tahunOutput);
+    return komponenNomor.join('/');
+}
         function bukaModalEdit(nomor) {
             const dataRow = window.arsipGlobal.find(item => item.nomor === nomor);
             if(dataRow) {
