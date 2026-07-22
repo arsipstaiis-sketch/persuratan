@@ -23,7 +23,7 @@
             background-color: #ffffff; color: var(--text-dark); margin: 0; padding: 40px 20px;
         }
 
-        .container { max-width: 950px; margin: 0 auto; }
+        .container { max-width: 980px; margin: 0 auto; }
         .header-section { text-align: center; margin-bottom: 30px; }
         .header-section h1 { font-size: 2.5rem; font-weight: 800; margin: 0 0 10px 0; }
         .header-section h1 span { color: var(--staiis-green); }
@@ -79,17 +79,29 @@
         }
         #toast.show { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        /* Bagian Arsip & Kontrol Modern */
+        /* Kontrol Arsip & Filter Modern Berbasis Ikon */
         .archive-controls {
-            display: grid; grid-template-columns: 1fr auto auto auto; gap: 12px; margin-bottom: 20px; align-items: center;
+            display: flex; gap: 10px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;
         }
+        .search-box { flex: 1; min-width: 220px; }
         .search-box input { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-light); font-size: 14px; background: var(--bg-light); }
+        
+        .filter-dropdown-wrapper { position: relative; }
         .icon-btn {
             background: var(--bg-light); border: 1px solid var(--border-light); padding: 12px 15px; border-radius: 10px;
             cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; color: var(--text-dark);
         }
         .icon-btn:hover { background: #edf2f7; border-color: #cbd5e0; }
         .icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
+        
+        /* Popup Menu Filter Ikon */
+        .filter-menu {
+            display: none; position: absolute; right: 0; top: 50px; background: white; border: 1px solid var(--border-light);
+            border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 15px; z-index: 100; width: 260px;
+        }
+        .filter-menu.show { display: block; animation: fadeIn 0.2s; }
+        .filter-menu label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-gray); margin-top: 10px; display: block; }
+        .filter-menu select { width: 100%; padding: 8px 10px; margin-top: 4px; font-size: 13px; border-radius: 8px; border: 1px solid var(--border-light); }
 
         .table-container { overflow-x: auto; border: 1px solid var(--border-light); border-radius: 12px; background: white; }
         table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
@@ -97,16 +109,19 @@
         th { font-weight: 600; background: var(--bg-light); font-size: 12px; text-transform: uppercase; color: var(--text-gray); }
         tr:hover td { background-color: #fafafa; }
         
-        /* Ikon Modern di Tabel */
         .action-icon-btn { background: none; border: none; cursor: pointer; color: var(--text-gray); padding: 6px; border-radius: 6px; transition: all 0.2s; }
         .action-icon-btn:hover { background: var(--bg-light); color: var(--staiis-green); }
         .action-icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
         
-        .badge-pdf { display: inline-flex; align-items: center; justify-content: center; background: rgba(18,130,70,0.1); color: var(--staiis-green); width: 32px; height: 32px; border-radius: 8px; transition: transform 0.2s; }
-        .badge-pdf:hover { transform: scale(1.1); background: rgba(18,130,70,0.2); }
-        .badge-pdf svg { width: 16px; height: 16px; fill: currentColor; }
-
-        .badge-empty { display: inline-block; background: #fff5f5; color: #e53e3e; padding: 4px 8px; border-radius: 6px; font-weight: 600; font-size: 11px; border: 1px solid #fed7d7; }
+        /* Ukuran Seragam Badge PDF dan Kotak Kosong */
+        .badge-pdf, .badge-empty { 
+            display: inline-flex; align-items: center; justify-content: center; 
+            width: 75px; height: 28px; border-radius: 6px; font-size: 11.5px; font-weight: 600; text-decoration: none; 
+        }
+        .badge-pdf { background: rgba(18,130,70,0.1); color: var(--staiis-green); border: 1px solid rgba(18,130,70,0.2); }
+        .badge-pdf:hover { background: rgba(18,130,70,0.2); }
+        
+        .badge-empty { background: #fff5f5; color: #e53e3e; border: 1px solid #fed7d7; }
 
         /* Modal Edit */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; justify-content: center; align-items: center; }
@@ -115,10 +130,7 @@
         .modal-header h3 { margin: 0; }
         .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-gray); }
 
-        @media (max-width: 768px) { 
-            form { grid-template-columns: 1fr; }
-            .archive-controls { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 768px) { form { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -189,18 +201,48 @@
 
         <!-- TAB 3: ARSIP DOKUMEN -->
         <div id="arsip" class="tab-content">
-            <!-- Kontrol Arsip Modern: Pencarian, Filter, Sort, & Refresh -->
+            <!-- Kontrol Arsip Berbasis Ikon Modern -->
             <div class="archive-controls">
                 <div class="search-box">
                     <input type="text" id="searchInput" placeholder="Cari nomor surat atau keterangan..." oninput="renderTabelArsip()">
                 </div>
-                <select id="filterDivisi" onchange="renderTabelArsip()" style="padding: 12px; border-radius: 10px; border: 1px solid var(--border-light); background: var(--bg-light);">
-                    <option value="">Semua Divisi</option>
-                </select>
-                <select id="sortOrder" onchange="renderTabelArsip()" style="padding: 12px; border-radius: 10px; border: 1px solid var(--border-light); background: var(--bg-light);">
-                    <option value="terbaru">Terbaru</option>
-                    <option value="terlama">Terlama</option>
-                </select>
+                
+                <!-- Tombol Ikon Filter -->
+                <div class="filter-dropdown-wrapper">
+                    <button class="icon-btn" onclick="toggleFilterMenu()" title="Filter Data">
+                        <svg viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
+                    </button>
+                    <!-- Menu Pop-up Filter -->
+                    <div id="filterMenu" class="filter-menu">
+                        <label>Divisi</label>
+                        <select id="filterDivisi" onchange="renderTabelArsip()">
+                            <option value="">Semua Divisi</option>
+                        </select>
+
+                        <label>Jenis Surat</label>
+                        <select id="filterJenis" onchange="renderTabelArsip()">
+                            <option value="">Semua Jenis</option>
+                        </select>
+
+                        <label>Tahun Akademik</label>
+                        <select id="filterTahunAkademik" onchange="renderTabelArsip()">
+                            <option value="">Semua Tahun</option>
+                        </select>
+
+                        <label>Berkas PDF</label>
+                        <select id="filterBerkas" onchange="renderTabelArsip()">
+                            <option value="">Semua Berkas</option>
+                            <option value="belum">Belum Ada PDF</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Tombol Ikon Urutkan (Sorting) -->
+                <button class="icon-btn" id="sortBtn" onclick="toggleSortOrder()" title="Urutan (Terbaru/Terlama)">
+                    <svg viewBox="0 0 24 24"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></svg>
+                </button>
+
+                <!-- Tombol Ikon Segarkan -->
                 <button class="icon-btn" onclick="muatDataReferensi()" title="Segarkan Data">
                     <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
                 </button>
@@ -268,7 +310,7 @@
     <script>
         const urlAPI = "https://script.google.com/macros/s/AKfycbyKRnIKopECo_pADMEP_Cw5soGivDREjgO_2TtmaJkbA2Ru-7mDz6bSlimcVi7FPLh_HQ/exec";
         window.arsipGlobal = [];
-        window.divisiListGlobal = [];
+        window.currentSort = 'terbaru'; // Default sort
 
         function showToast(pesan) {
             const toast = document.getElementById("toast");
@@ -284,7 +326,24 @@
             btnElement.classList.add('active');
         }
 
-        // Kalkulasi Tahun Akademik (1 Sept - 31 Agst)
+        function toggleFilterMenu() {
+            const menu = document.getElementById('filterMenu');
+            menu.classList.toggle('show');
+        }
+
+        function toggleSortOrder() {
+            window.currentSort = window.currentSort === 'terbaru' ? 'terlama' : 'terbaru';
+            showToast(`Urutan: ${window.currentSort === 'terbaru' ? 'Terbaru' : 'Terlama'}`);
+            renderTabelArsip();
+        }
+
+        // Tutup menu filter saat klik di luar
+        window.onclick = function(event) {
+            if (!event.target.closest('.filter-dropdown-wrapper')) {
+                document.getElementById('filterMenu').classList.remove('show');
+            }
+        };
+
         function hitungTahunAkademik(tanggalStr) {
             if (!tanggalStr) return "-";
             const dateObj = new Date(tanggalStr);
@@ -301,19 +360,30 @@
                 
                 if (hasil.status === "success") {
                     window.arsipGlobal = hasil.data;
-                    window.divisiListGlobal = hasil.kode_divisi;
 
+                    // Dropdown Tab 1
                     const selDivisi = document.getElementById('divisi');
                     selDivisi.innerHTML = `<option value="" disabled selected>-- Pilih Divisi --</option>` + 
                         hasil.kode_divisi.map(item => `<option value="${item.kode}">${item.nama}</option>`).join('');
 
+                    const selJenis = document.getElementById('jenis');
+                    selJenis.innerHTML = `<option value="" disabled selected>-- Pilih Jenis Surat --</option>` + 
+                        hasil.kode_surat.map(item => `<option value="${item.kode}">${item.nama}</option>`).join('');
+
+                    // Dropdown Filter Menu Arsip
                     const filterDivisi = document.getElementById('filterDivisi');
                     filterDivisi.innerHTML = `<option value="">Semua Divisi</option>` + 
                         hasil.kode_divisi.map(item => `<option value="${item.nama}">${item.nama}</option>`).join('');
 
-                    const selJenis = document.getElementById('jenis');
-                    selJenis.innerHTML = `<option value="" disabled selected>-- Pilih Jenis Surat --</option>` + 
-                        hasil.kode_surat.map(item => `<option value="${item.kode}">${item.nama}</option>`).join('');
+                    const filterJenis = document.getElementById('filterJenis');
+                    filterJenis.innerHTML = `<option value="">Semua Jenis</option>` + 
+                        hasil.kode_surat.map(item => `<option value="${item.nama}">${item.nama}</option>`).join('');
+
+                    // Ekstraksi Tahun Akademik Unik untuk Filter
+                    const setTahunAkademik = [...new Set(hasil.data.map(item => hitungTahunAkademik(item.tanggal)))].filter(t => t !== "-").sort().reverse();
+                    const filterTA = document.getElementById('filterTahunAkademik');
+                    filterTA.innerHTML = `<option value="">Semua Tahun</option>` + 
+                        setTahunAkademik.map(ta => `<option value="${ta}">${ta}</option>`).join('');
 
                     document.getElementById('loadingStatus').style.display = 'none';
                     renderTabelArsip();
@@ -323,23 +393,31 @@
             }
         }
 
-        // Render Tabel dengan Filter, Pencarian, & Sorting Modern
         function renderTabelArsip() {
             const keyword = document.getElementById('searchInput').value.toLowerCase();
-            const filterDivisiVal = document.getElementById('filterDivisi').value;
-            const sortOrder = document.getElementById('sortOrder').value;
+            const fDivisi = document.getElementById('filterDivisi').value;
+            const fJenis = document.getElementById('filterJenis').value;
+            const fTA = document.getElementById('filterTahunAkademik').value;
+            const fBerkas = document.getElementById('filterBerkas').value;
 
             let dataFiltered = window.arsipGlobal.filter(item => {
                 const matchKeyword = (item.nomor || "").toLowerCase().includes(keyword) || (item.keterangan || "").toLowerCase().includes(keyword);
-                const matchDivisi = filterDivisiVal === "" || item.divisi === filterDivisiVal;
-                return matchKeyword && matchDivisi;
+                const matchDivisi = fDivisi === "" || item.divisi === fDivisi;
+                const matchJenis = fJenis === "" || item.jenis === fJenis;
+                const matchTA = fTA === "" || hitungTahunAkademik(item.tanggal) === fTA;
+                
+                let matchBerkas = true;
+                if (fBerkas === "belum") {
+                    matchBerkas = !item.link || item.link.trim() === "";
+                }
+
+                return matchKeyword && matchDivisi && matchJenis && matchTA && matchBerkas;
             });
 
-            // Sorting
             dataFiltered.sort((a, b) => {
                 const dateA = new Date(a.tanggal);
                 const dateB = new Date(b.tanggal);
-                return sortOrder === 'terbaru' ? dateB - dateA : dateA - dateB;
+                return window.currentSort === 'terbaru' ? dateB - dateA : dateA - dateB;
             });
 
             const htmlBaris = dataFiltered.map(item => {
@@ -355,7 +433,7 @@
                         <td>${item.jenis}</td>
                         <td><strong>${item.nomor}</strong></td>
                         <td>${item.keterangan}</td>
-                        <td>${linkAman ? `<a href="${linkAman}" target="_blank" class="badge-pdf" title="Lihat Berkas PDF"><svg viewBox="0 0 24 24"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM9 9.5h1v-1H9v1zM14 9.5h1v-1h-1v1z"/></svg></a>` : '<span class="badge-empty">Belum ada</span>'}</td>
+                        <td>${linkAman ? `<a href="${linkAman}" target="_blank" class="badge-pdf" title="Lihat PDF"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5z"/></svg></a>` : '<span class="badge-empty">Belum ada</span>'}</td>
                         <td>
                             <button class="action-icon-btn" onclick="bukaModalEdit('${item.nomor}')" title="Edit Arsip">
                                 <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
@@ -368,7 +446,6 @@
             document.getElementById('badanTabel').innerHTML = htmlBaris || '<tr><td colspan="8" style="text-align:center; color:var(--text-gray); padding:30px;">Tidak ada arsip yang cocok.</td></tr>';
         }
 
-        // Kalkulasi Nomor Otomatis di Backend-Front Logic
         function generateNomorOtomatisPreview() {
             const tglVal = document.getElementById('tanggal').value;
             const divisiKode = document.getElementById('divisi').value;
@@ -426,7 +503,7 @@
             document.getElementById('modalEdit').style.display = 'none';
         }
 
-        // SUBMIT TAB 1: BUAT NOMOR & SALIN OTOMATIS
+        // SUBMIT TAB 1
         document.getElementById('formPenomoran').addEventListener('submit', async function(e) {
             e.preventDefault(); 
             const tombol = document.getElementById('btnSubmitPenomoran');
@@ -450,7 +527,6 @@
                 await fetch(urlAPI, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(dataBaru) });
                 this.reset();
                 
-                // Salin otomatis ke clipboard
                 navigator.clipboard.writeText(generatedNomor).then(() => {
                     showToast(`Nomor ${generatedNomor} dibuat & disalin!`);
                 }).catch(() => {
