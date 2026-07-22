@@ -23,7 +23,7 @@
             background-color: #ffffff; color: var(--text-dark); margin: 0; padding: 40px 20px;
         }
 
-        .container { max-width: 980px; margin: 0 auto; }
+        .container { max-width: 1050px; margin: 0 auto; }
         .header-section { text-align: center; margin-bottom: 30px; }
         .header-section h1 { font-size: 2.5rem; font-weight: 800; margin: 0 0 10px 0; }
         .header-section h1 span { color: var(--staiis-green); }
@@ -79,11 +79,11 @@
         }
         #toast.show { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        /* Kontrol Arsip & Filter Modern Berbasis Ikon */
+        /* Kontrol Arsip & Filter Modern Berbasis Ikon (Terpisah) */
         .archive-controls {
-            display: flex; gap: 10px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;
+            display: flex; gap: 15px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;
         }
-        .search-box { flex: 1; min-width: 220px; }
+        .search-box { flex: 1; min-width: 240px; }
         .search-box input { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-light); font-size: 14px; background: var(--bg-light); }
         
         .filter-dropdown-wrapper { position: relative; }
@@ -102,25 +102,34 @@
         .filter-menu.show { display: block; animation: fadeIn 0.2s; }
         .filter-menu label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-gray); margin-top: 10px; display: block; }
         .filter-menu select { width: 100%; padding: 8px 10px; margin-top: 4px; font-size: 13px; border-radius: 8px; border: 1px solid var(--border-light); }
+        
+        .reset-filter-btn {
+            background: #fff5f5; color: #e53e3e; border: 1px solid #fed7d7; width: 100%; margin-top: 15px; padding: 8px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s;
+        }
+        .reset-filter-btn:hover { background: #ffe3e3; }
 
         .table-container { overflow-x: auto; border: 1px solid var(--border-light); border-radius: 12px; background: white; }
         table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
         th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-light); }
-        th { font-weight: 600; background: var(--bg-light); font-size: 12px; text-transform: uppercase; color: var(--text-gray); }
+        th { font-weight: 600; background: var(--bg-light); font-size: 12px; text-transform: uppercase; color: var(--text-gray); white-space: nowrap; }
         tr:hover td { background-color: #fafafa; }
         
+        /* Pengaturan Lebar Kolom Tabel */
+        .col-tanggal { white-space: nowrap; width: 120px; }
+        .col-divisi { width: 90px; }
+        .col-nomor { white-space: nowrap; font-weight: bold; }
+        .col-keterangan { min-width: 250px; max-width: 350px; }
+
         .action-icon-btn { background: none; border: none; cursor: pointer; color: var(--text-gray); padding: 6px; border-radius: 6px; transition: all 0.2s; }
         .action-icon-btn:hover { background: var(--bg-light); color: var(--staiis-green); }
         .action-icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
         
-        /* Ukuran Seragam Badge PDF dan Kotak Kosong */
         .badge-pdf, .badge-empty { 
             display: inline-flex; align-items: center; justify-content: center; 
-            width: 75px; height: 28px; border-radius: 6px; font-size: 11.5px; font-weight: 600; text-decoration: none; 
+            width: 75px; height: 28px; border-radius: 6px; font-size: 11.5px; font-weight: 600; text-decoration: none; white-space: nowrap; 
         }
         .badge-pdf { background: rgba(18,130,70,0.1); color: var(--staiis-green); border: 1px solid rgba(18,130,70,0.2); }
         .badge-pdf:hover { background: rgba(18,130,70,0.2); }
-        
         .badge-empty { background: #fff5f5; color: #e53e3e; border: 1px solid #fed7d7; }
 
         /* Modal Edit */
@@ -201,18 +210,18 @@
 
         <!-- TAB 3: ARSIP DOKUMEN -->
         <div id="arsip" class="tab-content">
-            <!-- Kontrol Arsip Berbasis Ikon Modern -->
+            <!-- Kontrol Arsip Berbasis Ikon Modern dengan Jarak Terpisah -->
             <div class="archive-controls">
                 <div class="search-box">
                     <input type="text" id="searchInput" placeholder="Cari nomor surat atau keterangan..." oninput="renderTabelArsip()">
                 </div>
                 
-                <!-- Tombol Ikon Filter -->
+                <!-- Tombol Ikon Filter Terpisah -->
                 <div class="filter-dropdown-wrapper">
                     <button class="icon-btn" onclick="toggleFilterMenu()" title="Filter Data">
                         <svg viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
                     </button>
-                    <!-- Menu Pop-up Filter -->
+                    <!-- Menu Pop-up Filter dengan Tombol Reset -->
                     <div id="filterMenu" class="filter-menu">
                         <label>Divisi</label>
                         <select id="filterDivisi" onchange="renderTabelArsip()">
@@ -234,6 +243,8 @@
                             <option value="">Semua Berkas</option>
                             <option value="belum">Belum Ada PDF</option>
                         </select>
+
+                        <button type="button" class="reset-filter-btn" onclick="resetFilter()">Reset Filter</button>
                     </div>
                 </div>
 
@@ -252,12 +263,12 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Tanggal</th>
+                            <th class="col-tanggal">Tanggal</th>
                             <th>Tahun Akademik</th>
-                            <th>Divisi</th>
+                            <th class="col-divisi">Divisi</th>
                             <th>Jenis</th>
-                            <th>Nomor Surat</th>
-                            <th>Keterangan</th>
+                            <th class="col-nomor">Nomor Surat</th>
+                            <th class="col-keterangan">Keterangan</th>
                             <th>Berkas</th>
                             <th>Aksi</th>
                         </tr>
@@ -310,7 +321,7 @@
     <script>
         const urlAPI = "https://script.google.com/macros/s/AKfycbyKRnIKopECo_pADMEP_Cw5soGivDREjgO_2TtmaJkbA2Ru-7mDz6bSlimcVi7FPLh_HQ/exec";
         window.arsipGlobal = [];
-        window.currentSort = 'terbaru'; // Default sort
+        window.currentSort = 'terbaru';
 
         function showToast(pesan) {
             const toast = document.getElementById("toast");
@@ -331,18 +342,42 @@
             menu.classList.toggle('show');
         }
 
+        function resetFilter() {
+            document.getElementById('filterDivisi').value = "";
+            document.getElementById('filterJenis').value = "";
+            document.getElementById('filterTahunAkademik').value = "";
+            document.getElementById('filterBerkas').value = "";
+            renderTabelArsip();
+            showToast("Filter berhasil direset!");
+        }
+
         function toggleSortOrder() {
             window.currentSort = window.currentSort === 'terbaru' ? 'terlama' : 'terbaru';
             showToast(`Urutan: ${window.currentSort === 'terbaru' ? 'Terbaru' : 'Terlama'}`);
             renderTabelArsip();
         }
 
-        // Tutup menu filter saat klik di luar
         window.onclick = function(event) {
             if (!event.target.closest('.filter-dropdown-wrapper')) {
                 document.getElementById('filterMenu').classList.remove('show');
             }
         };
+
+        // Format Tanggal ke DD-MM-YYYY
+        function formatTanggalDDMMYYYY(tanggalStr) {
+            if (!tanggalStr) return "-";
+            const parts = tanggalStr.split('-');
+            if (parts.length === 3) {
+                // Jika format dari input date (YYYY-MM-DD)
+                return `${parts[2]}-${parts[1]}-${parts[0]}`;
+            }
+            const dateObj = new Date(tanggalStr);
+            if (isNaN(dateObj)) return tanggalStr;
+            const dd = String(dateObj.getDate()).padStart(2, '0');
+            const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const yyyy = dateObj.getFullYear();
+            return `${dd}-${mm}-${yyyy}`;
+        }
 
         function hitungTahunAkademik(tanggalStr) {
             if (!tanggalStr) return "-";
@@ -361,7 +396,6 @@
                 if (hasil.status === "success") {
                     window.arsipGlobal = hasil.data;
 
-                    // Dropdown Tab 1
                     const selDivisi = document.getElementById('divisi');
                     selDivisi.innerHTML = `<option value="" disabled selected>-- Pilih Divisi --</option>` + 
                         hasil.kode_divisi.map(item => `<option value="${item.kode}">${item.nama}</option>`).join('');
@@ -370,7 +404,6 @@
                     selJenis.innerHTML = `<option value="" disabled selected>-- Pilih Jenis Surat --</option>` + 
                         hasil.kode_surat.map(item => `<option value="${item.kode}">${item.nama}</option>`).join('');
 
-                    // Dropdown Filter Menu Arsip
                     const filterDivisi = document.getElementById('filterDivisi');
                     filterDivisi.innerHTML = `<option value="">Semua Divisi</option>` + 
                         hasil.kode_divisi.map(item => `<option value="${item.nama}">${item.nama}</option>`).join('');
@@ -379,7 +412,6 @@
                     filterJenis.innerHTML = `<option value="">Semua Jenis</option>` + 
                         hasil.kode_surat.map(item => `<option value="${item.nama}">${item.nama}</option>`).join('');
 
-                    // Ekstraksi Tahun Akademik Unik untuk Filter
                     const setTahunAkademik = [...new Set(hasil.data.map(item => hitungTahunAkademik(item.tanggal)))].filter(t => t !== "-").sort().reverse();
                     const filterTA = document.getElementById('filterTahunAkademik');
                     filterTA.innerHTML = `<option value="">Semua Tahun</option>` + 
@@ -423,17 +455,18 @@
             const htmlBaris = dataFiltered.map(item => {
                 let linkAman = item.link;
                 if (linkAman && !linkAman.startsWith('http')) linkAman = 'https://' + linkAman;
+                const tanggalFormatted = formatTanggalDDMMYYYY(item.tanggal);
                 const tahunAkademik = hitungTahunAkademik(item.tanggal);
                 
                 return `
                     <tr>
-                        <td>${item.tanggal}</td>
+                        <td class="col-tanggal">${tanggalFormatted}</td>
                         <td><span style="font-weight:600; color:var(--text-gray);">${tahunAkademik}</span></td>
-                        <td>${item.divisi}</td>
+                        <td class="col-divisi">${item.divisi}</td>
                         <td>${item.jenis}</td>
-                        <td><strong>${item.nomor}</strong></td>
-                        <td>${item.keterangan}</td>
-                        <td>${linkAman ? `<a href="${linkAman}" target="_blank" class="badge-pdf" title="Lihat PDF"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5z"/></svg></a>` : '<span class="badge-empty">Belum ada</span>'}</td>
+                        <td class="col-nomor">${item.nomor}</td>
+                        <td class="col-keterangan">${item.keterangan}</td>
+                        <td>${linkAman ? `<a href="${linkAman}" target="_blank" class="badge-pdf" title="Lihat PDF"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM9 9.5h1v-1H9v1zM14 9.5h1v-1h-1v1z"/></svg></a>` : '<span class="badge-empty">Belum ada</span>'}</td>
                         <td>
                             <button class="action-icon-btn" onclick="bukaModalEdit('${item.nomor}')" title="Edit Arsip">
                                 <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
