@@ -4,270 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Penomoran STAIIS</title>
-    <style>
-        html, body { margin: 0; padding: 0; box-sizing: border-box; }
-        *, *:before, *:after { box-sizing: inherit; }
-
-        :root {
-            --staiis-green: #128246;
-            --staiis-green-hover: #0e6b39;
-            --text-dark: #1f2124;
-            --text-gray: #5e6b73;
-            --bg-light: #f7f9fc;
-            --border-light: #e1e4e8;
-            --input-bg: #ffffff;
-            --warning-bg: #e8f5e9;
-            --warning-text: #1b5e20;
-            --warning-border: #a5d6a7;
-        }
-
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, sans-serif;
-            background-color: #ffffff; color: var(--text-dark); padding-bottom: 50px;
-        }
-
-        .container { max-width: 1050px; margin: 0 auto; padding: 30px 20px; }
-        
-        .header-section { text-align: center; margin-bottom: 20px; }
-        .header-section h1 { font-size: 2.5rem; font-weight: 800; margin: 0 0 10px 0; }
-        .header-section h1 span { color: var(--staiis-green); }
-        .header-section p { font-size: 1.1rem; color: var(--text-gray); margin: 0; }
-        
-        /* Tab Navigasi */
-        .tab-container { 
-            display: flex; 
-            border-bottom: 2px solid var(--border-light); 
-            margin-bottom: 20px; 
-            overflow-x: auto; 
-            background: #ffffff;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            height: 60px;
-            align-items: flex-end;
-        }
-        .tab-btn {
-            background: none; border: none; padding: 15px 25px; font-size: 15px; font-weight: 700;
-            color: var(--text-gray); cursor: pointer; transition: all 0.3s ease; position: relative; white-space: nowrap;
-        }
-        .tab-btn.active { color: var(--staiis-green); }
-        .tab-btn.active::after {
-            content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 3px;
-            background-color: var(--staiis-green); border-radius: 3px 3px 0 0;
-        }
-        
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.4s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .form-card { background: var(--bg-light); border: 1px solid var(--border-light); border-radius: 16px; padding: 35px; }
-        form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
-        
-        input, select { 
-            padding: 14px 16px; background: var(--input-bg); border: 1px solid var(--border-light); 
-            border-radius: 10px; font-size: 15px; outline: none; transition: all 0.2s ease; font-family: inherit;
-        }
-        input:focus, select:focus { border-color: var(--staiis-green); box-shadow: 0 0 0 3px rgba(18, 130, 70, 0.15); }
-        .full-width { grid-column: 1 / -1; }
-        
-        button.btn-primary { 
-            background: var(--staiis-green); color: white; border: none; padding: 16px; border-radius: 10px;
-            font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: all 0.2s;
-        }
-        button.btn-primary:hover:not(:disabled) { background: var(--staiis-green-hover); box-shadow: 0 6px 12px rgba(18, 130, 70, 0.3); }
-        button.btn-primary:disabled { background: #cbd5e0; cursor: wait; }
-
-        .file-upload-box { border: 2px dashed var(--border-light); padding: 30px; text-align: center; border-radius: 10px; background: white; }
-        
-        .reminder-box {
-            display: none; background: var(--warning-bg); border: 1px solid var(--warning-border);
-            color: var(--warning-text); padding: 15px 20px; border-radius: 10px; margin-bottom: 25px; font-size: 14px; line-height: 1.5;
-        }
-
-        #toast {
-            visibility: hidden; min-width: 250px; background-color: #212529; color: #fff; text-align: center;
-            border-radius: 8px; padding: 14px 20px; position: fixed; z-index: 1000; left: 50%; bottom: 30px;
-            transform: translateX(-50%); font-size: 14px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: visibility 0.5s, opacity 0.5s, transform 0.5s; opacity: 0;
-        }
-        #toast.show { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
-
-        /* KONTROL ARSIR & PENCARIAN STICKY BERSATU */
-        .archive-header-wrapper {
-            position: sticky;
-            top: 60px;
-            background: #ffffff;
-            z-index: 99;
-            padding-bottom: 5px;
-        }
-
-        .archive-controls {
-            display: flex; gap: 15px; align-items: center; flex-wrap: wrap; justify-content: space-between;
-            padding: 10px 0;
-        }
-        .search-box { width: 280px; }
-        .search-box input { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-light); font-size: 14px; background: var(--bg-light); }
-        
-        .archive-actions { display: flex; gap: 10px; align-items: center; }
-        .filter-dropdown-wrapper { position: relative; }
-        .icon-btn {
-            background: var(--bg-light); border: 1px solid var(--border-light); padding: 12px 15px; border-radius: 10px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; color: var(--text-dark);
-        }
-        .icon-btn:hover { background: #edf2f7; border-color: #cbd5e0; }
-        .icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
-        
-        .icon-btn.active-filter { background: var(--staiis-green); color: white; border-color: var(--staiis-green); }
-        .icon-btn.active-filter:hover { background: var(--staiis-green-hover); }
-        
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .spin { animation: spin 0.6s linear; }
-
-        .filter-menu {
-            display: none; position: absolute; right: 0; top: 50px; background: white; border: 1px solid var(--border-light);
-            border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 15px; z-index: 101; width: 260px;
-        }
-        .filter-menu.show { display: block; animation: fadeIn 0.2s; }
-        .filter-menu label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-gray); margin-top: 10px; display: block; }
-        .filter-menu select { width: 100%; padding: 8px 10px; margin-top: 4px; font-size: 13px; border-radius: 8px; border: 1px solid var(--border-light); }
-        
-        .reset-filter-btn {
-            background: var(--staiis-green); color: white; border: none; width: 100%; margin-top: 15px; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s;
-        }
-        .reset-filter-btn:hover { background: var(--staiis-green-hover); }
-
-        /* TABEL CONTAINER */
-        .table-scroll-wrapper {
-            overflow-x: auto;
-            overflow-y: auto;
-            max-height: calc(100vh - 220px); 
-            border: 1px solid var(--border-light);
-            border-radius: 12px;
-            background: white;
-            scrollbar-width: thin;
-        }
-
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        td { padding: 12px 14px; border-bottom: 1px solid var(--border-light); }
-        
-        /* HEADER TABEL STICKY TEPAT DI BAWAH PENCARIAN */
-        th { 
-            position: sticky;
-            top: 0; 
-            background: var(--bg-light) !important;
-            font-weight: 600; 
-            font-size: 11.5px; 
-            text-transform: uppercase; 
-            color: var(--text-gray); 
-            white-space: nowrap; 
-            text-align: center !important;
-            padding: 14px 12px;
-            border-bottom: 2px solid var(--border-light);
-            z-index: 98;
-            box-shadow: 0 2px 2px rgba(0,0,0,0.02);
-        }
-        tr:hover td { background-color: #fafafa; }
-        
-        .col-tanggal { white-space: nowrap; width: 85px; text-align: center; }
-        .col-ta { text-align: center; white-space: nowrap; width: 70px; }
-        .col-divisi { width: 60px; text-align: center; }
-        .col-jenis { width: 80px; text-align: center; }
-        .col-nomor { white-space: nowrap; font-weight: bold; font-size: 12.5px; }
-        
-        .col-keterangan { 
-            width: auto; 
-            max-width: 220px; 
-            white-space: normal; 
-            word-wrap: break-word; 
-            line-height: 1.4;
-        }
-        .col-berkas { text-align: center; width: 80px; }
-        .col-aksi { text-align: center; width: 40px; }
-
-        .action-icon-btn { background: none; border: none; cursor: pointer; color: var(--text-gray); padding: 6px; border-radius: 6px; transition: all 0.2s; }
-        .action-icon-btn:hover { background: var(--bg-light); color: var(--staiis-green); }
-        .action-icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
-        
-        .badge-pdf, .badge-empty { 
-            display: inline-flex; align-items: center; justify-content: center; 
-            width: 75px; height: 26px; border-radius: 6px; font-size: 11px; font-weight: 600; text-decoration: none; white-space: nowrap; 
-        }
-        .badge-pdf { background: var(--staiis-green); color: white; transition: background 0.2s; }
-        .badge-pdf:hover { background: var(--staiis-green-hover); }
-        .badge-empty { background: #fff5f5; color: #e53e3e; border: 1px solid #fed7d7; }
-
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-light); padding-bottom: 10px; }
-        .modal-header h3 { margin: 0; }
-        .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-gray); }
-
-        /* SCROLLBAR BAWAH (PROXY) TEPAT DI BAWAH TABEL */
-        .bottom-scrollbar-proxy {
-            width: 100%;
-            height: 14px;
-            overflow-x: auto;
-            overflow-y: hidden;
-            background: rgba(247, 249, 252, 0.95);
-            border: 1px solid var(--border-light);
-            border-top: none;
-            border-bottom-left-radius: 12px;
-            border-bottom-right-radius: 12px;
-            display: none;
-            margin-top: -1px;
-        }
-        .bottom-scrollbar-content { height: 1px; }
-
-        @media (max-width: 768px) { form { grid-template-columns: 1fr; } }
-    </style>
+    
+    <!-- Font Modern dari Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- Memanggil file CSS yang sudah dipisah -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="container">
-        <div class="header-section">
-            <h1>Sistem Penomoran <span>STAIIS</span></h1>
-            <p>Aplikasi pembuatan nomor surat dan arsip dokumen digital.</p>
+    <!-- HEADER MODERN -->
+    <header class="header-section">
+        <div class="header-container">
+            <span class="overline">LAYANAN ADMINISTRASI SURAT • 2026</span>
+            <h1 class="header-title">Sistem Penomoran STAIIS</h1>
+            <p class="header-subtitle">Aplikasi pembuatan nomor surat resmi dan arsip dokumen digital.</p>
+            
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchTab('penomoran', this)">Ambil Nomor</button>
+                <button class="nav-tab" onclick="switchTab('upload', this)">Upload Scan</button>
+                <button class="nav-tab" onclick="switchTab('arsip', this)">Arsip Dokumen</button>
+            </div>
         </div>
+    </header>
 
-        <div class="tab-container">
-            <button class="tab-btn active" onclick="switchTab('penomoran', this)">Ambil Nomor Surat</button>
-            <button class="tab-btn" onclick="switchTab('upload', this)">Upload Berkas Scan</button>
-            <button class="tab-btn" onclick="switchTab('arsip', this)">Arsip Dokumen</button>
-        </div>
+    <!-- KONTEN UTAMA -->
+    <main class="main-content">
 
         <!-- TAB 1: AMBIL NOMOR SURAT -->
-        <div id="penomoran" class="tab-content active form-card">
+        <div id="penomoran" class="tab-content active form-section">
             
-           <div id="reminderBox" class="reminder-box" style="display: none; position: relative; padding-right: 35px;">
-        <div>
-            ✨ <strong>Nomor berhasil direkam!</strong> Silakan cetak dan tandatangani surat terlebih dahulu, lalu unggah hasil scan PDF-nya melalui menu <strong>"Upload Berkas Scan"</strong>.
-        </div>
-        <button type="button" onclick="document.getElementById('reminderBox').style.display='none'" style="position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 22px; cursor: pointer; font-weight: bold; padding: 0; line-height: 1;">&times;</button>
-    </div>
+            <div id="reminderBox" class="reminder-box">
+                ✨ <strong>Nomor berhasil direkam!</strong> Silakan cetak dan tandatangani surat terlebih dahulu, lalu unggah hasil scan PDF-nya melalui menu <strong>"Upload Scan"</strong>.
+                <button type="button" class="reminder-close" onclick="document.getElementById('reminderBox').style.display='none'">&times;</button>
+            </div>
 
             <div id="loadingStatus" style="margin-bottom:15px; color:var(--text-gray); font-size:14px;">Memuat data referensi...</div>
+            
             <form id="formPenomoran">
                 <div class="form-group">
-                    <label>Tanggal Surat</label>
-                    <input type="date" id="tanggal" required>
+                    <label class="form-label">Tanggal Surat</label>
+                    <input type="date" id="tanggal" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label>Nama Divisi</label>
-                    <select id="divisi" required>
+                    <label class="form-label">Nama Divisi</label>
+                    <select id="divisi" class="form-control" required>
                         <option value="" disabled selected>Memuat referensi...</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Jenis Surat</label>
-                    <select id="jenis" required>
+                    <label class="form-label">Jenis Surat</label>
+                    <select id="jenis" class="form-control" required>
                         <option value="" disabled selected>Memuat referensi...</option>
                     </select>
                 </div>
 
                 <div class="form-group full-width">
-                    <label>Keterangan (Wajib Diisi)</label>
-                    <input type="text" id="keterangan" required placeholder="Catatan perihal surat..." autocomplete="off">
+                    <label class="form-label">Keterangan (Wajib Diisi)</label>
+                    <input type="text" id="keterangan" class="form-control" required placeholder="Catatan perihal surat..." autocomplete="off">
                 </div>
 
                 <button type="submit" id="btnSubmitPenomoran" class="btn-primary full-width">Buat Nomor</button>
@@ -275,29 +69,29 @@
         </div>
 
         <!-- TAB 2: UPLOAD BERKAS SCAN -->
-        <div id="upload" class="tab-content form-card">
+        <div id="upload" class="tab-content form-section">
             <form id="formUpload">
                 <div class="form-group full-width">
-                    <label>Nomor Surat (Tanpa Spasi)</label>
-                    <input type="text" id="upload_nomor" required placeholder="Contoh: 001/Ket-SK/STAIIS/VII/2026" 
+                    <label class="form-label">Nomor Surat (Tanpa Spasi)</label>
+                    <input type="text" id="upload_nomor" class="form-control" required placeholder="Contoh: 001/Ket-SK/STAIIS/VII/26" 
                            pattern="[^\s]+" title="Tidak boleh ada spasi" oninput="this.value = this.value.replace(/\s/g, '')">
                 </div>
                 <div class="form-group full-width file-upload-box">
-                    <label>Upload Hasil Scan (Format PDF)</label>
-                    <input type="file" id="upload_file" accept=".pdf" required>
+                    <label class="form-label" style="margin-bottom: 15px;">Upload Hasil Scan (Format PDF)</label>
+                    <input type="file" id="upload_file" class="form-control" accept=".pdf" required>
                 </div>
                 <button type="submit" id="btnSubmitUpload" class="btn-primary full-width">Upload</button>
             </form>
         </div>
 
-        <!-- TAB 3: ARsip DOKUMEN -->
-        <div id="arsip" class="tab-content">
+        <!-- TAB 3: ARSIP DOKUMEN -->
+        <div id="arsip" class="tab-content form-section">
             
-            <!-- Pencarian & Kontrol Sticky di Bawah Tab -->
             <div class="archive-header-wrapper">
                 <div class="archive-controls">
                     <div class="search-box">
-                        <input type="text" id="searchInput" placeholder="Cari nomor / keterangan..." oninput="renderTabelArsip()">
+                        <!-- Perhatikan penambahan debounceSearch() di sini -->
+                        <input type="text" id="searchInput" class="form-control" placeholder="Cari nomor / keterangan..." oninput="debounceSearch()">
                     </div>
                     
                     <div class="archive-actions">
@@ -307,26 +101,16 @@
                             </button>
                             <div id="filterMenu" class="filter-menu">
                                 <label>Divisi</label>
-                                <select id="filterDivisi" onchange="renderTabelArsip()">
-                                    <option value="">Semua Divisi</option>
-                                </select>
-
+                                <select id="filterDivisi" onchange="renderTabelArsip()"><option value="">Semua Divisi</option></select>
                                 <label>Jenis Surat</label>
-                                <select id="filterJenis" onchange="renderTabelArsip()">
-                                    <option value="">Semua Jenis</option>
-                                </select>
-
+                                <select id="filterJenis" onchange="renderTabelArsip()"><option value="">Semua Jenis</option></select>
                                 <label>Tahun Akademik</label>
-                                <select id="filterTahunAkademik" onchange="renderTabelArsip()">
-                                    <option value="">Semua Tahun</option>
-                                </select>
-
+                                <select id="filterTahunAkademik" onchange="renderTabelArsip()"><option value="">Semua Tahun</option></select>
                                 <label>Berkas PDF</label>
                                 <select id="filterBerkas" onchange="renderTabelArsip()">
                                     <option value="">Semua Berkas</option>
                                     <option value="belum">Belum Ada PDF</option>
                                 </select>
-
                                 <button type="button" class="reset-filter-btn" onclick="resetFilter()">Reset Filter</button>
                             </div>
                         </div>
@@ -334,7 +118,6 @@
                         <button class="icon-btn" id="sortBtn" onclick="toggleSortOrder()" title="Urutan (Terbaru/Terlama)">
                             <svg id="sortIcon" viewBox="0 0 24 24"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></svg>
                         </button>
-
                         <button class="icon-btn" id="refreshBtn" onclick="handleRefresh()" title="Segarkan Data">
                             <svg id="refreshIcon" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
                         </button>
@@ -342,7 +125,6 @@
                 </div>
             </div>
 
-            <!-- Wrapper Tabel -->
             <div class="table-scroll-wrapper" id="tableScrollWrapper">
                 <table id="mainTable">
                     <thead>
@@ -363,17 +145,16 @@
                 </table>
             </div>
 
-            <!-- Scrollbar Bawah Tepat di Bawah Tabel -->
             <div class="bottom-scrollbar-proxy" id="bottomScrollProxy" onscroll="syncScroll('proxy')">
                 <div class="bottom-scrollbar-content" id="bottomScrollContent"></div>
             </div>
         </div>
-    </div>
 
-    <!-- TOAST NOTIFICATION -->
+    </main>
+
+    <!-- TOAST & MODAL -->
     <div id="toast">Pesan notifikasi</div>
 
-    <!-- MODAL EDIT DOKUMEN -->
     <div id="modalEdit" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -383,455 +164,32 @@
             <form id="formEdit">
                 <input type="hidden" id="edit_old_nomor">
                 <div class="form-group full-width">
-                    <label>Tanggal Surat</label>
-                    <input type="text" id="edit_tanggal" required>
+                    <label class="form-label">Tanggal Surat</label>
+                    <input type="text" id="edit_tanggal" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label>Divisi</label>
-                    <input type="text" id="edit_divisi" required>
+                    <label class="form-label">Divisi</label>
+                    <input type="text" id="edit_divisi" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label>Jenis</label>
-                    <input type="text" id="edit_jenis" required>
+                    <label class="form-label">Jenis</label>
+                    <input type="text" id="edit_jenis" class="form-control" required>
                 </div>
                 <div class="form-group full-width">
-                    <label>Nomor Surat</label>
-                    <input type="text" id="edit_nomor" required>
+                    <label class="form-label">Nomor Surat</label>
+                    <input type="text" id="edit_nomor" class="form-control" required>
                 </div>
                 <div class="form-group full-width">
-                    <label>Keterangan</label>
-                    <input type="text" id="edit_keterangan" required>
+                    <label class="form-label">Keterangan</label>
+                    <input type="text" id="edit_keterangan" class="form-control" required>
                 </div>
                 <button type="submit" id="btnSubmitEdit" class="btn-primary full-width">Simpan Perubahan</button>
             </form>
         </div>
     </div>
 
-    <script>
-        const urlAPI = "https://script.google.com/macros/s/AKfycbyKRnIKopECo_pADMEP_Cw5soGivDREjgO_2TtmaJkbA2Ru-7mDz6bSlimcVi7FPLh_HQ/exec";
-        window.arsipGlobal = [];
-        window.currentSort = 'terbaru';
-
-        const tableWrapper = document.getElementById('tableScrollWrapper');
-        const bottomProxy = document.getElementById('bottomScrollProxy');
-        const bottomContent = document.getElementById('bottomScrollContent');
-        const mainTable = document.getElementById('mainTable');
-
-        function updateProxyWidth() {
-            if (mainTable && bottomContent) {
-                if (mainTable.scrollWidth > tableWrapper.clientWidth) {
-                    bottomProxy.style.display = 'block';
-                    bottomContent.style.width = mainTable.scrollWidth + 'px';
-                } else {
-                    bottomProxy.style.display = 'none';
-                }
-            }
-        }
-
-        function syncScroll(source) {
-            if (source === 'proxy') {
-                tableWrapper.scrollLeft = bottomProxy.scrollLeft;
-            } else {
-                bottomProxy.scrollLeft = tableWrapper.scrollLeft;
-            }
-        }
-
-        tableWrapper.addEventListener('scroll', () => syncScroll('table'));
-        window.addEventListener('resize', updateProxyWidth);
-
-        function showToast(pesan) {
-            const toast = document.getElementById("toast");
-            toast.innerText = pesan;
-            toast.className = "show";
-            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
-        }
-
-        function switchTab(tabId, btnElement) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            btnElement.classList.add('active');
-            
-            document.getElementById('reminderBox').style.display = 'none';
-            
-            if (tabId === 'arsip') {
-                setTimeout(updateProxyWidth, 100);
-            } else {
-                document.getElementById('bottomScrollProxy').style.display = 'none';
-            }
-        }
-
-        function toggleFilterMenu() {
-            const menu = document.getElementById('filterMenu');
-            menu.classList.toggle('show');
-        }
-
-        function updateFilterButtonState() {
-            const fDivisi = document.getElementById('filterDivisi').value;
-            const fJenis = document.getElementById('filterJenis').value;
-            const fTA = document.getElementById('filterTahunAkademik').value;
-            const fBerkas = document.getElementById('filterBerkas').value;
-            const filterBtn = document.getElementById('filterBtn');
-
-            if (fDivisi !== "" || fJenis !== "" || fTA !== "" || fBerkas !== "") {
-                filterBtn.classList.add('active-filter');
-            } else {
-                filterBtn.classList.remove('active-filter');
-            }
-        }
-
-        function resetFilter() {
-            document.getElementById('filterDivisi').value = "";
-            document.getElementById('filterJenis').value = "";
-            document.getElementById('filterTahunAkademik').value = "";
-            document.getElementById('filterBerkas').value = "";
-            updateFilterButtonState();
-            renderTabelArsip();
-            showToast("Filter berhasil direset!");
-        }
-
-        function updateSortIcon() {
-            const sortIcon = document.getElementById('sortIcon');
-            const sortBtn = document.getElementById('sortBtn');
-            if (window.currentSort === 'terbaru') {
-                sortIcon.innerHTML = '<path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/>';
-                sortBtn.title = "Urutan: Terbaru ke Terlama";
-            } else {
-                sortIcon.innerHTML = '<path d="M3 6h6v2H3V6zm0 12h18v-2H3v2zm0-7h12v2H3v-2z"/>';
-                sortBtn.title = "Urutan: Terlama ke Terbaru";
-            }
-        }
-
-        function toggleSortOrder() {
-            window.currentSort = window.currentSort === 'terbaru' ? 'terlama' : 'terbaru';
-            updateSortIcon();
-            showToast(`Urutan diubah ke: ${window.currentSort === 'terbaru' ? 'Terbaru' : 'Terlama'}`);
-            renderTabelArsip();
-        }
-
-        function handleRefresh() {
-            const refreshIcon = document.getElementById('refreshIcon');
-            refreshIcon.classList.add('spin');
-            
-            muatDataReferensi().then(() => {
-                setTimeout(() => {
-                    refreshIcon.classList.remove('spin');
-                    showToast("Data arsip berhasil disegarkan!");
-                }, 400);
-            });
-        }
-
-        window.onclick = function(event) {
-            if (!event.target.closest('.filter-dropdown-wrapper')) {
-                document.getElementById('filterMenu').classList.remove('show');
-            }
-        };
-
-        function formatTanggalDDMMYYYY(tanggalStr) {
-            if (!tanggalStr) return "-";
-            const parts = tanggalStr.split('-');
-            if (parts.length === 3) {
-                return `${parts[2]}-${parts[1]}-${parts[0]}`;
-            }
-            const dateObj = new Date(tanggalStr);
-            if (isNaN(dateObj)) return tanggalStr;
-            const dd = String(dateObj.getDate()).padStart(2, '0');
-            const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
-            const yyyy = dateObj.getFullYear();
-            return `${dd}-${mm}-${yyyy}`;
-        }
-
-        function hitungTahunAkademik(tanggalStr) {
-            if (!tanggalStr) return "-";
-            const dateObj = new Date(tanggalStr);
-            if (isNaN(dateObj)) return "-";
-            const tahun = dateObj.getFullYear();
-            const bulan = dateObj.getMonth() + 1;
-            return bulan >= 9 ? `${tahun}/${tahun + 1}` : `${tahun - 1}/${tahun}`;
-        }
-
-        async function muatDataReferensi() {
-            try {
-                const res = await fetch(urlAPI);
-                const hasil = await res.json();
-                
-                if (hasil.status === "success") {
-                    window.arsipGlobal = hasil.data;
-
-                    const selDivisi = document.getElementById('divisi');
-                    selDivisi.innerHTML = `<option value="" disabled selected>-- Pilih Divisi --</option>` + 
-                        hasil.kode_divisi.map(item => `<option value="${item.kode}">${item.nama}</option>`).join('');
-
-                    const selJenis = document.getElementById('jenis');
-                    selJenis.innerHTML = `<option value="" disabled selected>-- Pilih Jenis Surat --</option>` + 
-                        hasil.kode_surat.map(item => `<option value="${item.kode}">${item.nama}</option>`).join('');
-
-                    const filterDivisi = document.getElementById('filterDivisi');
-                    filterDivisi.innerHTML = `<option value="">Semua Divisi</option>` + 
-                        hasil.kode_divisi.map(item => `<option value="${item.nama}">${item.nama}</option>`).join('');
-
-                    const filterJenis = document.getElementById('filterJenis');
-                    filterJenis.innerHTML = `<option value="">Semua Jenis</option>` + 
-                        hasil.kode_surat.map(item => `<option value="${item.nama}">${item.nama}</option>`).join('');
-
-                    const setTahunAkademik = [...new Set(hasil.data.map(item => hitungTahunAkademik(item.tanggal)))].filter(t => t !== "-").sort().reverse();
-                    const filterTA = document.getElementById('filterTahunAkademik');
-                    filterTA.innerHTML = `<option value="">Semua Tahun</option>` + 
-                        setTahunAkademik.map(ta => `<option value="${ta}">${ta}</option>`).join('');
-
-                    document.getElementById('loadingStatus').style.display = 'none';
-                    renderTabelArsip();
-                }
-            } catch (err) {
-                document.getElementById('badanTabel').innerHTML = '<tr><td colspan="8" style="text-align:center; color:red;">Gagal memuat data.</td></tr>';
-            }
-        }
-
-        function renderTabelArsip() {
-            updateFilterButtonState();
-            updateSortIcon();
-
-            const keyword = document.getElementById('searchInput').value.toLowerCase();
-            const fDivisi = document.getElementById('filterDivisi').value;
-            const fJenis = document.getElementById('filterJenis').value;
-            const fTA = document.getElementById('filterTahunAkademik').value;
-            const fBerkas = document.getElementById('filterBerkas').value;
-
-            let dataFiltered = window.arsipGlobal.filter(item => {
-                const matchKeyword = (item.nomor || "").toLowerCase().includes(keyword) || (item.keterangan || "").toLowerCase().includes(keyword);
-                const matchDivisi = fDivisi === "" || item.divisi === fDivisi;
-                const matchJenis = fJenis === "" || item.jenis === fJenis;
-                const matchTA = fTA === "" || hitungTahunAkademik(item.tanggal) === fTA;
-                
-                let matchBerkas = true;
-                if (fBerkas === "belum") {
-                    matchBerkas = !item.link || item.link.trim() === "";
-                }
-
-                return matchKeyword && matchDivisi && matchJenis && matchTA && matchBerkas;
-            });
-
-            dataFiltered.sort((a, b) => {
-                const dateA = new Date(a.tanggal);
-                const dateB = new Date(b.tanggal);
-                return window.currentSort === 'terbaru' ? dateB - dateA : dateA - dateB;
-            });
-
-            const htmlBaris = dataFiltered.map(item => {
-                let linkAman = item.link;
-                if (linkAman && !linkAman.startsWith('http')) linkAman = 'https://' + linkAman;
-                const tanggalFormatted = formatTanggalDDMMYYYY(item.tanggal);
-                const tahunAkademik = hitungTahunAkademik(item.tanggal);
-                
-                return `
-                    <tr>
-                        <td class="col-tanggal">${tanggalFormatted}</td>
-                        <td class="col-ta"><span style="font-weight:600; color:var(--text-gray);">${tahunAkademik}</span></td>
-                        <td class="col-divisi">${item.divisi}</td>
-                        <td class="col-jenis">${item.jenis}</td>
-                        <td class="col-nomor">${item.nomor}</td>
-                        <td class="col-keterangan">${item.keterangan}</td>
-                        <td class="col-berkas">${linkAman ? `<a href="${linkAman}" target="_blank" class="badge-pdf" title="Lihat PDF"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM9 9.5h1v-1H9v1zM14 9.5h1v-1h-1v1z"/></svg></a>` : '<span class="badge-empty">Belum ada</span>'}</td>
-                        <td class="col-aksi">
-                            <button class="action-icon-btn" onclick="bukaModalEdit('${item.nomor}')" title="Edit Arsip">
-                                <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-            
-            document.getElementById('badanTabel').innerHTML = htmlBaris || '<tr><td colspan="8" style="text-align:center; color:var(--text-gray); padding:30px;">Tidak ada arsip yang cocok.</td></tr>';
-            setTimeout(updateProxyWidth, 50);
-        }
-
-      function generateNomorOtomatisPreview() {
-    const tglVal = document.getElementById('tanggal').value;
-    const divisiKode = document.getElementById('divisi').value;
-    const jenisKode = document.getElementById('jenis').value;
-    if (!tglVal) return "";
-
-    const inputDate = new Date(tglVal);
-    const inputYear = inputDate.getFullYear();
-    const inputMonth = inputDate.getMonth() + 1;
-    const labelTarget = inputMonth >= 9 ? `${inputYear}-${inputYear+1}` : `${inputYear-1}-${inputYear}`;
+    <!-- Memanggil file JavaScript yang sudah dipisah -->
+    <script src="script.js"></script>
     
-    const romanMap = { "I":1, "II":2, "III":3, "IV":4, "V":5, "VI":6, "VII":7, "VIII":8, "IX":9, "X":10, "XI":11, "XII":12 };
-    const arrayRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
-    const inputRomawi = arrayRomawi[inputMonth - 1];
-
-    let maxUrutan = 0;
-    window.arsipGlobal.forEach(item => {
-        const parts = (item.nomor || "").split('/');
-        
-        if (parts.length >= 5) {
-            const seq = parseInt(parts[0], 10);
-            const bulanLamaRomawi = parts[parts.length - 2];
-            let tahunLama = parseInt(parts[parts.length - 1], 10);
-            
-            // --- PERBAIKAN: Ubah paksa tahun 2 digit (misal: 26) menjadi 4 digit (2026) agar sinkron ---
-            if (tahunLama < 100) {
-                tahunLama += 2000;
-            }
-
-            const bulanLamaInt = romanMap[bulanLamaRomawi];
-
-            if (!isNaN(seq) && !isNaN(tahunLama) && bulanLamaInt) {
-                const labelLama = bulanLamaInt >= 9 ? `${tahunLama}-${tahunLama+1}` : `${tahunLama-1}-${tahunLama}`;
-                
-                if (labelLama === labelTarget && seq > maxUrutan) {
-                    maxUrutan = seq;
-                }
-            }
-        }
-    });
-
-    const urutanSelanjutnya = String(maxUrutan + 1).padStart(3, '0');
-    const stringDivisiKode = [divisiKode, jenisKode].filter(Boolean).join('-');
-    
-    let komponenNomor = [urutanSelanjutnya];
-    if (stringDivisiKode) komponenNomor.push(stringDivisiKode);
-    
-    // --- FORMAT TAHUN BARU ---
-    // Menggunakan .slice(-2) agar nomor yang di-generate konsisten berakhiran 2 digit (contoh: /26)
-    // Jika Anda ingin 4 digit, ganti "tahunOutput" di bawah dengan "inputYear"
-    const tahunOutput = String(inputYear).slice(-2);
-    
-    komponenNomor.push("STAIIS", inputRomawi, tahunOutput);
-    return komponenNomor.join('/');
-}
-        function bukaModalEdit(nomor) {
-            const dataRow = window.arsipGlobal.find(item => item.nomor === nomor);
-            if(dataRow) {
-                document.getElementById('edit_old_nomor').value = dataRow.nomor;
-                document.getElementById('edit_tanggal').value = dataRow.tanggal;
-                document.getElementById('edit_divisi').value = dataRow.divisi;
-                document.getElementById('edit_jenis').value = dataRow.jenis;
-                document.getElementById('edit_nomor').value = dataRow.nomor;
-                document.getElementById('edit_keterangan').value = dataRow.keterangan;
-                document.getElementById('modalEdit').style.display = 'flex';
-            }
-        }
-
-        function tutupModal() {
-            document.getElementById('modalEdit').style.display = 'none';
-        }
-
-        document.getElementById('formPenomoran').addEventListener('submit', async function(e) {
-            e.preventDefault(); 
-            const tombol = document.getElementById('btnSubmitPenomoran');
-            tombol.innerText = "Membuat Nomor...";
-            tombol.disabled = true;
-
-            const elDivisi = document.getElementById('divisi');
-            const elJenis = document.getElementById('jenis');
-            const generatedNomor = generateNomorOtomatisPreview();
-
-            const dataBaru = {
-                action: "create",
-                tanggal: document.getElementById('tanggal').value,
-                divisi: elDivisi.options[elDivisi.selectedIndex].text, 
-                jenis: elJenis.options[elJenis.selectedIndex].text,
-                nomor: generatedNomor, 
-                keterangan: document.getElementById('keterangan').value
-            };
-
-            try {
-                await fetch(urlAPI, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(dataBaru) });
-                this.reset();
-                
-                navigator.clipboard.writeText(generatedNomor).then(() => {
-                    showToast(`Nomor ${generatedNomor} dibuat & disalin!`);
-                }).catch(() => {
-                    showToast("Nomor berhasil dibuat!");
-                });
-                
-                document.getElementById('reminderBox').style.display = 'block';
-                muatDataReferensi();
-            } catch (err) {
-                showToast("Terjadi kesalahan jaringan.");
-            } finally {
-                tombol.innerText = "Buat Nomor";
-                tombol.disabled = false;
-            }
-        });
-
-        document.getElementById('formEdit').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const tombol = document.getElementById('btnSubmitEdit');
-            tombol.innerText = "Menyimpan...";
-            tombol.disabled = true;
-
-            const updateData = {
-                action: "edit",
-                old_nomor: document.getElementById('edit_old_nomor').value,
-                tanggal: document.getElementById('edit_tanggal').value,
-                divisi: document.getElementById('edit_divisi').value,
-                jenis: document.getElementById('edit_jenis').value,
-                nomor: document.getElementById('edit_nomor').value,
-                keterangan: document.getElementById('edit_keterangan').value
-            };
-
-            try {
-                const response = await fetch(urlAPI, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(updateData) });
-                const result = await response.json();
-                
-                if (result.status === "success") {
-                    showToast("Perubahan berhasil disimpan!");
-                    tutupModal();
-                    muatDataReferensi();
-                } else {
-                    showToast("Gagal: " + result.message);
-                }
-            } catch (err) {
-                showToast("Kesalahan jaringan.");
-            } finally {
-                tombol.innerText = "Simpan Perubahan";
-                tombol.disabled = false;
-            }
-        });
-
-        document.getElementById('formUpload').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const tombol = document.getElementById('btnSubmitUpload');
-            const file = document.getElementById('upload_file').files[0];
-            if (!file) return showToast("Pilih file PDF terlebih dahulu.");
-
-            tombol.innerText = "Mengupload...";
-            tombol.disabled = true;
-
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = async function () {
-                const uploadPayload = {
-                    action: "upload",
-                    nomor: document.getElementById('upload_nomor').value,
-                    filename: file.name,
-                    mimeType: file.type,
-                    base64: reader.result.split(',')[1]
-                };
-
-                try {
-                    const response = await fetch(urlAPI, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(uploadPayload) });
-                    const result = await response.json();
-
-                    if (result.status === "success") {
-                        showToast("Berkas PDF berhasil diupload!");
-                        document.getElementById('formUpload').reset();
-                        muatDataReferensi();
-                    } else {
-                        showToast("Gagal: " + result.message);
-                    }
-                } catch (err) {
-                    showToast("Kesalahan jaringan saat mengupload file.");
-                } finally {
-                    tombol.innerText = "Upload";
-                    tombol.disabled = false;
-                }
-            };
-        });
-
-        muatDataReferensi();
-    </script>
 </body>
 </html>
