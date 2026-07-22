@@ -239,11 +239,11 @@
         <!-- TAB 1: AMBIL NOMOR SURAT -->
         <div id="penomoran" class="tab-content active form-card">
             
-           <div id="reminderBox" class="reminder-box" style="display: none; justify-content: space-between; align-items: center;">
+           <div id="reminderBox" class="reminder-box" style="display: none; position: relative; padding-right: 35px;">
         <div>
             ✨ <strong>Nomor berhasil direkam!</strong> Silakan cetak dan tandatangani surat terlebih dahulu, lalu unggah hasil scan PDF-nya melalui menu <strong>"Upload Berkas Scan"</strong>.
         </div>
-        <button type="button" onclick="document.getElementById('reminderBox').style.display='none'" style="background:none; border:none; font-size:16px; cursor:pointer; color:var(--warning-text); margin-left:10px; font-weight:bold;">&times;</button>
+        <button type="button" onclick="document.getElementById('reminderBox').style.display='none'" style="position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 22px; cursor: pointer; font-weight: bold; padding: 0; line-height: 1;">&times;</button>
     </div>
 
             <div id="loadingStatus" style="margin-bottom:15px; color:var(--text-gray); font-size:14px;">Memuat data referensi...</div>
