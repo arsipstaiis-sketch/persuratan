@@ -40,9 +40,9 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            height: 60px; /* Tinggi presisi untuk tumpukan sticky */
+            height: 60px;
             box-sizing: border-box;
-            align-items: flex-end; /* Agar garis bawah pas */
+            align-items: flex-end;
         }
         .tab-btn {
             background: none; border: none; padding: 15px 25px; font-size: 15px; font-weight: 700;
@@ -94,7 +94,7 @@
         /* Kontrol Arsip - Sticky di Bawah Tab (top: 60px) */
         .archive-controls-sticky {
             position: sticky;
-            top: 60px; /* Menyambung pas dengan Tab */
+            top: 60px;
             background: #ffffff;
             z-index: 99;
             padding: 10px 0 15px 0;
@@ -132,10 +132,10 @@
         }
         .reset-filter-btn:hover { background: var(--staiis-green-hover); }
 
-        /* Tabel Wrapper & Scrollbar Bawah Layar */
+        /* Tabel Wrapper */
         .table-scroll-wrapper {
             overflow: auto;
-            max-height: calc(100vh - 160px); /* Menyesuaikan otomatis tinggi sisa layar */
+            max-height: calc(100vh - 160px); 
             border: 1px solid var(--border-light);
             border-radius: 12px;
             background: white;
@@ -157,36 +157,47 @@
         }
         .bottom-scrollbar-content { height: 1px; }
 
-        table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-        td { padding: 14px 16px; border-bottom: 1px solid var(--border-light); }
+        /* Penyesuaian font-size tabel agar lebih ramping secara keseluruhan */
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        td { padding: 12px 14px; border-bottom: 1px solid var(--border-light); }
         
-        /* Header Tabel Sticky di bagian dalam (top: 0 menghapus baris tambahan putih) */
+        /* Header Tabel Sticky di bagian dalam */
         th { 
             position: sticky;
             top: 0; /* ZERO GAP */
             background: var(--bg-light) !important;
             font-weight: 600; 
-            font-size: 12px; 
+            font-size: 11.5px; 
             text-transform: uppercase; 
             color: var(--text-gray); 
             white-space: nowrap; 
             text-align: center !important;
-            padding: 14px 16px;
+            padding: 14px 12px;
             border-bottom: 2px solid var(--border-light);
             z-index: 98;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.03); /* Bayangan halus */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03); 
         }
 
         tr:hover td { background-color: #fafafa; }
         
-        .col-tanggal { white-space: nowrap; width: 110px; text-align: center; }
-        .col-ta { text-align: center; white-space: nowrap; }
-        .col-divisi { width: 75px; text-align: center; }
-        .col-jenis { width: 75px; text-align: center; }
-        .col-nomor { white-space: nowrap; font-weight: bold; }
-        .col-keterangan { min-width: 250px; max-width: 350px; }
-        .col-berkas { text-align: center; }
-        .col-aksi { text-align: center; }
+        /* PENGATURAN LEBAR KOLOM (DIPERBARUI) */
+        .col-tanggal { white-space: nowrap; width: 85px; text-align: center; }
+        .col-ta { text-align: center; white-space: nowrap; width: 70px; }
+        .col-divisi { width: 60px; text-align: center; }
+        .col-jenis { width: 80px; text-align: center; }
+        .col-nomor { white-space: nowrap; font-weight: bold; font-size: 12.5px; }
+        
+        /* Kolom Keterangan dibuat auto menyesuaikan, teks bisa turun ke bawah */
+        .col-keterangan { 
+            width: auto; 
+            max-width: 220px; /* Batas maksimal agar tidak mendorong tabel ke samping */
+            white-space: normal; /* Mengizinkan teks turun ke baris baru */
+            word-wrap: break-word; /* Mencegah teks panjang merusak layout */
+            line-height: 1.4;
+        }
+        
+        .col-berkas { text-align: center; width: 80px; }
+        .col-aksi { text-align: center; width: 40px; }
 
         .action-icon-btn { background: none; border: none; cursor: pointer; color: var(--text-gray); padding: 6px; border-radius: 6px; transition: all 0.2s; }
         .action-icon-btn:hover { background: var(--bg-light); color: var(--staiis-green); }
@@ -194,7 +205,7 @@
         
         .badge-pdf, .badge-empty { 
             display: inline-flex; align-items: center; justify-content: center; 
-            width: 75px; height: 28px; border-radius: 6px; font-size: 11.5px; font-weight: 600; text-decoration: none; white-space: nowrap; 
+            width: 75px; height: 26px; border-radius: 6px; font-size: 11px; font-weight: 600; text-decoration: none; white-space: nowrap; 
         }
         .badge-pdf { background: var(--staiis-green); color: white; transition: background 0.2s; }
         .badge-pdf:hover { background: var(--staiis-green-hover); }
@@ -403,7 +414,13 @@
 
         function updateProxyWidth() {
             if (mainTable && bottomContent) {
-                bottomContent.style.width = mainTable.scrollWidth + 'px';
+                // Periksa apakah tabel benar-benar butuh scrollbar
+                if (mainTable.scrollWidth > tableWrapper.clientWidth) {
+                    bottomProxy.style.display = 'block';
+                    bottomContent.style.width = mainTable.scrollWidth + 'px';
+                } else {
+                    bottomProxy.style.display = 'none';
+                }
             }
         }
 
@@ -432,8 +449,7 @@
             btnElement.classList.add('active');
             
             if (tabId === 'arsip') {
-                document.getElementById('bottomScrollProxy').style.display = 'block';
-                updateProxyWidth();
+                setTimeout(updateProxyWidth, 100);
             } else {
                 document.getElementById('bottomScrollProxy').style.display = 'none';
             }
