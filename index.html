@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Penomoran STAIIS</title>
     <style>
-        /* Global Reset untuk meminimalisir tabrakan padding */
         html, body { margin: 0; padding: 0; box-sizing: border-box; }
         *, *:before, *:after { box-sizing: inherit; }
 
@@ -24,7 +23,7 @@
 
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, sans-serif;
-            background-color: #ffffff; color: var(--text-dark);
+            background-color: #ffffff; color: var(--text-dark); padding-bottom: 50px;
         }
 
         .container { max-width: 1050px; margin: 0 auto; padding: 30px 20px; }
@@ -94,14 +93,18 @@
         }
         #toast.show { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        /* KONTROL ARSIP */
-        .archive-controls-sticky {
+        /* KONTROL ARSIR & PENCARIAN STICKY BERSATU */
+        .archive-header-wrapper {
             position: sticky;
             top: 60px;
             background: #ffffff;
             z-index: 99;
-            padding: 10px 0 15px 0;
+            padding-bottom: 5px;
+        }
+
+        .archive-controls {
             display: flex; gap: 15px; align-items: center; flex-wrap: wrap; justify-content: space-between;
+            padding: 10px 0;
         }
         .search-box { width: 280px; }
         .search-box input { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-light); font-size: 14px; background: var(--bg-light); }
@@ -134,35 +137,21 @@
         }
         .reset-filter-btn:hover { background: var(--staiis-green-hover); }
 
-        /* TABEL WRAPPER STANDAR */
+        /* TABEL CONTAINER */
         .table-scroll-wrapper {
-            overflow: auto;
-            max-height: calc(100vh - 160px); 
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: calc(100vh - 220px); 
             border: 1px solid var(--border-light);
             border-radius: 12px;
             background: white;
             scrollbar-width: thin;
         }
-        
-        /* SCROLLBAR BAWAH (PROXY) */
-        .bottom-scrollbar-proxy {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 14px;
-            overflow-x: auto;
-            overflow-y: hidden;
-            z-index: 999;
-            background: rgba(247, 249, 252, 0.95);
-            border-top: 1px solid var(--border-light);
-            display: none;
-        }
-        .bottom-scrollbar-content { height: 1px; }
 
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
         td { padding: 12px 14px; border-bottom: 1px solid var(--border-light); }
         
+        /* HEADER TABEL STICKY TEPAT DI BAWAH PENCARIAN */
         th { 
             position: sticky;
             top: 0; 
@@ -176,6 +165,7 @@
             padding: 14px 12px;
             border-bottom: 2px solid var(--border-light);
             z-index: 98;
+            box-shadow: 0 2px 2px rgba(0,0,0,0.02);
         }
         tr:hover td { background-color: #fafafa; }
         
@@ -213,59 +203,21 @@
         .modal-header h3 { margin: 0; }
         .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-gray); }
 
-        /* =========================================================
-           KUNCI PERBAIKAN: MODE ARSIP (FULL HEIGHT APP) & SCROLLBAR
-           ========================================================= */
-        
-        /* 1. Modifikasi Scrollbar agar TIKDAK MENIMPA HEADER th */
-        .table-scroll-wrapper::-webkit-scrollbar {
-            width: 12px;
-            height: 12px;
+        /* SCROLLBAR BAWAH (PROXY) TEPAT DI BAWAH TABEL */
+        .bottom-scrollbar-proxy {
+            width: 100%;
+            height: 14px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            background: rgba(247, 249, 252, 0.95);
+            border: 1px solid var(--border-light);
+            border-top: none;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            display: none;
+            margin-top: -1px;
         }
-        .table-scroll-wrapper::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 0 0 12px 12px;
-            /* Memberikan jeda khusus agar scrollbar icon dimulai SETELAH border bawah header tabel */
-            margin-top: 47px; 
-            margin-bottom: 5px;
-        }
-        .table-scroll-wrapper::-webkit-scrollbar-thumb {
-            background-color: var(--staiis-green);
-            border-radius: 6px;
-            border: 3px solid #f1f1f1; /* Efek padding di sekeliling thumb */
-        }
-
-        /* 2. Mengunci halaman penuh saat tab Arsip aktif agar th TIDAK TERPOTONG */
-        body.arsip-mode {
-            height: 100vh;
-            overflow: hidden; /* Mengunci scroll bar utama browser */
-        }
-        body.arsip-mode .container {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            padding-bottom: 20px;
-        }
-        body.arsip-mode #arsip {
-            display: flex !important; /* Timpa display block */
-            flex-direction: column;
-            flex-grow: 1;
-            overflow: hidden;
-        }
-        body.arsip-mode .archive-controls-sticky {
-            position: relative; /* Karena page tidak scroll, ini tidak perlu sticky lagi */
-            top: 0;
-            padding-bottom: 12px;
-        }
-        body.arsip-mode .table-scroll-wrapper {
-            flex-grow: 1; /* Biarkan wrapper mengisi 100% sisa ruang secara otomatis */
-            max-height: none;
-            overflow: auto; /* Hanya tabel ini yang akan di-scroll secara vertikal! */
-            margin-bottom: 0;
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-            border-top: none; /* Menyatu dengan garis bawah archive-controls */
-        }
+        .bottom-scrollbar-content { height: 1px; }
 
         @media (max-width: 768px) { form { grid-template-columns: 1fr; } }
     </style>
@@ -335,52 +287,55 @@
             </form>
         </div>
 
-        <!-- TAB 3: ARSIP DOKUMEN -->
+        <!-- TAB 3: ARsip DOKUMEN -->
         <div id="arsip" class="tab-content">
             
-            <div class="archive-controls-sticky">
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Cari nomor / keterangan..." oninput="renderTabelArsip()">
-                </div>
-                
-                <div class="archive-actions">
-                    <div class="filter-dropdown-wrapper">
-                        <button class="icon-btn" id="filterBtn" onclick="toggleFilterMenu()" title="Filter Data">
-                            <svg viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
-                        </button>
-                        <div id="filterMenu" class="filter-menu">
-                            <label>Divisi</label>
-                            <select id="filterDivisi" onchange="renderTabelArsip()">
-                                <option value="">Semua Divisi</option>
-                            </select>
-
-                            <label>Jenis Surat</label>
-                            <select id="filterJenis" onchange="renderTabelArsip()">
-                                <option value="">Semua Jenis</option>
-                            </select>
-
-                            <label>Tahun Akademik</label>
-                            <select id="filterTahunAkademik" onchange="renderTabelArsip()">
-                                <option value="">Semua Tahun</option>
-                            </select>
-
-                            <label>Berkas PDF</label>
-                            <select id="filterBerkas" onchange="renderTabelArsip()">
-                                <option value="">Semua Berkas</option>
-                                <option value="belum">Belum Ada PDF</option>
-                            </select>
-
-                            <button type="button" class="reset-filter-btn" onclick="resetFilter()">Reset Filter</button>
-                        </div>
+            <!-- Pencarian & Kontrol Sticky di Bawah Tab -->
+            <div class="archive-header-wrapper">
+                <div class="archive-controls">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Cari nomor / keterangan..." oninput="renderTabelArsip()">
                     </div>
+                    
+                    <div class="archive-actions">
+                        <div class="filter-dropdown-wrapper">
+                            <button class="icon-btn" id="filterBtn" onclick="toggleFilterMenu()" title="Filter Data">
+                                <svg viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
+                            </button>
+                            <div id="filterMenu" class="filter-menu">
+                                <label>Divisi</label>
+                                <select id="filterDivisi" onchange="renderTabelArsip()">
+                                    <option value="">Semua Divisi</option>
+                                </select>
 
-                    <button class="icon-btn" id="sortBtn" onclick="toggleSortOrder()" title="Urutan (Terbaru/Terlama)">
-                        <svg id="sortIcon" viewBox="0 0 24 24"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></svg>
-                    </button>
+                                <label>Jenis Surat</label>
+                                <select id="filterJenis" onchange="renderTabelArsip()">
+                                    <option value="">Semua Jenis</option>
+                                </select>
 
-                    <button class="icon-btn" id="refreshBtn" onclick="handleRefresh()" title="Segarkan Data">
-                        <svg id="refreshIcon" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
-                    </button>
+                                <label>Tahun Akademik</label>
+                                <select id="filterTahunAkademik" onchange="renderTabelArsip()">
+                                    <option value="">Semua Tahun</option>
+                                </select>
+
+                                <label>Berkas PDF</label>
+                                <select id="filterBerkas" onchange="renderTabelArsip()">
+                                    <option value="">Semua Berkas</option>
+                                    <option value="belum">Belum Ada PDF</option>
+                                </select>
+
+                                <button type="button" class="reset-filter-btn" onclick="resetFilter()">Reset Filter</button>
+                            </div>
+                        </div>
+
+                        <button class="icon-btn" id="sortBtn" onclick="toggleSortOrder()" title="Urutan (Terbaru/Terlama)">
+                            <svg id="sortIcon" viewBox="0 0 24 24"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></svg>
+                        </button>
+
+                        <button class="icon-btn" id="refreshBtn" onclick="handleRefresh()" title="Segarkan Data">
+                            <svg id="refreshIcon" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -404,12 +359,12 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-    </div>
 
-    <!-- Scrollbar Bawah Layar -->
-    <div class="bottom-scrollbar-proxy" id="bottomScrollProxy" onscroll="syncScroll('proxy')">
-        <div class="bottom-scrollbar-content" id="bottomScrollContent"></div>
+            <!-- Scrollbar Bawah Tepat di Bawah Tabel -->
+            <div class="bottom-scrollbar-proxy" id="bottomScrollProxy" onscroll="syncScroll('proxy')">
+                <div class="bottom-scrollbar-content" id="bottomScrollContent"></div>
+            </div>
+        </div>
     </div>
 
     <!-- TOAST NOTIFICATION -->
@@ -454,7 +409,6 @@
         window.arsipGlobal = [];
         window.currentSort = 'terbaru';
 
-        // Script Sinkronisasi Proxy Scrollbar Bawah
         const tableWrapper = document.getElementById('tableScrollWrapper');
         const bottomProxy = document.getElementById('bottomScrollProxy');
         const bottomContent = document.getElementById('bottomScrollContent');
@@ -495,12 +449,9 @@
             document.getElementById(tabId).classList.add('active');
             btnElement.classList.add('active');
             
-            // Aktivasi Mode Arsip (Terkunci Full Height)
             if (tabId === 'arsip') {
-                document.body.classList.add('arsip-mode');
                 setTimeout(updateProxyWidth, 100);
             } else {
-                document.body.classList.remove('arsip-mode');
                 document.getElementById('bottomScrollProxy').style.display = 'none';
             }
         }
