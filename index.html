@@ -79,13 +79,17 @@
         }
         #toast.show { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        /* Kontrol Arsip & Filter Berbasis Ikon (Pencarian Dibuat Lebih Ramping) */
+        /* Kontrol Arsip (Pencarian dan Tombol Terpisah) */
         .archive-controls {
-            display: flex; gap: 15px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;
+            display: flex; gap: 15px; margin-bottom: 20px; align-items: center; flex-wrap: wrap; justify-content: space-between;
         }
-        .search-box { width: 280px; } /* Lebar kolom pencarian dibatasi agar tidak terlalu panjang */
+        .search-box { width: 280px; }
         .search-box input { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-light); font-size: 14px; background: var(--bg-light); }
         
+        .archive-actions {
+            display: flex; gap: 10px; align-items: center;
+        }
+
         .filter-dropdown-wrapper { position: relative; }
         .icon-btn {
             background: var(--bg-light); border: 1px solid var(--border-light); padding: 12px 15px; border-radius: 10px;
@@ -93,6 +97,16 @@
         }
         .icon-btn:hover { background: #edf2f7; border-color: #cbd5e0; }
         .icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
+        
+        /* Tombol Filter Aktif (Berwarna Hijau) */
+        .icon-btn.active-filter {
+            background: var(--staiis-green);
+            color: white;
+            border-color: var(--staiis-green);
+        }
+        .icon-btn.active-filter:hover {
+            background: var(--staiis-green-hover);
+        }
         
         /* Popup Menu Filter Ikon */
         .filter-menu {
@@ -103,7 +117,6 @@
         .filter-menu label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-gray); margin-top: 10px; display: block; }
         .filter-menu select { width: 100%; padding: 8px 10px; margin-top: 4px; font-size: 13px; border-radius: 8px; border: 1px solid var(--border-light); }
         
-        /* Tombol Reset Filter Berwarna Hijau */
         .reset-filter-btn {
             background: var(--staiis-green); color: white; border: none; width: 100%; margin-top: 15px; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s;
         }
@@ -115,7 +128,6 @@
         th { font-weight: 600; background: var(--bg-light); font-size: 12px; text-transform: uppercase; color: var(--text-gray); white-space: nowrap; }
         tr:hover td { background-color: #fafafa; }
         
-        /* Pengaturan Lebar Kolom Tabel */
         .col-tanggal { white-space: nowrap; width: 120px; }
         .col-divisi { width: 90px; }
         .col-nomor { white-space: nowrap; font-weight: bold; }
@@ -125,7 +137,6 @@
         .action-icon-btn:hover { background: var(--bg-light); color: var(--staiis-green); }
         .action-icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
         
-        /* Ikon PDF Berlatar Belakang Hijau dengan Ikon Putih */
         .badge-pdf, .badge-empty { 
             display: inline-flex; align-items: center; justify-content: center; 
             width: 75px; height: 28px; border-radius: 6px; font-size: 11.5px; font-weight: 600; text-decoration: none; white-space: nowrap; 
@@ -134,7 +145,6 @@
         .badge-pdf:hover { background: var(--staiis-green-hover); }
         .badge-empty { background: #fff5f5; color: #e53e3e; border: 1px solid #fed7d7; }
 
-        /* Modal Edit */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-light); padding-bottom: 10px; }
@@ -212,53 +222,55 @@
 
         <!-- TAB 3: ARSIP DOKUMEN -->
         <div id="arsip" class="tab-content">
-            <!-- Kontrol Arsip (Kolom pencarian ramping dan terpisah dari ikon filter) -->
+            <!-- Kontrol Arsip: Pencarian di kiri, Grup Aksi (Filter, Sort, Refresh) di kanan -->
             <div class="archive-controls">
                 <div class="search-box">
                     <input type="text" id="searchInput" placeholder="Cari nomor / keterangan..." oninput="renderTabelArsip()">
                 </div>
                 
-                <!-- Tombol Ikon Filter -->
-                <div class="filter-dropdown-wrapper">
-                    <button class="icon-btn" onclick="toggleFilterMenu()" title="Filter Data">
-                        <svg viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
-                    </button>
-                    <!-- Menu Pop-up Filter -->
-                    <div id="filterMenu" class="filter-menu">
-                        <label>Divisi</label>
-                        <select id="filterDivisi" onchange="renderTabelArsip()">
-                            <option value="">Semua Divisi</option>
-                        </select>
+                <div class="archive-actions">
+                    <!-- Tombol Ikon Filter -->
+                    <div class="filter-dropdown-wrapper">
+                        <button class="icon-btn" id="filterBtn" onclick="toggleFilterMenu()" title="Filter Data">
+                            <svg viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
+                        </button>
+                        <!-- Menu Pop-up Filter -->
+                        <div id="filterMenu" class="filter-menu">
+                            <label>Divisi</label>
+                            <select id="filterDivisi" onchange="renderTabelArsip()">
+                                <option value="">Semua Divisi</option>
+                            </select>
 
-                        <label>Jenis Surat</label>
-                        <select id="filterJenis" onchange="renderTabelArsip()">
-                            <option value="">Semua Jenis</option>
-                        </select>
+                            <label>Jenis Surat</label>
+                            <select id="filterJenis" onchange="renderTabelArsip()">
+                                <option value="">Semua Jenis</option>
+                            </select>
 
-                        <label>Tahun Akademik</label>
-                        <select id="filterTahunAkademik" onchange="renderTabelArsip()">
-                            <option value="">Semua Tahun</option>
-                        </select>
+                            <label>Tahun Akademik</label>
+                            <select id="filterTahunAkademik" onchange="renderTabelArsip()">
+                                <option value="">Semua Tahun</option>
+                            </select>
 
-                        <label>Berkas PDF</label>
-                        <select id="filterBerkas" onchange="renderTabelArsip()">
-                            <option value="">Semua Berkas</option>
-                            <option value="belum">Belum Ada PDF</option>
-                        </select>
+                            <label>Berkas PDF</label>
+                            <select id="filterBerkas" onchange="renderTabelArsip()">
+                                <option value="">Semua Berkas</option>
+                                <option value="belum">Belum Ada PDF</option>
+                            </select>
 
-                        <button type="button" class="reset-filter-btn" onclick="resetFilter()">Reset Filter</button>
+                            <button type="button" class="reset-filter-btn" onclick="resetFilter()">Reset Filter</button>
+                        </div>
                     </div>
+
+                    <!-- Tombol Ikon Urutkan (Sorting) -->
+                    <button class="icon-btn" id="sortBtn" onclick="toggleSortOrder()" title="Urutan (Terbaru/Terlama)">
+                        <svg viewBox="0 0 24 24"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></svg>
+                    </button>
+
+                    <!-- Tombol Ikon Segarkan -->
+                    <button class="icon-btn" onclick="muatDataReferensi()" title="Segarkan Data">
+                        <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                    </button>
                 </div>
-
-                <!-- Tombol Ikon Urutkan (Sorting) -->
-                <button class="icon-btn" id="sortBtn" onclick="toggleSortOrder()" title="Urutan (Terbaru/Terlama)">
-                    <svg viewBox="0 0 24 24"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></svg>
-                </button>
-
-                <!-- Tombol Ikon Segarkan -->
-                <button class="icon-btn" onclick="muatDataReferensi()" title="Segarkan Data">
-                    <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
-                </button>
             </div>
 
             <div class="table-container">
@@ -344,11 +356,27 @@
             menu.classList.toggle('show');
         }
 
+        // Cek apakah filter sedang aktif untuk mengubah warna tombol menjadi hijau
+        function updateFilterButtonState() {
+            const fDivisi = document.getElementById('filterDivisi').value;
+            const fJenis = document.getElementById('filterJenis').value;
+            const fTA = document.getElementById('filterTahunAkademik').value;
+            const fBerkas = document.getElementById('filterBerkas').value;
+            const filterBtn = document.getElementById('filterBtn');
+
+            if (fDivisi !== "" || fJenis !== "" || fTA !== "" || fBerkas !== "") {
+                filterBtn.classList.add('active-filter');
+            } else {
+                filterBtn.classList.remove('active-filter');
+            }
+        }
+
         function resetFilter() {
             document.getElementById('filterDivisi').value = "";
             document.getElementById('filterJenis').value = "";
             document.getElementById('filterTahunAkademik').value = "";
             document.getElementById('filterBerkas').value = "";
+            updateFilterButtonState();
             renderTabelArsip();
             showToast("Filter berhasil direset!");
         }
@@ -426,6 +454,8 @@
         }
 
         function renderTabelArsip() {
+            updateFilterButtonState();
+
             const keyword = document.getElementById('searchInput').value.toLowerCase();
             const fDivisi = document.getElementById('filterDivisi').value;
             const fJenis = document.getElementById('filterJenis').value;
