@@ -153,12 +153,25 @@ function hitungTahunAkademik(tanggalStr) {
 
 async function muatDataReferensi() {
     try {
+        // 1. INGAT/SIMPAN STATUS FILTER SAAT INI SEBELUM DATA DI-REFRESH
+        const filterDivisiEl = document.getElementById('filterDivisi');
+        const filterJenisEl = document.getElementById('filterJenis');
+        const filterTAEl = document.getElementById('filterTahunAkademik');
+        const filterBerkasEl = document.getElementById('filterBerkas');
+
+        const valDivisi = filterDivisiEl ? filterDivisiEl.value : "";
+        const valJenis = filterJenisEl ? filterJenisEl.value : "";
+        const valTA = filterTAEl ? filterTAEl.value : "";
+        const valBerkas = filterBerkasEl ? filterBerkasEl.value : "";
+
+        // Mengambil data terbaru dari Google Sheet
         const res = await fetch(urlAPI);
         const hasil = await res.json();
         
         if (hasil.status === "success") {
             window.arsipGlobal = hasil.data;
 
+            // Memperbarui dropdown Form Penomoran
             const selDivisi = document.getElementById('divisi');
             if (selDivisi) {
                 selDivisi.innerHTML = `<option value="" disabled selected>-- Pilih Divisi --</option>` + 
@@ -171,27 +184,34 @@ async function muatDataReferensi() {
                     hasil.kode_surat.map(item => `<option value="${item.kode}">${item.nama}</option>`).join('');
             }
 
-            const filterDivisi = document.getElementById('filterDivisi');
-            if (filterDivisi) {
-                filterDivisi.innerHTML = `<option value="">Semua Divisi</option>` + 
+            // Memperbarui dropdown Filter DAN MENGEMBALIKAN NILAI YANG DIINGAT (Disimpan)
+            if (filterDivisiEl) {
+                filterDivisiEl.innerHTML = `<option value="">Semua Divisi</option>` + 
                     hasil.kode_divisi.map(item => `<option value="${item.nama}">${item.nama}</option>`).join('');
+                filterDivisiEl.value = valDivisi; // Kembalikan ke pilihan terakhir pengguna
             }
 
-            const filterJenis = document.getElementById('filterJenis');
-            if (filterJenis) {
-                filterJenis.innerHTML = `<option value="">Semua Jenis</option>` + 
+            if (filterJenisEl) {
+                filterJenisEl.innerHTML = `<option value="">Semua Jenis</option>` + 
                     hasil.kode_surat.map(item => `<option value="${item.nama}">${item.nama}</option>`).join('');
+                filterJenisEl.value = valJenis; // Kembalikan ke pilihan terakhir pengguna
             }
 
             const setTahunAkademik = [...new Set(hasil.data.map(item => hitungTahunAkademik(item.tanggal)))].filter(t => t !== "-").sort().reverse();
-            const filterTA = document.getElementById('filterTahunAkademik');
-            if (filterTA) {
-                filterTA.innerHTML = `<option value="">Semua Tahun</option>` + 
+            if (filterTAEl) {
+                filterTAEl.innerHTML = `<option value="">Semua Tahun</option>` + 
                     setTahunAkademik.map(ta => `<option value="${ta}">${ta}</option>`).join('');
+                filterTAEl.value = valTA; // Kembalikan ke pilihan terakhir pengguna
+            }
+
+            if (filterBerkasEl) {
+                filterBerkasEl.value = valBerkas; // Kembalikan status filter berkas
             }
 
             const loading = document.getElementById('loadingStatus');
             if (loading) loading.style.display = 'none';
+            
+            // Render tabel menggunakan kondisi filter yang sudah di-restore
             renderTabelArsip();
         }
     } catch (err) {
