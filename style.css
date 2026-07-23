@@ -149,11 +149,11 @@ form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 }
 
 .action-icon-btn svg { 
-    width: 16px; 
+   width: 16px; 
     height: 16px; 
-    fill: none; /* Matikan isian padat */
-    stroke: currentColor; /* Gunakan warna garis */
-    stroke-width: 2;
+    fill: none; /* Menghilangkan warna blok/padat */
+    stroke: currentColor; /* Menghidupkan garis tepi ikon */
+    stroke-width: 2; /* Ketebalan garis pensil dan kotak */
     stroke-linecap: round; 
     stroke-linejoin: round;
 }
