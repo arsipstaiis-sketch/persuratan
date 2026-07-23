@@ -288,40 +288,54 @@ tr:hover td { background-color: #fafafa; }
 /* Wadah fleksibel untuk menyandingkan Nomor dan Tombol Copy */
 .result-number-container {
     display: flex;
-    align-items: stretch; /* Membuat tinggi tombol sejajar dengan kotak nomor */
+    align-items: stretch; 
     justify-content: center;
-    gap: 10px;
+    gap: 8px; /* Jarak dirapatkan sedikit */
     margin-bottom: 12px;
+    width: 100%;
 }
 .result-number {
-    font-size: 20px;
+    font-size: 15px; /* Ukuran diperkecil agar elegan dan pas di HP */
     font-weight: 700;
     color: var(--primary-dark);
-    padding: 10px 18px;
+    padding: 10px 14px;
     background: white;
     border: 1px solid #bbf7d0;
     border-radius: 8px;
-    word-break: break-all;
-    /* user-select: all dihapus, kita andalkan ikon copy */
+    
+    /* KUNCI 1 BARIS: Memaksa teks tidak turun ke bawah */
+    white-space: nowrap; 
+    overflow-x: auto; /* Jika nomor sangat panjang, pengguna bisa menggesernya */
+    scrollbar-width: none; /* Menyembunyikan garis scroll agar tetap rapi */
+    
+    flex-grow: 1; /* Kotak nomor menyesuaikan sisa ruang */
+    text-align: center;
 }
-/* Gaya untuk tombol ikon copy di sebelahnya */
+/* Menyembunyikan scrollbar untuk browser Chrome/Safari di dalam kotak nomor */
+.result-number::-webkit-scrollbar { 
+    display: none; 
+}
+
+/* Tombol Copy yang lebih modern dan ringkas */
 .copy-btn {
-    background: var(--staiis-green);
-    color: white;
-    border: none;
+    background: var(--bg-light);
+    color: var(--staiis-green);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: 0 15px;
+    padding: 0 16px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(18, 130, 70, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0; /* KUNCI 1 BARIS: Mencegah tombol ikut mengecil/tergencet di HP */
 }
 .copy-btn:hover {
-    background: var(--primary-dark);
-    transform: translateY(-2px); /* Efek melayang */
-    box-shadow: 0 4px 8px rgba(18, 130, 70, 0.3);
+    background: var(--staiis-green);
+    color: white;
+    border-color: var(--staiis-green);
+    transform: translateY(-2px); 
+    box-shadow: 0 4px 8px rgba(18, 130, 70, 0.2);
 }
 .result-desc {
     font-size: 14px;
