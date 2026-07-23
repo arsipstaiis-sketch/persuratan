@@ -367,6 +367,16 @@ function tutupModal() {
 function tutupResultBox() {
     document.getElementById('resultBox').style.display = 'none';
 }
+function copyResultNumber() {
+    const teksNomor = document.getElementById('resultNumberText').innerText;
+    if (teksNomor) {
+        navigator.clipboard.writeText(teksNomor).then(() => {
+            showToast("Nomor berhasil disalin!");
+        }).catch(() => {
+            showToast("Gagal menyalin nomor, silakan blok manual.");
+        });
+    }
+}
 const formPenomoran = document.getElementById('formPenomoran');
 if (formPenomoran) {
     formPenomoran.addEventListener('submit', async function(e) {
@@ -388,24 +398,18 @@ if (formPenomoran) {
             keterangan: document.getElementById('keterangan').value
         };
 
-        try {
+       try {
             await fetch(urlAPI, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(dataBaru) });
             this.reset();
             
-            // Menyalin otomatis ke clipboard pengguna
-            navigator.clipboard.writeText(generatedNomor).then(() => {
-                showToast(`Nomor ${generatedNomor} dibuat & disalin otomatis!`);
-            }).catch(() => {
-                showToast("Nomor berhasil dibuat!");
-            });
+            // Auto-copy sudah dihilangkan. Hanya menampilkan notifikasi dasar.
+            showToast("Nomor berhasil direkam ke arsip!");
             
             document.getElementById('reminderBox').style.display = 'block';
             
-            // --- KODE BARU: Menampilkan Kotak Hasil ---
             document.getElementById('resultNumberText').innerText = generatedNomor;
             document.getElementById('resultDescText').innerText = dataBaru.keterangan;
             document.getElementById('resultBox').style.display = 'block';
-            // ------------------------------------------
 
             muatDataReferensi();
         } catch (err) {
