@@ -285,22 +285,48 @@ tr:hover td { background-color: #fafafa; }
     text-transform: uppercase;
     margin-bottom: 8px;
 }
+/* Wadah fleksibel untuk menyandingkan Nomor dan Tombol Copy */
+.result-number-container {
+    display: flex;
+    align-items: stretch; /* Membuat tinggi tombol sejajar dengan kotak nomor */
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
 .result-number {
     font-size: 20px;
     font-weight: 700;
     color: var(--primary-dark);
-    margin-bottom: 12px;
-    padding: 12px;
+    padding: 10px 18px;
     background: white;
     border: 1px solid #bbf7d0;
     border-radius: 8px;
-    user-select: all; /* Kunci efisiensi: Satu kali klik otomatis mem-blok semua teks */
     word-break: break-all;
+    /* user-select: all dihapus, kita andalkan ikon copy */
+}
+/* Gaya untuk tombol ikon copy di sebelahnya */
+.copy-btn {
+    background: var(--staiis-green);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(18, 130, 70, 0.2);
+}
+.copy-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px); /* Efek melayang */
+    box-shadow: 0 4px 8px rgba(18, 130, 70, 0.3);
 }
 .result-desc {
     font-size: 14px;
     color: var(--text-dark);
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     line-height: 1.5;
 }
 .result-note {
