@@ -49,7 +49,14 @@
                 ✨ <strong>Nomor berhasil direkam!</strong> Silakan cetak dan tandatangani surat terlebih dahulu, lalu unggah hasil scan PDF-nya melalui menu <strong>"Upload Scan"</strong>.
                 <button type="button" class="reminder-close" onclick="document.getElementById('reminderBox').style.display='none'">&times;</button>
             </div>
-
+            <!-- KOTAK HASIL GENERATE (Muncul setelah submit) -->
+            <div id="resultBox" class="result-box">
+                <button type="button" class="result-close" onclick="tutupResultBox()">&times;</button>
+                <div class="result-label">Nomor Surat Anda:</div>
+                <div class="result-number" id="resultNumberText" title="Klik/Tahan untuk menyalin"></div>
+                <div class="result-desc"><strong>Keterangan:</strong> <span id="resultDescText"></span></div>
+                <p class="result-note">Silakan salin (copy) nomor di atas secara manual jika diperlukan.</p>
+            </div>
             <div id="loadingStatus" style="margin-bottom:15px; color:var(--text-gray); font-size:14px;">Memuat data referensi...</div>
             
             <form id="formPenomoran">
