@@ -94,10 +94,10 @@ function updateSortIcon() {
     const sortIcon = document.getElementById('sortIcon');
     const sortBtn = document.getElementById('sortBtn');
     if (window.currentSort === 'terbaru') {
-        sortIcon.innerHTML = '<path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/>';
+        sortIcon.innerHTML = '<path d="M4 6h16M4 12h10M4 18h4"/>';
         sortBtn.title = "Urutan: Terbaru ke Terlama";
     } else {
-        sortIcon.innerHTML = '<path d="M3 6h6v2H3V6zm0 12h18v-2H3v2zm0-7h12v2H3v-2z"/>';
+        sortIcon.innerHTML = '<path d="M4 18h16M4 12h10M4 6h4"/>';
         sortBtn.title = "Urutan: Terlama ke Terbaru";
     }
 }
@@ -253,10 +253,14 @@ function renderTabelArsip() {
                 <td class="col-jenis">${item.jenis}</td>
                 <td class="col-nomor">${item.nomor}</td>
                 <td class="col-keterangan">${item.keterangan}</td>
-                <td class="col-berkas">${linkAman ? `<a href="${linkAman}" target="_blank" class="badge-pdf" title="Lihat PDF"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM9 9.5h1v-1H9v1zM14 9.5h1v-1h-1v1z"/></svg></a>` : '<span class="badge-empty">Belum ada</span>'}</td>
+                <td class="col-berkas">${linkAman ? `<a href="${linkAman}" target="_blank" class="badge-pdf" title="Lihat PDF">
+                    <!-- Ikon Berkas File Modern -->
+                    <svg viewBox="0 0 24 24" width="14" height="14" style="margin-right: 4px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    Lihat</a>` : '<span class="badge-empty">Belum ada</span>'}</td>
                 <td class="col-aksi">
                     <button class="action-icon-btn" onclick="bukaModalEdit('${item.nomor}')" title="Edit Arsip">
-                        <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                        <!-- Ikon Pensil Edit Modern -->
+                        <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                     </button>
                 </td>
             </tr>
