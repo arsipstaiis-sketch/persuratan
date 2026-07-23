@@ -109,9 +109,13 @@ form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .reset-filter-btn { background: var(--staiis-green); color: white; border: none; width: 100%; margin-top: 15px; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
 
 .table-scroll-wrapper {
-    overflow-x: auto; /* Mengembalikan scroll horizontal */
+    overflow-x: auto; 
     overflow-y: auto; 
-    max-height: calc(100vh - 220px); 
+    
+    /* Mengunci tinggi tabel agar batas bawahnya selalu sejajar dengan batas bawah layar */
+    height: calc(100vh - 280px); 
+    min-height: 300px; /* Batas aman agar tabel tidak terlalu menyusut di layar kecil */
+    
     border: 1px solid var(--border-light); 
     border-radius: 12px; 
     background: white; 
