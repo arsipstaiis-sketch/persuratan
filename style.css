@@ -247,3 +247,11 @@ tr:hover td { background-color: #fafafa; }
 .bottom-scrollbar-content { height: 1px; }
 
 @media (max-width: 768px) { form { grid-template-columns: 1fr; } }
+/* --- PERBAIKAN POP-UP FILTER UNTUK HP --- */
+@media (max-width: 600px) {
+    .filter-menu {
+        right: auto; /* Mematikan tarikan ke arah kiri */
+        left: 0;     /* Mengunci menu di kiri agar memanjang ke kanan */
+        width: 280px; /* Menyesuaikan lebar maksimal untuk layar HP */
+    }
+}
