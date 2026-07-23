@@ -255,3 +255,56 @@ tr:hover td { background-color: #fafafa; }
         width: 280px; /* Menyesuaikan lebar maksimal untuk layar HP */
     }
 }
+/* --- KOTAK HASIL GENERATE NOMOR --- */
+.result-box {
+    display: none; /* Disembunyikan secara default */
+    background: #f0fdf4; 
+    border: 1px dashed var(--primary-light);
+    padding: 20px;
+    border-radius: var(--radius-md);
+    margin-bottom: 25px;
+    position: relative;
+    text-align: center;
+    animation: fadeIn 0.4s;
+}
+.result-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 26px;
+    cursor: pointer;
+    color: var(--primary-dark);
+    line-height: 1;
+}
+.result-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-gray);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+.result-number {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 12px;
+    padding: 12px;
+    background: white;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    user-select: all; /* Kunci efisiensi: Satu kali klik otomatis mem-blok semua teks */
+    word-break: break-all;
+}
+.result-desc {
+    font-size: 14px;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+.result-note {
+    font-size: 12px;
+    color: var(--text-gray);
+    font-style: italic;
+}
