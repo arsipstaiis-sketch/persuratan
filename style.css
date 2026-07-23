@@ -109,8 +109,13 @@ form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .reset-filter-btn { background: var(--staiis-green); color: white; border: none; width: 100%; margin-top: 15px; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
 
 .table-scroll-wrapper {
-    overflow-x: auto; overflow-y: auto; max-height: calc(100vh - 220px); 
-    border: 1px solid var(--border-light); border-radius: 12px; background: white; scrollbar-width: thin;
+    overflow-x: auto; /* Mengembalikan scroll horizontal */
+    overflow-y: auto; 
+    max-height: calc(100vh - 220px); 
+    border: 1px solid var(--border-light); 
+    border-radius: 12px; 
+    background: white; 
+    scrollbar-width: thin;
 }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 td { padding: 12px 14px; border-bottom: 1px solid var(--border-light); }
@@ -120,22 +125,29 @@ th {
     padding: 14px 12px; border-bottom: 2px solid var(--border-light); z-index: 98;
 }
 tr:hover td { background-color: #fafafa; }
+
 .col-tanggal { white-space: nowrap; width: 85px; text-align: center; }
 .col-ta { text-align: center; white-space: nowrap; width: 70px; }
 .col-divisi { width: 60px; text-align: center; }
 .col-jenis { width: 80px; text-align: center; }
 .col-nomor { white-space: nowrap; font-weight: bold; font-size: 12.5px; }
-.col-keterangan { width: auto; max-width: 200px; white-space: normal; word-wrap: break-word; line-height: 1.4; }
-.col-berkas { text-align: center; width: 60px; }
+.col-keterangan { width: auto; max-width: 220px; white-space: normal; word-wrap: break-word; line-height: 1.4; }
+.col-berkas { text-align: center; width: 80px; }
 .col-aksi { text-align: center; width: 40px; }
 
 .action-icon-btn { background: none; border: none; cursor: pointer; color: var(--text-gray); padding: 6px; border-radius: 6px; transition: all 0.2s; }
 .action-icon-btn:hover { background: var(--bg-light); color: var(--staiis-green); }
 .action-icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
 
-.badge-pdf, .badge-empty { display: inline-flex; align-items: center; justify-content: center; width: 60px; height: 26px; border-radius: 6px; font-size: 11px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.badge-pdf, .badge-empty { display: inline-flex; align-items: center; justify-content: center; width: 75px; height: 26px; border-radius: 6px; font-size: 11px; font-weight: 600; text-decoration: none; white-space: nowrap; }
 .badge-pdf { background: var(--staiis-green); color: white; transition: background 0.2s; }
 .badge-empty { background: #fff5f5; color: #e53e3e; border: 1px solid #fed7d7; }
+
+/* SOLUSI DOUBLE SCROLLBAR: Mematikan paksa proxy scrollbar yang menumpuk */
+.bottom-scrollbar-proxy { 
+    display: none !important; 
+}
+.bottom-scrollbar-content { height: 1px; }
 
 /* Modal & Toast & Proxy Scrollbar */
 #toast { visibility: hidden; min-width: 250px; background-color: #212529; color: #fff; text-align: center; border-radius: 8px; padding: 14px 20px; position: fixed; z-index: 1000; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 14px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: visibility 0.5s, opacity 0.5s, transform 0.5s; opacity: 0; }
