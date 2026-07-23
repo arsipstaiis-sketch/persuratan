@@ -133,14 +133,29 @@ form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     transform: translateY(-3px); /* Efek melayang (naik) */
     box-shadow: 0 6px 12px rgba(18, 130, 70, 0.15); /* Bayangan hijau */
 }
+/* --- PENGATURAN IKON MODERN (OUTLINE/GARIS) --- */
 .icon-btn svg { 
     width: 18px; 
     height: 18px; 
-    fill: currentColor; 
-    transition: transform 0.3s ease; /* Animasi ukuran SVG */
+    fill: none; /* Matikan isian padat */
+    stroke: currentColor; /* Gunakan warna garis */
+    stroke-width: 2; /* Ketebalan garis */
+    stroke-linecap: round; /* Ujung garis membulat lembut */
+    stroke-linejoin: round;
+    transition: transform 0.3s ease; 
 }
 .icon-btn:hover svg {
-    transform: scale(1.15); /* Ikon di dalamnya sedikit membesar */
+    transform: scale(1.15); 
+}
+
+.action-icon-btn svg { 
+    width: 16px; 
+    height: 16px; 
+    fill: none; /* Matikan isian padat */
+    stroke: currentColor; /* Gunakan warna garis */
+    stroke-width: 2;
+    stroke-linecap: round; 
+    stroke-linejoin: round;
 }
 .icon-btn.active-filter { background: var(--staiis-green); color: white; border-color: var(--staiis-green); }
 
