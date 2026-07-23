@@ -53,7 +53,8 @@ function switchTab(tabId, btnElement) {
     btnElement.classList.add('active');
     
     document.getElementById('reminderBox').style.display = 'none';
-    
+    const resultBox = document.getElementById('resultBox');
+    if (resultBox) resultBox.style.display = 'none';
     if (tabId === 'arsip') {
         setTimeout(updateProxyWidth, 100);
     } else {
@@ -363,7 +364,9 @@ function bukaModalEdit(nomor) {
 function tutupModal() {
     document.getElementById('modalEdit').style.display = 'none';
 }
-
+function tutupResultBox() {
+    document.getElementById('resultBox').style.display = 'none';
+}
 const formPenomoran = document.getElementById('formPenomoran');
 if (formPenomoran) {
     formPenomoran.addEventListener('submit', async function(e) {
@@ -389,13 +392,21 @@ if (formPenomoran) {
             await fetch(urlAPI, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(dataBaru) });
             this.reset();
             
+            // Menyalin otomatis ke clipboard pengguna
             navigator.clipboard.writeText(generatedNomor).then(() => {
-                showToast(`Nomor ${generatedNomor} dibuat & disalin!`);
+                showToast(`Nomor ${generatedNomor} dibuat & disalin otomatis!`);
             }).catch(() => {
                 showToast("Nomor berhasil dibuat!");
             });
             
             document.getElementById('reminderBox').style.display = 'block';
+            
+            // --- KODE BARU: Menampilkan Kotak Hasil ---
+            document.getElementById('resultNumberText').innerText = generatedNomor;
+            document.getElementById('resultDescText').innerText = dataBaru.keterangan;
+            document.getElementById('resultBox').style.display = 'block';
+            // ------------------------------------------
+
             muatDataReferensi();
         } catch (err) {
             showToast("Terjadi kesalahan jaringan.");
