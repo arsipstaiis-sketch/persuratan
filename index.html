@@ -53,9 +53,20 @@
             <div id="resultBox" class="result-box">
                 <button type="button" class="result-close" onclick="tutupResultBox()">&times;</button>
                 <div class="result-label">Nomor Surat Anda:</div>
-                <div class="result-number" id="resultNumberText" title="Klik/Tahan untuk menyalin"></div>
+                
+                <!-- Kontainer fleksibel agar teks dan ikon bersandingan -->
+                <div class="result-number-container">
+                    <div class="result-number" id="resultNumberText"></div>
+                    <button type="button" class="copy-btn" onclick="copyResultNumber()" title="Salin Nomor">
+                        <!-- Ikon Copy Modern (Dua kotak bertumpuk) -->
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                    </button>
+                </div>
+                
                 <div class="result-desc"><strong>Keterangan:</strong> <span id="resultDescText"></span></div>
-                <p class="result-note">Silakan salin (copy) nomor di atas secara manual jika diperlukan.</p>
             </div>
             <div id="loadingStatus" style="margin-bottom:15px; color:var(--text-gray); font-size:14px;">Memuat data referensi...</div>
             
