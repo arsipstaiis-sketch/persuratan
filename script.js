@@ -359,7 +359,7 @@ function bukaModalEdit(nomor) {
         document.getElementById('edit_keterangan').value = dataRow.keterangan;
         const inputBerkas = document.getElementById('editBerkas');
         if (inputBerkas) {
-            inputBerkas.value = item.berkas ? item.berkas : '';
+            inputBerkas.value = dataRow.berkas ? dataRow.berkas : '';
         }
         document.getElementById('modalEdit').style.display = 'flex';
     }
