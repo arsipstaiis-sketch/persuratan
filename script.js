@@ -357,6 +357,10 @@ function bukaModalEdit(nomor) {
         document.getElementById('edit_jenis').value = dataRow.jenis;
         document.getElementById('edit_nomor').value = dataRow.nomor;
         document.getElementById('edit_keterangan').value = dataRow.keterangan;
+        const inputBerkas = document.getElementById('editBerkas');
+        if (inputBerkas) {
+            inputBerkas.value = item.berkas ? item.berkas : '';
+        }
         document.getElementById('modalEdit').style.display = 'flex';
     }
 }
@@ -436,7 +440,8 @@ if (formEdit) {
             divisi: document.getElementById('edit_divisi').value,
             jenis: document.getElementById('edit_jenis').value,
             nomor: document.getElementById('edit_nomor').value,
-            keterangan: document.getElementById('edit_keterangan').value
+            keterangan: document.getElementById('edit_keterangan').value,
+            berkas: document.getElementById('editBerkas').value.trim()
         };
 
         try {
