@@ -316,26 +316,36 @@ tr:hover td { background-color: #fafafa; }
     display: none; 
 }
 
-/* Tombol Copy yang lebih modern dan ringkas */
+/* Tombol Copy dengan Efek Cahaya */
 .copy-btn {
-    background: var(--bg-light);
-    color: var(--staiis-green);
-    border: 1px solid var(--border-color);
+    background: #ffffff; /* Latar belakang putih */
+    color: var(--staiis-green); /* Ikon berwarna hijau sebelum disorot/diklik */
+    border: 1px solid #bbf7d0; /* Garis tepi hijau pudar */
     border-radius: 8px;
     padding: 0 16px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    flex-shrink: 0; /* KUNCI 1 BARIS: Mencegah tombol ikut mengecil/tergencet di HP */
+    transition: all 0.3s ease;
+    flex-shrink: 0; 
 }
+
+/* Saat kursor menyentuh tombol */
 .copy-btn:hover {
-    background: var(--staiis-green);
-    color: white;
+    background: var(--staiis-green); /* Latar belakang berubah hijau */
+    color: #ffffff; /* Ikon berubah putih */
     border-color: var(--staiis-green);
     transform: translateY(-2px); 
-    box-shadow: 0 4px 8px rgba(18, 130, 70, 0.2);
+    box-shadow: 0 6px 12px rgba(18, 130, 70, 0.25); /* Bayangan hijau di bawah tombol */
+}
+
+/* EFEK TERSOROT SINAR PADA IKON */
+.copy-btn:hover svg {
+    /* Memberikan pendaran cahaya putih di sekeliling bentuk ikon */
+    filter: drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.9));
+    transform: scale(1.05); /* Ikon sedikit membesar agar lebih hidup */
+    transition: all 0.3s ease;
 }
 .result-desc {
     font-size: 14px;
