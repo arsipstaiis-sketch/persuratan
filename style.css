@@ -67,20 +67,22 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); colo
 }
 .nav-tab.active { opacity: 1; border-bottom: 3px solid white; }
 
-/* --- EFEK HOVER UNTUK TOMBOL TAB NAVIGASI --- */
-/* Memastikan perubahan warna/redup terjadi secara halus */
+/* --- EFEK HOVER TAB NAVIGASI (Garis Bawah & Terangkat) --- */
+
 .nav-tab {
     transition: all 0.3s ease;
+    /* Memberikan garis bawah transparan secara default agar letak teks tidak "melompat/goyang" saat disorot */
+    border-bottom: 3px solid transparent; 
 }
 
-/* Mengkopi gaya tab aktif, tapi diberi efek redup (opacity) */
 .nav-tab:not(.active):hover {
-    background-color: var(--staiis-green); /* Menggunakan warna hijau yang sama dengan tab aktif */
-    color: #ffffff; /* Menggunakan warna teks putih seperti tab aktif */
-    opacity: 0.6; /* Kunci utamanya: Membuat tombol 40% transparan (redup) */
+    background-color: transparent; /* Tanpa background kotak */
+    color: #ffffff; /* Teks putih menyala */
+    opacity: 0.7; /* Tingkat keredupan (70% terlihat, 30% transparan) */
+    transform: translateY(-2px); /* Efek teks dan garis terangkat naik */
+    border-bottom: 3px solid rgba(255, 255, 255, 0.7); /* Memunculkan garis bawah putih yang juga redup */
     cursor: pointer;
 }
-
 /* --- MAIN CONTENT & FORMS --- */
 .main-content { max-width: 1050px; margin: -40px auto 40px auto; padding: 0 20px; }
 .tab-content { display: none; }
