@@ -383,46 +383,56 @@ function copyResultNumber() {
 }
 const formPenomoran = document.getElementById('formPenomoran');
 if (formPenomoran) {
-    formPenomoran.addEventListener('submit', async function(e) {
-        e.preventDefault(); 
-        const tombol = document.getElementById('btnSubmitPenomoran');
-        tombol.innerText = "Membuat Nomor...";
-        tombol.disabled = true;
+   formPenomoran.addEventListener('submit', async function(e) {
+    e.preventDefault();
 
-        const elDivisi = document.getElementById('divisi');
-        const elJenis = document.getElementById('jenis');
-        const generatedNomor = generateNomorOtomatisPreview();
+    // 1. Tangkap tombol submit dan ubah ke mode Loading
+    const tombol = document.getElementById('btnSubmitPenomoran');
+    const teksAsli = tombol.innerText; // Mengingat teks asli ("Buat Nomor")
+    
+    tombol.innerText = "Merekam ke Server..."; // Ubah teks saat loading
+    tombol.disabled = true; // Matikan tombol agar tidak diklik 2x
+    tombol.style.opacity = "0.7"; // Membuat tombol sedikit transparan
+    tombol.style.cursor = "wait"; // Mengubah kursor mouse menjadi ikon loading (putar)
 
-        const dataBaru = {
-            action: "create",
-            tanggal: document.getElementById('tanggal').value,
-            divisi: elDivisi.options[elDivisi.selectedIndex].text, 
-            jenis: elJenis.options[elJenis.selectedIndex].text,
-            nomor: generatedNomor, 
-            keterangan: document.getElementById('keterangan').value
-        };
+    // 2. Susun Data
+    const elDivisi = document.getElementById('divisi');
+    const elJenis = document.getElementById('jenis');
+    const generatedNomor = generateNomorOtomatisPreview();
 
-       try {
-            await fetch(urlAPI, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(dataBaru) });
-            this.reset();
-            
-            // Auto-copy sudah dihilangkan. Hanya menampilkan notifikasi dasar.
-            showToast("Nomor berhasil direkam ke arsip!");
-            
-            document.getElementById('reminderBox').style.display = 'block';
-            
-            document.getElementById('resultNumberText').innerText = generatedNomor;
-            document.getElementById('resultDescText').innerText = dataBaru.keterangan;
-            document.getElementById('resultBox').style.display = 'block';
+    const dataBaru = {
+        action: "create",
+        tanggal: document.getElementById('tanggal').value,
+        divisi: elDivisi.options[elDivisi.selectedIndex].text, 
+        jenis: elJenis.options[elJenis.selectedIndex].text,
+        nomor: generatedNomor, 
+        keterangan: document.getElementById('keterangan').value
+    };
 
-            muatDataReferensi();
-        } catch (err) {
-            showToast("Terjadi kesalahan jaringan.");
-        } finally {
-            tombol.innerText = "Buat Nomor";
-            tombol.disabled = false;
-        }
-    });
+    // 3. Proses Pengiriman
+    try {
+        await fetch(urlAPI, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(dataBaru) });
+        this.reset();
+        
+        showToast("Nomor berhasil direkam ke arsip!");
+        
+        document.getElementById('reminderBox').style.display = 'block';
+        
+        document.getElementById('resultNumberText').innerText = generatedNomor;
+        document.getElementById('resultDescText').innerText = dataBaru.keterangan;
+        document.getElementById('resultBox').style.display = 'block';
+
+        muatDataReferensi();
+    } catch (err) {
+        showToast("Terjadi kesalahan jaringan.");
+    } finally {
+        // 4. Kembalikan tombol ke kondisi normal (berhasil ataupun gagal)
+        tombol.innerText = teksAsli;
+        tombol.disabled = false;
+        tombol.style.opacity = "1";
+        tombol.style.cursor = "pointer";
+    }
+});
 }
 
 const formEdit = document.getElementById('formEdit');
