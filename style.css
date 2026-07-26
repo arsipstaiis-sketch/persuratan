@@ -66,6 +66,21 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); colo
     padding-bottom: 12px; text-transform: uppercase; opacity: 0.7; transition: 0.3s; white-space: nowrap; cursor: pointer;
 }
 .nav-tab.active { opacity: 1; border-bottom: 3px solid white; }
+/* --- EFEK HOVER UNTUK TOMBOL TAB NAVIGASI --- */
+
+/* 1. Memastikan perubahan terjadi secara halus (tidak kaku) */
+.nav-tab {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 2. Efek saat kursor menyentuh tombol tab (KECUALI tab yang sedang aktif) */
+.nav-tab:not(.active):hover {
+    background-color: #f1f5f9; /* Latar belakang abu-abu sangat muda/bersih */
+    color: var(--staiis-green, #15803d); /* Teks menyala menjadi hijau */
+    transform: translateY(-2px); /* Tombol sedikit terangkat/melayang */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); /* Muncul bayangan sangat tipis */
+    cursor: pointer;
+}
 
 /* --- MAIN CONTENT & FORMS --- */
 .main-content { max-width: 1050px; margin: -40px auto 40px auto; padding: 0 20px; }
