@@ -60,6 +60,23 @@ function switchTab(tabId, btnElement) {
     } else {
         document.getElementById('bottomScrollProxy').style.display = 'none';
     }
+    // A. Hapus Isian Form Penomoran
+    const formNomor = document.getElementById('formPenomoran');
+    if (formNomor) formNomor.reset();
+
+    // B. Hapus Isian Form Upload (Sesuaikan ID form jika berbeda, misal 'formUpload')
+    const formUpload = document.getElementById('formUpload');
+    if (formUpload) formUpload.reset();
+
+    // C. Hapus Teks di Kotak Pencarian Arsip & Kembalikan Tabel
+    const pencarian = document.getElementById('searchInput'); // Sesuaikan ID jika berbeda
+    if (pencarian && pencarian.value !== '') {
+        pencarian.value = '';
+        // Memanggil ulang tabel agar tidak tersangkut di hasil pencarian sebelumnya
+        if (typeof renderTabelArsip === "function") {
+            renderTabelArsip(); 
+        }
+    }
 }
 
 function toggleFilterMenu() {
