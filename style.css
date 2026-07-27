@@ -367,3 +367,21 @@ tr:hover td { background-color: #fafafa; }
     color: var(--text-gray);
     font-style: italic;
 }
+/* --- ANIMASI LOADING SPINNER PADA TOMBOL --- */
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2.5px solid rgba(255, 255, 255, 0.3); /* Lingkaran dasar transparan */
+    border-radius: 50%;
+    border-top-color: #ffffff; /* Sisi atas berwarna putih terang */
+    animation: spin 0.8s linear infinite; /* Kecepatan putaran */
+    margin-right: 8px;
+    vertical-align: middle;
+    margin-top: -2px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
