@@ -403,14 +403,15 @@ if (formPenomoran) {
    formPenomoran.addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    // 1. Tangkap tombol submit dan ubah ke mode Loading
+    // 1. Tangkap tombol submit
     const tombol = document.getElementById('btnSubmitPenomoran');
-    const teksAsli = tombol.innerText; // Mengingat teks asli ("Buat Nomor")
+    const teksAsli = tombol.innerText;
     
-    tombol.innerText = "Merekam ke Server..."; // Ubah teks saat loading
-    tombol.disabled = true; // Matikan tombol agar tidak diklik 2x
-    tombol.style.opacity = "0.7"; // Membuat tombol sedikit transparan
-    tombol.style.cursor = "wait"; // Mengubah kursor mouse menjadi ikon loading (putar)
+    // MENGUBAH INNER-TEXT MENJADI INNER-HTML UNTUK SPINNER
+    tombol.innerHTML = '<span class="spinner"></span> Merekam...'; 
+    tombol.disabled = true;
+    tombol.style.opacity = "0.8";
+    tombol.style.cursor = "wait";
 
     // 2. Susun Data
     const elDivisi = document.getElementById('divisi');
@@ -443,8 +444,7 @@ if (formPenomoran) {
     } catch (err) {
         showToast("Terjadi kesalahan jaringan.");
     } finally {
-        // 4. Kembalikan tombol ke kondisi normal (berhasil ataupun gagal)
-        tombol.innerText = teksAsli;
+        tombol.innerText = teksAsli; // Mengembalikan ke teks asli tanpa spinner
         tombol.disabled = false;
         tombol.style.opacity = "1";
         tombol.style.cursor = "pointer";
@@ -456,9 +456,13 @@ const formEdit = document.getElementById('formEdit');
 if (formEdit) {
     formEdit.addEventListener('submit', async function(e) {
         e.preventDefault();
-        const tombol = document.getElementById('btnSubmitEdit');
-        tombol.innerText = "Menyimpan...";
-        tombol.disabled = true;
+        const tombolEdit = this.querySelector('button[type="submit"]'); // atau gunakan getElementById
+        const teksAsliEdit = tombolEdit.innerText;
+    
+        tombolEdit.innerHTML = '<span class="spinner"></span> Menyimpan...';
+        tombolEdit.disabled = true;
+        tombolEdit.style.opacity = "0.8";
+        tombolEdit.style.cursor = "wait";
 
         const updateData = {
             action: "edit",
@@ -485,8 +489,10 @@ if (formEdit) {
         } catch (err) {
             showToast("Kesalahan jaringan.");
         } finally {
-            tombol.innerText = "Simpan Perubahan";
-            tombol.disabled = false;
+            tombolEdit.innerText = teksAsliEdit;
+            tombolEdit.disabled = false;
+            tombolEdit.style.opacity = "1";
+            tombolEdit.style.cursor = "pointer";
         }
     });
 }
@@ -495,12 +501,13 @@ const formUpload = document.getElementById('formUpload');
 if (formUpload) {
     formUpload.addEventListener('submit', async function(e) {
         e.preventDefault();
-        const tombol = document.getElementById('btnSubmitUpload');
-        const file = document.getElementById('upload_file').files[0];
-        if (!file) return showToast("Pilih file PDF terlebih dahulu.");
-
-        tombol.innerText = "Mengupload...";
-        tombol.disabled = true;
+        const tombolUpload = this.querySelector('button[type="submit"]'); // atau gunakan getElementById
+        const teksAsliUpload = tombolUpload.innerText;
+    
+        tombolUpload.innerHTML = '<span class="spinner"></span> Mengunggah...';
+        tombolUpload.disabled = true;
+        tombolUpload.style.opacity = "0.8";
+        tombolUpload.style.cursor = "wait";
 
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -527,8 +534,10 @@ if (formUpload) {
             } catch (err) {
                 showToast("Kesalahan jaringan saat mengupload file.");
             } finally {
-                tombol.innerText = "Upload";
-                tombol.disabled = false;
+                tombolUpload.innerText = teksAsliUpload;
+                tombolUpload.disabled = false;
+                tombolUpload.style.opacity = "1";
+                tombolUpload.style.cursor = "pointer";
             }
         };
     });
