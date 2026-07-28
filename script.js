@@ -458,9 +458,18 @@ if (formPenomoran) {
         
         document.getElementById('reminderBox').style.display = 'block';
         
-        // Tampilkan rentang nomor di layar (contoh: 001/X/... s/d 050/X/...)
-        document.getElementById('resultNumberText').innerText = jumlahTarget > 1 ? `${nomorPertama} s/d \n${nomorTerakhir}` : nomorPertama;
-        document.getElementById('resultDescText').innerText = payload.data[0].keterangan.replace(" (1/" + jumlahTarget + ")", "");
+        // 1. Kotak utama (yang dicopy) HANYA menampilkan Nomor Awal
+        document.getElementById('resultNumberText').innerText = nomorPertama; 
+        
+        // 2. Membersihkan teks keterangan dari embel-embel (1/50)
+        let deskripsiAsli = payload.data[0].keterangan.replace(" (1/" + jumlahTarget + ")", "");
+        
+        // 3. Menampilkan Nomor Akhir di atas teks keterangan (jika massal)
+        if (jumlahTarget > 1) {
+            document.getElementById('resultDescText').innerHTML = `<strong>S/d Nomor Akhir:</strong> ${nomorTerakhir}<br><br>${deskripsiAsli}`;
+        } else {
+            document.getElementById('resultDescText').innerText = deskripsiAsli;
+        }
         document.getElementById('resultBox').style.display = 'block';
 
         muatDataReferensi();
