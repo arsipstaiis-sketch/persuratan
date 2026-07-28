@@ -265,7 +265,7 @@ function renderTabelArsip() {
         
         let matchBerkas = true;
         if (fBerkas === "belum") {
-            matchBerkas = !item.berkas || item.berkas.trim() === "";
+            matchBerkas = !item.link || item.link.trim() === "";
         }
 
         return matchKeyword && matchDivisi && matchJenis && matchTA && matchBerkas;
@@ -278,7 +278,7 @@ function renderTabelArsip() {
     });
 
     const htmlBaris = dataFiltered.map(item => {
-        let linkAman = item.berkas;
+        let linkAman = item.link;
         if (linkAman && !linkAman.startsWith('http')) linkAman = 'https://' + linkAman;
         const tanggalFormatted = formatTanggalDDMMYYYY(item.tanggal);
         const tahunAkademik = hitungTahunAkademik(item.tanggal);
