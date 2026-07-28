@@ -533,6 +533,19 @@ const formUpload = document.getElementById('formUpload');
 if (formUpload) {
     formUpload.addEventListener('submit', async function(e) {
         e.preventDefault();
+        
+        // --- [BAGIAN BARU] TANGKAP FILE DARI HTML ---
+        // Catatan: Pastikan 'upload_file' di bawah ini sama dengan ID pada <input type="file"> di index.html Anda
+        const fileInput = document.getElementById('upload_file'); 
+        const file = fileInput.files[0];
+
+        // Mencegah proses lanjut jika user belum memilih file
+        if (!file) {
+            alert("Silakan pilih file hasil scan terlebih dahulu!");
+            return;
+        }
+        // ---------------------------------------------
+
         const tombolUpload = this.querySelector('button[type="submit"]'); // atau gunakan getElementById
         const teksAsliUpload = tombolUpload.innerText;
     
@@ -542,7 +555,9 @@ if (formUpload) {
         tombolUpload.style.cursor = "wait";
 
         const reader = new FileReader();
-        reader.readAsDataURL(file);
+        // Sekarang sistem tahu 'file' itu berasal dari fileInput di atas
+        reader.readAsDataURL(file); 
+        
         reader.onload = async function () {
             const uploadPayload = {
                 action: "upload",
