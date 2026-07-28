@@ -403,48 +403,71 @@ if (formPenomoran) {
    formPenomoran.addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    // 1. Tangkap tombol submit
     const tombol = document.getElementById('btnSubmitPenomoran');
     const teksAsli = tombol.innerText;
-    
-    // MENGUBAH INNER-TEXT MENJADI INNER-HTML UNTUK SPINNER
-    tombol.innerHTML = '<span class="spinner"></span> Merekam...'; 
+    tombol.innerHTML = '<span class="spinner"></span> Merekam...';
     tombol.disabled = true;
     tombol.style.opacity = "0.8";
     tombol.style.cursor = "wait";
 
-    // 2. Susun Data
     const elDivisi = document.getElementById('divisi');
     const elJenis = document.getElementById('jenis');
-    const generatedNomor = generateNomorOtomatisPreview();
+    
+    // 1. Menangkap Jumlah Surat (Default: 1 jika kosong)
+    const inputJumlah = document.getElementById('jumlahGenerate');
+    const jumlahTarget = inputJumlah && inputJumlah.value ? parseInt(inputJumlah.value) : 1;
+    
+    // 2. Mendapatkan Format Nomor Dasar
+    const nomorDasar = generateNomorOtomatisPreview(); 
+    const bagianNomor = nomorDasar.split('/'); // Memecah jadi array: ['001', 'DIV-SK', 'STAIIS', ...]
+    const urutanAwal = parseInt(bagianNomor[0], 10);
+    
+    let arrayDataBaru = [];
+    let nomorPertama = "";
+    let nomorTerakhir = "";
 
-    const dataBaru = {
-        action: "create",
-        tanggal: document.getElementById('tanggal').value,
-        divisi: elDivisi.options[elDivisi.selectedIndex].text, 
-        jenis: elJenis.options[elJenis.selectedIndex].text,
-        nomor: generatedNomor, 
-        keterangan: document.getElementById('keterangan').value
+    // 3. Looping untuk Membuat Nomor Sebanyak 'jumlahTarget'
+    for (let i = 0; i < jumlahTarget; i++) {
+        let urutanBaru = String(urutanAwal + i).padStart(3, '0');
+        let formatBaru = [...bagianNomor];
+        formatBaru[0] = urutanBaru; // Mengganti urutan awal dengan urutan yang sudah ditambah
+        let nomorFinal = formatBaru.join('/');
+        
+        if (i === 0) nomorPertama = nomorFinal;
+        if (i === jumlahTarget - 1) nomorTerakhir = nomorFinal;
+
+        arrayDataBaru.push({
+            nomor: nomorFinal,
+            tanggal: document.getElementById('tanggal').value,
+            divisi: elDivisi.options[elDivisi.selectedIndex].text,
+            jenis: elJenis.options[elJenis.selectedIndex].text,
+            // Menambahkan penanda pada keterangan jika digenerate massal
+            keterangan: jumlahTarget > 1 ? `${document.getElementById('keterangan').value} (${i + 1}/${jumlahTarget})` : document.getElementById('keterangan').value
+        });
+    }
+
+    // 4. Membungkus Data ke dalam Payload Bulk
+    const payload = {
+        action: "create_bulk",
+        data: arrayDataBaru
     };
 
-    // 3. Proses Pengiriman
     try {
-        await fetch(urlAPI, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(dataBaru) });
+        await fetch(urlAPI, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
         this.reset();
-        
-        showToast("Nomor berhasil direkam ke arsip!");
         
         document.getElementById('reminderBox').style.display = 'block';
         
-        document.getElementById('resultNumberText').innerText = generatedNomor;
-        document.getElementById('resultDescText').innerText = dataBaru.keterangan;
+        // Tampilkan rentang nomor di layar (contoh: 001/X/... s/d 050/X/...)
+        document.getElementById('resultNumberText').innerText = jumlahTarget > 1 ? `${nomorPertama} s/d \n${nomorTerakhir}` : nomorPertama;
+        document.getElementById('resultDescText').innerText = payload.data[0].keterangan.replace(" (1/" + jumlahTarget + ")", "");
         document.getElementById('resultBox').style.display = 'block';
 
         muatDataReferensi();
     } catch (err) {
-        showToast("Terjadi kesalahan jaringan.");
+        alert("Terjadi kesalahan jaringan.");
     } finally {
-        tombol.innerText = teksAsli; // Mengembalikan ke teks asli tanpa spinner
+        tombol.innerText = teksAsli;
         tombol.disabled = false;
         tombol.style.opacity = "1";
         tombol.style.cursor = "pointer";
