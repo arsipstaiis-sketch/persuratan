@@ -265,7 +265,7 @@ function renderTabelArsip() {
         
         let matchBerkas = true;
         if (fBerkas === "belum") {
-            matchBerkas = !item.link || item.link.trim() === "";
+            matchBerkas = !item.berkas || item.berkas.trim() === "";
         }
 
         return matchKeyword && matchDivisi && matchJenis && matchTA && matchBerkas;
