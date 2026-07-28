@@ -278,7 +278,7 @@ function renderTabelArsip() {
     });
 
     const htmlBaris = dataFiltered.map(item => {
-        let linkAman = item.link;
+        let linkAman = item.berkas;
         if (linkAman && !linkAman.startsWith('http')) linkAman = 'https://' + linkAman;
         const tanggalFormatted = formatTanggalDDMMYYYY(item.tanggal);
         const tahunAkademik = hitungTahunAkademik(item.tanggal);
