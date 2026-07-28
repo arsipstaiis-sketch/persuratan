@@ -376,7 +376,7 @@ function bukaModalEdit(nomor) {
         document.getElementById('edit_keterangan').value = dataRow.keterangan;
         const inputBerkas = document.getElementById('editBerkas');
         if (inputBerkas) {
-            inputBerkas.value = dataRow.berkas ? dataRow.berkas : '';
+            inputBerkas.value = dataRow.link ? dataRow.link : '';
         }
         document.getElementById('modalEdit').style.display = 'flex';
     }
