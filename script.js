@@ -52,7 +52,7 @@ function switchTab(tabId, btnElement) {
     document.getElementById(tabId).classList.add('active');
     btnElement.classList.add('active');
     
-    document.getElementById('reminderBox').style.display = 'none';
+    //document.getElementById('reminderBox').style.display = 'none';
     const resultBox = document.getElementById('resultBox');
     if (resultBox) resultBox.style.display = 'none';
     if (tabId === 'arsip') {
@@ -456,7 +456,7 @@ if (formPenomoran) {
         await fetch(urlAPI, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
         this.reset();
         
-        document.getElementById('reminderBox').style.display = 'block';
+        //document.getElementById('reminderBox').style.display = 'block';
         
         // 1. Kotak utama (yang dicopy) HANYA menampilkan Nomor Awal
         document.getElementById('resultNumberText').innerText = nomorPertama; 
