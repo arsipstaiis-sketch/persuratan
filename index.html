@@ -17,16 +17,22 @@
    <header class="header-section">
         <div class="header-container">
             
-            <!-- Tambahan Wrapper untuk Logo dan Judul Bersebelahan -->
-           <div class="header-top-wrapper">
+           <div class="header-top-wrapper" style="position: relative; display: flex; align-items: center; justify-content: space-between;">
                 
-                <!-- Memanggil file gambar logo dari GitHub -->
-                <img src="logo.png" alt="Logo STAIIS" class="header-logo">
-                
-                <div class="header-title-wrapper">
-                    <span class="overline">LAYANAN ADMINISTRASI PERSURATAN</span>
-                    <h1 class="header-title">Sistem Penomoran STAIIS</h1>
+                <div style="display: flex; align-items: center;">
+                    <!-- Memanggil file gambar logo dari GitHub -->
+                    <img src="logo.png" alt="Logo STAIIS" class="header-logo">
+                    
+                    <div class="header-title-wrapper">
+                        <span class="overline">LAYANAN ADMINISTRASI PERSURATAN</span>
+                        <h1 class="header-title">Sistem Penomoran STAIIS</h1>
+                    </div>
                 </div>
+
+                <!-- TOMBOL LOGOUT -->
+                <button onclick="logoutSistem()" style="background-color: #dc2626; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: background 0.3s;">
+                    Logout
+                </button>
             </div>
 
             <p class="header-subtitle">Aplikasi pembuatan nomor surat resmi dan arsip dokumen digital.</p>
@@ -237,8 +243,7 @@
     </div>
 
     <!-- Memanggil file JavaScript yang sudah dipisah -->
-    <link rel="stylesheet" href="style.css?v=6">
-    <script src="script.js?v=v12"></script>
+     <script src="script.js?v=v12"></script>
     
 </body>
 </html>
