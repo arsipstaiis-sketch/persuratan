@@ -277,12 +277,25 @@ function renderTabelArsip() {
         return window.currentSort === 'terbaru' ? dateB - dateA : dateA - dateB;
     });
 
+    const roleSaatIni = localStorage.getItem('userRole') || 'pengguna';
+
     const htmlBaris = dataFiltered.map(item => {
         let linkAman = item.link;
         if (linkAman && !linkAman.startsWith('http')) linkAman = 'https://' + linkAman;
         const tanggalFormatted = formatTanggalDDMMYYYY(item.tanggal);
         const tahunAkademik = hitungTahunAkademik(item.tanggal);
-        
+        let tombolEdit = '';
+        if (roleSaatIni === 'admin') {
+            tombolEdit = `
+                <button class="action-icon-btn" onclick="bukaModalEdit('${item.nomor}')" title="Edit Arsip">
+                    <!-- Ikon Edit Terkunci (Garis Mutlak) -->
+                    <svg viewBox="0 0 24 24" width="18" height="18" style="fill: none !important; stroke: currentColor !important; stroke-width: 2px; stroke-linecap: round; stroke-linejoin: round;">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                </button>
+            `;
+        }
         return `
             <tr>
                 <td class="col-tanggal">${tanggalFormatted}</td>
@@ -329,6 +342,7 @@ function generateNomorOtomatisPreview() {
     const inputRomawi = arrayRomawi[inputMonth - 1];
 
     let maxUrutan = 0;
+    
     window.arsipGlobal.forEach(item => {
         const parts = (item.nomor || "").split('/');
         
@@ -597,3 +611,13 @@ if (formUpload) {
 
 // Menjalankan fungsi muat referensi pertama kali saat script dimuat
 muatDataReferensi();
+// Fungsi untuk keluar dari sistem
+function logoutSistem() {
+    let konfirmasi = confirm("Apakah Anda yakin ingin keluar dari sistem?");
+    if (konfirmasi) {
+        // Hapus role dari memori
+        localStorage.removeItem('userRole');
+        // Arahkan kembali ke halaman login (sesuaikan nama file login Anda)
+        window.location.href = 'login.html'; 
+    }
+}
