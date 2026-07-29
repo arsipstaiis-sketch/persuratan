@@ -388,15 +388,20 @@ function tutupModal() {
 function tutupResultBox() {
     document.getElementById('resultBox').style.display = 'none';
 }
-function copyResultNumber() {
+function copyNumber() {
     const teksNomor = document.getElementById('resultNumberText').innerText;
-    if (teksNomor) {
-        navigator.clipboard.writeText(teksNomor).then(() => {
-            showToast("Nomor berhasil disalin!");
-        }).catch(() => {
-            showToast("Gagal menyalin nomor, silakan blok manual.");
-        });
+    
+    if (!teksNomor) {
+        alert("Tidak ada nomor untuk disalin.");
+        return;
     }
+
+    navigator.clipboard.writeText(teksNomor).then(() => {
+        alert("Nomor surat berhasil disalin: " + teksNomor);
+    }).catch(err => {
+        console.error('Gagal menyalin:', err);
+        alert("Gagal menyalin nomor. Silakan copy secara manual.");
+    });
 }
 const formPenomoran = document.getElementById('formPenomoran');
 if (formPenomoran) {
