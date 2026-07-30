@@ -207,7 +207,8 @@ form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
 .table-scroll-wrapper {
     overflow-x: auto; 
-    overflow-y: auto; 
+    overflow-y: auto;
+    position: relative;
     
     /* Mengunci tinggi tabel agar batas bawahnya selalu sejajar dengan batas bawah layar */
     height: calc(100vh - 280px); 
@@ -221,7 +222,7 @@ form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 td { padding: 12px 14px; border-bottom: 1px solid var(--border-light); }
 th { 
-    position: sticky; top: 0; background: var(--bg-light) !important; font-weight: 600; font-size: 11.5px; 
+    position: sticky; top: -1px; background: var(--bg-light) !important; font-weight: 600; font-size: 11.5px; 
     text-transform: uppercase; color: var(--text-gray); white-space: nowrap; text-align: center !important;
     padding: 14px 12px; border-bottom: 2px solid var(--border-light); z-index: 98;
 }
