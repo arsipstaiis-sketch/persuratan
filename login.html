@@ -57,7 +57,9 @@
     </div>
 
     <script>
-        // Fitur Lihat Password
+        // Gunakan URL API Web App Google Apps Script Anda yang sama
+        const urlAPI = "URL_WEB_APP_GOOGLE_APPS_SCRIPT_ANDA";
+
         function togglePassword() {
             const pwdInput = document.getElementById('password');
             const eyeIcon = document.getElementById('eyeIcon');
@@ -70,20 +72,41 @@
             }
         }
 
-        // Simulasi Login Role (Admin/Pengguna)
-        document.getElementById('formLogin').addEventListener('submit', function(e) {
+        // Pengecekan Login Terhubung ke Google Apps Script
+        document.getElementById('formLogin').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const uname = document.getElementById('username').value.toLowerCase();
-            const pass = document.getElementById('password').value;
             
-            if (uname === 'admin' && pass === 'admin123') {
-                localStorage.setItem('userRole', 'admin');
-                window.location.href = 'index.html'; 
-            } else if (uname === 'user' && pass === 'user123') {
-                localStorage.setItem('userRole', 'pengguna');
-                window.location.href = 'index.html'; 
-            } else {
-                alert('Username atau Password salah!');
+            const submitBtn = document.querySelector('.btn-login-submit');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Memeriksa...";
+            submitBtn.disabled = true;
+
+            const payload = {
+                action: "login",
+                username: document.getElementById('username').value.trim(),
+                password: document.getElementById('password').value.trim()
+            };
+
+            try {
+                const response = await fetch(urlAPI, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+
+                if (result.status === "success") {
+                    // Menyimpan role yang didapat langsung dari database Google Sheets
+                    localStorage.setItem('userRole', result.role);
+                    window.location.href = 'index.html';
+                } else {
+                    alert(result.message);
+                }
+            } catch (err) {
+                alert("Terjadi kesalahan jaringan saat mencoba login.");
+            } finally {
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
             }
         });
     </script>
