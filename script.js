@@ -279,7 +279,34 @@ function renderTabelArsip() {
 
     // --- [TAMBAHAN] CEK ROLE DARI BROWSER ---
     const roleSaatIni = localStorage.getItem('userRole') || 'pengguna';
-    // ----------------------------------------
+    const isAdmin = (roleSaatIni === 'admin');
+
+    // 1. Atur Header Tabel Secara Dinamis
+    const headerRow = document.getElementById('tableHeaderRow');
+    if (headerRow) {
+        if (isAdmin) {
+            headerRow.innerHTML = `
+                <th class="col-tanggal">Tanggal</th>
+                <th class="col-ta">Tahun<br>Akademik</th>
+                <th class="col-divisi">Divisi</th>
+                <th class="col-jenis">Jenis</th>
+                <th class="col-nomor">Nomor Surat</th>
+                <th class="col-keterangan">Keterangan</th>
+                <th class="col-berkas">Berkas</th>
+                <th class="col-aksi">Aksi</th>
+            `;
+        } else {
+            headerRow.innerHTML = `
+                <th class="col-tanggal">Tanggal</th>
+                <th class="col-ta">Tahun<br>Akademik</th>
+                <th class="col-divisi">Divisi</th>
+                <th class="col-jenis">Jenis</th>
+                <th class="col-nomor">Nomor Surat</th>
+                <th class="col-keterangan">Keterangan</th>
+                <th class="col-berkas">Berkas</th>
+            `;
+        }
+    }
 
     const htmlBaris = dataFiltered.map(item => {
         let linkAman = item.link;
@@ -288,20 +315,20 @@ function renderTabelArsip() {
         const tahunAkademik = hitungTahunAkademik(item.tanggal);
         
         // --- [TAMBAHAN] LOGIKA TOMBOL EDIT ---
-        let tombolEdit = '';
-        if (roleSaatIni === 'admin') {
-            tombolEdit = `
-                <button class="action-icon-btn" onclick="bukaModalEdit('${item.nomor}')" title="Edit Arsip">
-                    <!-- Ikon Edit Terkunci (Garis Mutlak) -->
-                    <svg viewBox="0 0 24 24" width="18" height="18" style="fill: none !important; stroke: currentColor !important; stroke-width: 2px; stroke-linecap: round; stroke-linejoin: round;">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
-                </button>
+        let kolomAksiHtml = '';
+        if (isAdmin) {
+            kolomAksiHtml = `
+                <td class="col-aksi">
+                    <button class="action-icon-btn" onclick="bukaModalEdit('${item.nomor}')" title="Edit Arsip">
+                        <svg viewBox="0 0 24 24" width="18" height="18" style="fill: none !important; stroke: currentColor !important; stroke-width: 2px; stroke-linecap: round; stroke-linejoin: round;">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
+                </td>
             `;
         }
-        // --------------------------------------
-        
+
         return `
             <tr>
                 <td class="col-tanggal">${tanggalFormatted}</td>
@@ -311,16 +338,14 @@ function renderTabelArsip() {
                 <td class="col-nomor">${item.nomor}</td>
                 <td class="col-keterangan">${item.keterangan}</td>
                 <td class="col-berkas">${linkAman ? `<a href="${linkAman}" target="_blank" class="badge-pdf" title="Lihat PDF">
-                    <!-- Ikon Berkas File Modern -->
                     <svg viewBox="0 0 24 24" width="14" height="14" style="margin-right: 4px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                     Lihat</a>` : '<span class="badge-empty">Belum ada</span>'}</td>
-                <td class="col-aksi">
-                    ${tombolEdit} <!-- Variabel tombol dimasukkan ke sini -->
-                </td>
+                ${kolomAksiHtml}
             </tr>
         `;
     }).join('');
     
+    const colspanVal = isAdmin ? 8 : 7;
     const badanTabel = document.getElementById('badanTabel');
     if (badanTabel) badanTabel.innerHTML = htmlBaris || '<tr><td colspan="8" style="text-align:center; color:var(--text-gray); padding:30px;">Tidak ada arsip yang cocok.</td></tr>';
     setTimeout(updateProxyWidth, 50);
