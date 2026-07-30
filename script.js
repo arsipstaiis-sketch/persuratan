@@ -293,7 +293,7 @@ function renderTabelArsip() {
                 <th class="col-nomor">Nomor Surat</th>
                 <th class="col-keterangan">Keterangan</th>
                 <th class="col-berkas">Berkas</th>
-                <th class="col-aksi">Aksi</th>
+                <th class="col-aksi">Aksi</th> <!-- Judul kolom AKSI dikembalikan khusus untuk Admin -->
             `;
         } else {
             headerRow.innerHTML = `
