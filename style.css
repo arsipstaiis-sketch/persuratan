@@ -394,15 +394,13 @@ tr:hover td { background-color: #fafafa; }
 }
 
 .table-scroll-wrapper::-webkit-scrollbar-track {
-    background: transparent;
-    margin-top: 48px; /* Mendorong jalur scrollbar vertikal sejauh tinggi header */
-    margin-bottom: 8px;
-    border-radius: 8px;
+    background: #f7f9fc; /* Disamakan dengan warna abu-abu header agar terlihat menyatu */
+    border-radius: 0 12px 12px 0;
 }
-
 .table-scroll-wrapper::-webkit-scrollbar-thumb {
     background-color: #cbd5e0;
     border-radius: 8px;
+    border: 2px solid #f7f9fc; /* Memberikan ilusi jarak/margin */
 }
 
 .table-scroll-wrapper::-webkit-scrollbar-thumb:hover {
