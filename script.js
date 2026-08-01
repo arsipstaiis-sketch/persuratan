@@ -278,7 +278,7 @@ function renderTabelArsip() {
     });
 
     // --- [TAMBAHAN] CEK ROLE DARI BROWSER ---
-    const roleSaatIni = localStorage.getItem('userRole') || 'pengguna';
+    const roleSaatIni = sessionStorage.getItem('userRole') || 'pengguna';
     const isAdmin = (roleSaatIni === 'admin');
 
     // 1. Atur Header Tabel Secara Dinamis
@@ -640,9 +640,8 @@ muatDataReferensi();
 function logoutSistem() {
     let konfirmasi = confirm("Apakah Anda yakin ingin keluar dari sistem?");
     if (konfirmasi) {
-        // Hapus role dari memori
-        localStorage.removeItem('userRole');
-        // Arahkan kembali ke halaman login (sesuaikan nama file login Anda)
+        // Hapus sesi dari memori sementara
+        sessionStorage.removeItem('userRole');
         window.location.href = 'login.html'; 
     }
 }
