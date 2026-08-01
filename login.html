@@ -11,6 +11,58 @@
     
     <!-- Memanggil CSS khusus Login -->
     <link rel="stylesheet" href="login.css">
+
+    <style>
+        /* --- ANIMASI SPINNER PADA TOMBOL --- */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #ffffff;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+            margin-top: -2px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- NOTIFIKASI TOAST MODERN --- */
+        .modern-toast {
+            visibility: hidden;
+            min-width: 280px;
+            background-color: #1f2937;
+            color: #ffffff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 14px 20px;
+            position: fixed;
+            z-index: 9999;
+            left: 50%;
+            bottom: -60px; /* Posisi awal bersembunyi di bawah */
+            transform: translateX(-50%);
+            font-size: 14.5px;
+            font-weight: 500;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            opacity: 0;
+        }
+
+        .modern-toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 40px; /* Melayang naik ke atas */
+        }
+
+        .modern-toast.success { border-left: 5px solid #167a53; }
+        .modern-toast.error { border-left: 5px solid #ef4444; }
+        .modern-toast.info { border-left: 5px solid #3b82f6; }
+    </style>
 </head>
 <body>
 
@@ -46,7 +98,7 @@
                     </span>
                 </div>
 
-                <button type="submit" class="btn-login-submit">LOGIN APLIKASI</button>
+                <button type="submit" class="btn-login-submit" id="btnLogin">LOGIN APLIKASI</button>
             </form>
 
             <div class="login-footer">
@@ -55,6 +107,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Elemen penampung Notifikasi Modern -->
+    <div id="modernToast" class="modern-toast"></div>
 
     <script>
         // Gunakan URL API Web App Google Apps Script Anda yang sama
@@ -72,14 +127,28 @@
             }
         }
 
+        // Fungsi Memunculkan Notifikasi Modern
+        function showModernToast(pesan, tipe = 'info') {
+            const toast = document.getElementById("modernToast");
+            toast.innerText = pesan;
+            toast.className = "modern-toast show " + tipe;
+            setTimeout(() => { 
+                toast.className = toast.className.replace("show", "").trim(); 
+            }, 3000);
+        }
+
         // Pengecekan Login Terhubung ke Google Apps Script
         document.getElementById('formLogin').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const submitBtn = document.querySelector('.btn-login-submit');
+            const submitBtn = document.getElementById('btnLogin');
             const originalText = submitBtn.innerText;
-            submitBtn.innerText = "Memeriksa...";
+            
+            // Ubah tombol jadi status loading
+            submitBtn.innerHTML = '<span class="spinner"></span> Memeriksa...';
             submitBtn.disabled = true;
+            submitBtn.style.cursor = "wait";
+            submitBtn.style.opacity = "0.8";
 
             const payload = {
                 action: "login",
@@ -96,17 +165,29 @@
                 const result = await response.json();
 
                 if (result.status === "success") {
-                    // Menyimpan role yang didapat langsung dari database Google Sheets
-                    localStorage.setItem('userRole', result.role);
-                    window.location.href = 'index.html';
+                    showModernToast("Login berhasil! Mengalihkan...", "success");
+                    
+                    // MENGGUNAKAN SESSIONSTORAGE AGAR OTOMATIS LOGOUT SAAT TAB DITUTUP
+                    sessionStorage.setItem('userRole', result.role);
+                    
+                    // Jeda agar notifikasi terbaca sebelum pindah halaman
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
                 } else {
-                    alert(result.message);
+                    showModernToast(result.message, "error");
+                    // Mengembalikan tombol seperti semula jika gagal
+                    submitBtn.innerText = originalText;
+                    submitBtn.disabled = false;
+                    submitBtn.style.cursor = "pointer";
+                    submitBtn.style.opacity = "1";
                 }
             } catch (err) {
-                alert("Terjadi kesalahan jaringan saat mencoba login.");
-            } finally {
+                showModernToast("Terjadi kesalahan jaringan saat mencoba login.", "error");
                 submitBtn.innerText = originalText;
                 submitBtn.disabled = false;
+                submitBtn.style.cursor = "pointer";
+                submitBtn.style.opacity = "1";
             }
         });
     </script>
