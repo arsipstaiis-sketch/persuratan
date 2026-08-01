@@ -428,7 +428,11 @@ function tutupResultBox() {
     document.getElementById('resultBox').style.display = 'none';
 }
 function copyNumber() {
-    const teksNomor = document.getElementById('resultNumberText').innerText;
+    const el = document.getElementById('resultNumberText');
+    
+    // KUNCI: Ambil teks dari atribut tersembunyi 'data-nomor' agar teks "s/d" tidak ikut tersalin. 
+    // Jika tidak ada, baru gunakan innerText standar.
+    const teksNomor = el.getAttribute('data-nomor') || el.innerText;
     
     if (!teksNomor) {
         alert("Tidak ada nomor untuk disalin.");
