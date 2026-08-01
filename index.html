@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <script>
-        if (!localStorage.getItem('userRole')) {
+        if (!sessionStorage.getItem('userRole')) {
             alert("Anda belum login! Silakan login terlebih dahulu.");
             window.location.href = 'login.html'; // Sesuaikan jika nama file login Anda berbeda
         }
