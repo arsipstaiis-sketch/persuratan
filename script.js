@@ -649,11 +649,20 @@ if (formUpload) {
 // Menjalankan fungsi muat referensi pertama kali saat script dimuat
 muatDataReferensi();
 // Fungsi untuk keluar dari sistem
+// Membuka modal khusus
 function logoutSistem() {
-    let konfirmasi = confirm("Apakah Anda yakin ingin keluar dari sistem?");
-    if (konfirmasi) {
-        // Hapus sesi dari memori sementara
-        sessionStorage.removeItem('userRole');
-        window.location.href = 'login.html'; 
-    }
+    const modal = document.getElementById('logoutModal');
+    if(modal) modal.classList.add('show');
+}
+
+// Menutup modal tanpa logout
+function tutupLogoutModal() {
+    const modal = document.getElementById('logoutModal');
+    if(modal) modal.classList.remove('show');
+}
+
+// Eksekusi logout jika tombol "Keluar" ditekan
+function prosesLogout() {
+    sessionStorage.removeItem('userRole');
+    window.location.href = 'login.html'; 
 }
