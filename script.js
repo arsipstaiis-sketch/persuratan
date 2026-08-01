@@ -504,20 +504,28 @@ if (formPenomoran) {
         await fetch(urlAPI, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
         this.reset();
         
-        //document.getElementById('reminderBox').style.display = 'block';
+        // --- TAMPILAN GABUNGAN NOMOR DAN KETERANGAN ---
+        const resultNumberEl = document.getElementById('resultNumberText');
         
-        // 1. Kotak utama (yang dicopy) HANYA menampilkan Nomor Awal
-        document.getElementById('resultNumberText').innerText = nomorPertama; 
+        // 1. Simpan nomor awal murni ke atribut tersembunyi untuk kebutuhan tombol Copy
+        resultNumberEl.setAttribute('data-nomor', nomorPertama);
         
         // 2. Membersihkan teks keterangan dari embel-embel (1/50)
         let deskripsiAsli = payload.data[0].keterangan.replace(" (1/" + jumlahTarget + ")", "");
         
-        // 3. Menampilkan Nomor Akhir di atas teks keterangan (jika massal)
+        // 3. Menata tampilan Nomor dan Keterangan
         if (jumlahTarget > 1) {
-            document.getElementById('resultDescText').innerHTML = `<strong>S/d Nomor Akhir:</strong> ${nomorTerakhir}<br><br>${deskripsiAsli}`;
+            // Gabungkan nomor awal dan nomor akhir dalam 1 kotak secara visual
+            resultNumberEl.innerHTML = `${nomorPertama} <span style="color: var(--text-gray); font-size: 13px; font-weight: 500; font-style: italic; margin-left: 8px;">(s/d ${nomorTerakhir})</span>`;
+            
+            // Keterangan kini hanya menampilkan teks aslinya saja
+            document.getElementById('resultDescText').innerText = deskripsiAsli;
         } else {
+            // Jika generate hanya 1 (tunggal)
+            resultNumberEl.innerText = nomorPertama;
             document.getElementById('resultDescText').innerText = deskripsiAsli;
         }
+        
         document.getElementById('resultBox').style.display = 'block';
 
         muatDataReferensi();
