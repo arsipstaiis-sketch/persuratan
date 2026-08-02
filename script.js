@@ -509,7 +509,9 @@ if (formPenomoran) {
         
         // 1. Simpan nomor awal murni ke atribut tersembunyi untuk kebutuhan tombol Copy
         resultNumberEl.setAttribute('data-nomor', nomorPertama);
-        
+        // --- BARIS KODE BARU UNTUK MENGHASILKAN QR CODE ---
+        const urlVerifikasi = `https://persuratan-staiis.vercel.app/verifikasi.html?nomor=${encodeURIComponent(nomorPertama)}`;
+        document.getElementById('qrCodeImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${urlVerifikasi}&margin=0`;
         // 2. Membersihkan teks keterangan dari embel-embel (1/50)
         let deskripsiAsli = payload.data[0].keterangan.replace(" (1/" + jumlahTarget + ")", "");
         
