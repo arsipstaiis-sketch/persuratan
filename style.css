@@ -547,3 +547,14 @@ tr:hover td { background-color: #fafafa; }
     background: #dc2626;
     box-shadow: 0 6px 12px rgba(239, 68, 68, 0.3);
 }
+/* Tombol Tunggal untuk Peringatan Login */
+.btn-confirm-login {
+    background: var(--primary-dark);
+    color: white;
+    box-shadow: 0 4px 6px rgba(13, 92, 61, 0.2);
+    width: 100%; /* Dibuat melebar penuh karena hanya ada 1 tombol */
+}
+.btn-confirm-login:hover {
+    background: var(--primary-light);
+    box-shadow: 0 6px 12px rgba(13, 92, 61, 0.3);
+}
