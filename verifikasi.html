@@ -135,9 +135,9 @@
                         // Menampilkan Tombol Preview File PDF jika tersedia di database
                         const linkFile = dokumenDitemukan.link || dokumenDitemukan.fileUrl || "";
                         const fileActionArea = document.getElementById('fileActionArea');
-                        if (dokumenDitemukan.fileUrl && dokumenDitemukan.fileUrl.trim() !== "") {
+                        if (linkFile && linkFile.trim() !== "") {
                             fileActionArea.innerHTML = `
-                                <a href="${dokumenDitemukan.fileUrl}" target="_blank" class="btn-preview">
+                                <a href="${linkFile}" target="_blank" class="btn-preview">
                                     <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                     Preview / Lihat Dokumen Scan PDF
                                 </a>
