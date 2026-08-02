@@ -133,6 +133,7 @@
                         document.getElementById('resDivisi').innerText = dokumenDitemukan.divisi;
                         document.getElementById('resKet').innerText = dokumenDitemukan.keterangan;
                         // Menampilkan Tombol Preview File PDF jika tersedia di database
+                        const linkFile = dokumenDitemukan.fileUrl || dokumenDitemukan.urlFile || dokumenDitemukan.linkFile || dokumenDitemukan.pdf || "";
                         const fileActionArea = document.getElementById('fileActionArea');
                         if (dokumenDitemukan.fileUrl && dokumenDitemukan.fileUrl.trim() !== "") {
                             fileActionArea.innerHTML = `
