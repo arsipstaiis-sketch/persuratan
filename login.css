@@ -203,23 +203,27 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-/* --- NOTIFIKASI TOAST MODERN --- */
+/* --- NOTIFIKASI TOAST MODERN (Tema Terang & Menyatu) --- */
 .modern-toast {
     visibility: hidden;
     min-width: 280px;
-    background-color: #1f2937;
-    color: #ffffff;
-    text-align: center;
+    background-color: #ffffff; /* Latar belakang putih bersih */
+    color: #1f2937; /* Warna teks abu-abu gelap */
+    text-align: left; /* Rata kiri agar lebih rapi */
     border-radius: 8px;
-    padding: 14px 20px;
+    padding: 16px 20px;
     position: fixed;
     z-index: 9999;
     left: 50%;
-    bottom: -60px; /* Posisi awal bersembunyi di bawah */
+    bottom: -60px;
     transform: translateX(-50%);
-    font-size: 14.5px;
-    font-weight: 500;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    font-size: 14px;
+    font-weight: 600;
+    
+    /* Bayangan lembut khas desain modern */
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb; /* Garis batas tipis */
+    
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     opacity: 0;
 }
@@ -227,10 +231,19 @@ body {
 .modern-toast.show {
     visibility: visible;
     opacity: 1;
-    bottom: 40px; /* Melayang naik ke atas saat dipanggil */
+    bottom: 40px; 
 }
 
-/* Indikator Warna Status Toast */
-.modern-toast.success { border-left: 5px solid #167a53; }
-.modern-toast.error { border-left: 5px solid #ef4444; }
-.modern-toast.info { border-left: 5px solid #3b82f6; }
+/* Indikator Warna (Garis kiri dan warna teks yang disesuaikan) */
+.modern-toast.success { 
+    border-left: 5px solid var(--primary-light, #167a53); 
+    color: var(--primary-dark, #0d5c3d); /* Teks menjadi hijau tua */
+}
+.modern-toast.error { 
+    border-left: 5px solid #ef4444; 
+    color: #991b1b; /* Teks menjadi merah tua */
+}
+.modern-toast.info { 
+    border-left: 5px solid #3b82f6; 
+    color: #1e40af; /* Teks menjadi biru tua */
+}
