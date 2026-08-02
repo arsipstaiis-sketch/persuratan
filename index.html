@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Penomoran STAIIS</title>
-    
+    <!-- Mencegah Browser Menyimpan Cache Halaman -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <!-- Font Modern dari Google -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@600;700&display=swap" rel="stylesheet">
     
@@ -37,7 +40,23 @@ function redirectToLogin() {
 }
 </script>
 <body>
+    <script>
+        // 1. Pengecekan langsung saat halaman dirender
+        if (!sessionStorage.getItem('userRole')) {
+            window.location.replace('login.html');
+        }
 
+        // 2. Pengecekan khusus jika pengguna menekan tombol Back (BFCache)
+        window.addEventListener("pageshow", function (event) {
+            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                if (!sessionStorage.getItem('userRole')) {
+                    window.location.replace('login.html');
+                }
+            }
+        });
+    </script>
+    
+    <!-- (Kode Latar Belakang dan Header Anda di bawah sini) -->
     <!-- HEADER MODERN -->
    <header class="header-section">
         <div class="header-container">
