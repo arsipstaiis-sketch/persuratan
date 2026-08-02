@@ -446,6 +446,44 @@ function copyNumber() {
         alert("Gagal menyalin nomor. Silakan copy secara manual.");
     });
 }
+// Fungsi untuk mendownload QR Code
+function downloadQR() {
+    const imgSrc = document.getElementById('qrCodeImage').src;
+    if (!imgSrc) {
+        alert("QR Code belum tersedia.");
+        return;
+    }
+
+    // Mengambil nomor surat untuk dijadikan nama file, dan mengubah garis miring (/) menjadi underscore (_) agar valid di Windows/Mac
+    const elNomor = document.getElementById('resultNumberText');
+    const teksNomor = elNomor.getAttribute('data-nomor') || "Surat_STAIIS";
+    const namaFile = "QR_" + teksNomor.replace(/\//g, '_') + ".png";
+
+    // Proses mengambil (fetch) gambar dari API menjadi file yang siap diunduh
+    fetch(imgSrc)
+        .then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = namaFile; // Menamai file yang diunduh
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        })
+        .catch(() => {
+            // Jalur alternatif (fallback) jika sistem browser memblokir fetch langsung
+            const a = document.createElement('a');
+            a.href = imgSrc;
+            a.download = namaFile;
+            a.target = '_blank';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+}
 const formPenomoran = document.getElementById('formPenomoran');
 if (formPenomoran) {
    formPenomoran.addEventListener('submit', async function(e) {
