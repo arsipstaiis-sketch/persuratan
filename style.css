@@ -38,41 +38,6 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); colo
 .header-title { font-family: 'Lora', serif; font-size: 36px; font-weight: 700; line-height: 1.2; margin-bottom: 12px; }
 .header-subtitle { font-size: 15px; color: #d1fae5; margin-bottom: 30px; max-width: 600px; }
 
-/* --- LAYOUT LOGO & JUDUL HEADER (Diperbarui dengan Jarak Ekstra) --- */
-.header-top-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 45px; /* Nilai gap diperbesar secara signifikan */
-    margin-bottom: 25px;
-}
-
-.header-logo {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 50%; 
-    border: 3px solid rgba(255, 255, 255, 0.9); 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
-    flex-shrink: 0; 
-    margin-right: 20px; /* Trik paksaan: Menambahkan margin kanan khusus pada logo */
-}
-
-.header-title-wrapper .overline { margin-bottom: 6px; }
-.header-title-wrapper .header-title { margin-bottom: 0; }
-
-/* Mengatur logo otomatis ke atas saat di layar HP */
-@media (max-width: 600px) {
-    .header-top-wrapper { 
-        flex-direction: column; 
-        align-items: center; 
-        justify-content: center;
-        text-align: center; 
-        gap: 20px; /* Jarak atas-bawah saat di HP */
-    }
-    .header-logo {
-        margin-right: 0; /* Menghilangkan margin kanan saat di HP agar tetap di tengah */
-    }
-}
 .nav-tabs { display: flex; gap: 20px; border-bottom: 1px solid rgba(255,255,255,0.2); overflow-x: auto; }
 .nav-tab {
     background: none; border: none; color: white; font-family: inherit; font-size: 14px; font-weight: 600;
@@ -557,4 +522,92 @@ tr:hover td { background-color: #fafafa; }
 .btn-confirm-login:hover {
     background: var(--primary-light);
     box-shadow: 0 6px 12px rgba(13, 92, 61, 0.3);
+}
+/* =========================================
+   HEADER RESPONSIVE (DESKTOP & MOBILE)
+========================================= */
+.header-top-wrapper {
+    display: flex;
+    justify-content: space-between; /* Menjauhkan kiri (logo) dan kanan (logout) */
+    align-items: center;
+    width: 100%;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.logo-title-group {
+    display: flex;
+    align-items: center;
+    gap: 30px; /* Jarak antara logo dan judul */
+}
+
+.header-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+}
+
+.header-title-wrapper .overline { margin-bottom: 6px; }
+.header-title-wrapper .header-title { margin-bottom: 0; }
+
+.btn-logout {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+    background: rgba(239, 68, 68, 0.9);
+    border-color: transparent;
+}
+
+/* --- KHUSUS LAYAR HP --- */
+@media (max-width: 768px) {
+    .header-top-wrapper {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .logo-title-group {
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .header-title-wrapper, .header-subtitle {
+        text-align: center;
+    }
+
+    .header-subtitle {
+        margin: 10px auto 20px auto;
+        max-width: 90%;
+    }
+
+    /* Ubah Logout jadi bulat di pojok kanan atas */
+    .btn-logout {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 10px;
+        border-radius: 50%;
+        border: none;
+    }
+
+    .btn-logout .logout-text {
+        display: none; /* Sembunyikan tulisan di HP */
+    }
 }
