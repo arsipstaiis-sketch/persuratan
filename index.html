@@ -61,21 +61,24 @@ function redirectToLogin() {
    <header class="header-section">
         <div class="header-container">
             
-           <div class="header-top-wrapper" style="position: relative; display: flex; align-items: center; justify-content: space-between;">
-                
-                <div style="display: flex; align-items: center;">
-                    <!-- Memanggil file gambar logo dari GitHub -->
+            <div class="header-top-wrapper">
+                <!-- KIRI: Logo dan Judul -->
+                <div class="logo-title-group">
                     <img src="logo.png" alt="Logo STAIIS" class="header-logo">
-                    
                     <div class="header-title-wrapper">
                         <span class="overline">LAYANAN ADMINISTRASI PERSURATAN</span>
                         <h1 class="header-title">Sistem Penomoran STAIIS</h1>
                     </div>
                 </div>
 
-                <!-- TOMBOL LOGOUT -->
-                <button onclick="logoutSistem()" style="background-color: #dc2626; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: background 0.3s;">
-                    Logout
+                <!-- KANAN: Tombol Logout -->
+                <button onclick="logoutSistem()" class="btn-logout" title="Keluar Sistem">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    <span class="logout-text">Logout</span>
                 </button>
             </div>
 
@@ -86,6 +89,7 @@ function redirectToLogin() {
                 <button class="nav-tab" onclick="switchTab('upload', this)">Upload Scan</button>
                 <button class="nav-tab" onclick="switchTab('arsip', this)">Arsip Dokumen</button>
             </div>
+            
         </div>
     </header>
 
