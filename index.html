@@ -12,10 +12,18 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <script>
-        if (!sessionStorage.getItem('userRole')) {
-            alert("Anda belum login! Silakan login terlebih dahulu.");
-            window.location.href = 'login.html'; // Sesuaikan jika nama file login Anda berbeda
-        }
+        // GUNAKAN KODE INI:
+if (!sessionStorage.getItem('userRole')) {
+    // Menampilkan modal modern
+    document.getElementById('loginAlertModal').classList.add('show');
+    // Mengunci background agar tidak bisa digulir
+    document.body.style.overflow = 'hidden'; 
+}
+
+// Fungsi saat tombol "Oke, Paham" ditekan
+function redirectToLogin() {
+    window.location.href = 'login.html';
+}
 </script>
 <body>
 
