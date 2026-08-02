@@ -160,6 +160,12 @@ body {
 
 /* Responsivitas untuk Layar Kecil */
 @media (max-width: 800px) {
+    /* --- TAMBAHAN BARU: Mendorong form ke atas pada layar HP --- */
+    body {
+        align-items: flex-start; 
+        padding-top: 30px; /* Ubah angka ini jika masih kurang naik/turun */
+        padding-bottom: 30px;
+    }
     .login-wrapper {
         flex-direction: column;
         width: 90%;
