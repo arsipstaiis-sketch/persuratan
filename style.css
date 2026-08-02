@@ -611,3 +611,38 @@ tr:hover td { background-color: #fafafa; }
         display: none; /* Sembunyikan tulisan di HP */
     }
 }
+/* --- TOAST NOTIFICATION (NOTIFIKASI MODERN) --- */
+.toast-notification {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #1f2937; /* Warna latar gelap elegan */
+    color: #ffffff;
+    text-align: center;
+    border-radius: 50px; /* Bentuk pil/melengkung penuh */
+    padding: 12px 24px;
+    position: fixed;
+    z-index: 9999;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.3s ease, bottom 0.3s ease, visibility 0.3s;
+}
+
+.toast-notification.show {
+    visibility: visible;
+    opacity: 1;
+    bottom: 50px; /* Muncul dengan efek bergeser ke atas */
+}
+
+/* Warna ikon centang hijau */
+.toast-notification svg {
+    color: #10b981; 
+}
