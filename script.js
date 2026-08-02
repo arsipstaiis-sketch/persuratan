@@ -663,6 +663,9 @@ function tutupLogoutModal() {
 
 // Eksekusi logout jika tombol "Keluar" ditekan
 function prosesLogout() {
+    // 1. Hapus sesi dari penyimpanan
     sessionStorage.removeItem('userRole');
-    window.location.href = 'login.html'; 
+    
+    // 2. Gunakan location.replace agar halaman index tidak tersimpan di history browser
+    window.location.replace('login.html');
 }
