@@ -247,3 +247,37 @@ body {
     border-left: 5px solid #3b82f6; 
     color: #1e40af; /* Teks menjadi biru tua */
 }
+/* --- TOMBOL VERIFIKASI DI PANEL KIRI (LOGIN) --- */
+.verifikasi-link-container {
+    margin-top: 40px; /* Memberikan jarak dengan teks deskripsi di atasnya */
+}
+
+.btn-verifikasi-login {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; /* Jarak antara ikon dan teks */
+    background: rgba(255, 255, 255, 0.15); /* Efek putih transparan */
+    color: #ffffff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    transition: all 0.3s ease;
+    width: fit-content; /* Lebar tombol menyesuaikan isi teks */
+}
+
+.btn-verifikasi-login:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-2px); /* Efek tombol terangkat sedikit saat disorot */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsivitas untuk Layar HP (Panel Kiri Login) */
+@media (max-width: 800px) {
+    .verifikasi-link-container {
+        margin-top: 30px;
+    }
+}
