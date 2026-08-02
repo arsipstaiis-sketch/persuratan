@@ -111,33 +111,35 @@ function redirectToLogin() {
                         <strong>Nomor berhasil direkam!</strong> Silakan salin nomor, atau klik kanan pada QR Code untuk menyisipkannya ke dalam dokumen surat Anda.
                     </div>
                 </div>
-
+            
                 <hr class="result-divider">
-
-                <!-- Fleksibel Layout: Kiri untuk Nomor, Kanan untuk QR Code -->
-                <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap;">
+            
+                <!-- Layout Proporsional Flexbox -->
+                <div style="display: flex; gap: 24px; align-items: stretch; flex-wrap: wrap;">
                     
-                    <!-- Bagian Kiri -->
-                    <div style="flex: 1; min-width: 250px;">
-                        <div class="result-label">NOMOR SURAT ANDA:</div>
-                        <div class="result-number-container">
-                            <div class="result-number" id="resultNumberText"></div>
-                            <button type="button" class="copy-btn" onclick="copyNumber()" title="Salin Nomor">
-                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                                </svg>
-                            </button>
+                    <!-- Bagian Kiri (Nomor Surat & Keterangan) -->
+                    <div style="flex: 1; min-width: 260px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
+                        <div>
+                            <div class="result-label" style="margin-bottom: 6px;">NOMOR SURAT ANDA:</div>
+                            <div class="result-number-container">
+                                <div class="result-number" id="resultNumberText"></div>
+                                <button type="button" class="copy-btn" onclick="copyNumber()" title="Salin Nomor">
+                                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
-                        <div class="result-desc" id="resultDescText"></div>
+                        <div class="result-desc" id="resultDescText" style="margin-top: 0;"></div>
                     </div>
-
-                    <!-- Bagian Kanan (QR Code) -->
-                    <div style="text-align: center; background: white; padding: 12px; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                        <img id="qrCodeImage" src="" alt="QR Code" style="width: 110px; height: 110px; display: block; margin: 0 auto;">
-                        <div style="font-size: 11px; color: var(--text-gray); margin-top: 8px; margin-bottom: 8px; font-weight: 600;">SCAN UNTUK CEK</div>
+            
+                    <!-- Bagian Kanan (QR Code Card) -->
+                    <div style="flex: 0 0 auto; background: white; padding: 14px 16px; border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto;">
+                        <img id="qrCodeImage" src="" alt="QR Code" style="width: 105px; height: 105px; display: block; object-fit: contain;">
+                        <div style="font-size: 11px; color: var(--text-gray); margin-top: 8px; font-weight: 600; letter-spacing: 0.5px;">SCAN UNTUK CEK</div>
                     </div>
-
+            
                 </div>
             </div>
             <!-- Status Loading Data Referensi -->
