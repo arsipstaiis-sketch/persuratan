@@ -148,6 +148,28 @@
                 submitBtn.style.opacity = "1";
             }
         });
+        // Pembersihan otomatis jika browser memaksa load dari Cache (Tombol Back)
+        window.addEventListener("pageshow", function (event) {
+            // Jika user ternyata masih punya sesi aktif, tendang balik ke dashboard
+            if (sessionStorage.getItem('userRole')) {
+                window.location.replace('index.html');
+                return;
+            }
+
+            // Jika benar-benar belum login, pastikan form bersih
+            document.getElementById('formLogin').reset();
+            document.getElementById('password').type = "password";
+            const icon = document.getElementById('eyeIcon');
+            if(icon) icon.classList.replace("bi-eye", "bi-eye-slash");
+
+            const btn = document.getElementById('btnLogin');
+            if(btn) {
+                btn.innerText = "LOGIN APLIKASI";
+                btn.disabled = false;
+                btn.style.cursor = "pointer";
+                btn.style.opacity = "1";
+            }
+        });
     </script>
 </body>
 </html>
