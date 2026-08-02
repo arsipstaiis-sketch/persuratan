@@ -445,11 +445,7 @@ function copyNumber() {
         console.error('Gagal menyalin:', err);
         showToast("Gagal menyalin nomor. Silakan copy secara manual.");
     });
-    // Mengambil nomor surat untuk dijadikan nama file, dan mengubah garis miring (/) menjadi underscore (_) agar valid di Windows/Mac
-    const elNomor = document.getElementById('resultNumberText');
-    const teksNomor = elNomor.getAttribute('data-nomor') || "Surat_STAIIS";
-    const namaFile = "QR_" + teksNomor.replace(/\//g, '_') + ".png";
-
+    
     // Proses mengambil (fetch) gambar dari API menjadi file yang siap diunduh
     fetch(imgSrc)
         .then(response => response.blob())
