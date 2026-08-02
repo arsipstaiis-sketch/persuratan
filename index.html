@@ -270,6 +270,23 @@
                 <button class="btn-confirm-logout" onclick="prosesLogout()">Keluar</button>
             </div>
         </div>
-    </div>    
+    </div>
+    <!-- Modal Peringatan Belum Login -->
+    <div id="loginAlertModal" class="custom-modal-overlay">
+        <div class="custom-modal-box">
+            <!-- Ikon Gembok (Kuning/Oranye) -->
+            <div class="custom-modal-icon" style="background: #fef3c7; color: #d97706;">
+                <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+            </div>
+            <h3 class="custom-modal-title">Akses Ditolak</h3>
+            <p class="custom-modal-desc">Anda belum login! Silakan login terlebih dahulu untuk mengakses layanan persuratan.</p>
+            <div class="custom-modal-actions">
+                <button class="btn-confirm-login" onclick="redirectToLogin()">Oke, Paham</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
