@@ -435,25 +435,17 @@ function copyNumber() {
     const teksNomor = el.getAttribute('data-nomor') || el.innerText;
     
     if (!teksNomor) {
-        alert("Tidak ada nomor untuk disalin.");
+        showToast("Tidak ada nomor untuk disalin.");
         return;
     }
 
     navigator.clipboard.writeText(teksNomor).then(() => {
-        alert("Nomor surat berhasil disalin: " + teksNomor);
+        showToast("Nomor surat berhasil disalin: " + teksNomor);
     }).catch(err => {
         console.error('Gagal menyalin:', err);
-        alert("Gagal menyalin nomor. Silakan copy secara manual.");
+        showToast("Gagal menyalin nomor. Silakan copy secara manual.");
     });
 }
-// Fungsi untuk mendownload QR Code
-function downloadQR() {
-    const imgSrc = document.getElementById('qrCodeImage').src;
-    if (!imgSrc) {
-        alert("QR Code belum tersedia.");
-        return;
-    }
-
     // Mengambil nomor surat untuk dijadikan nama file, dan mengubah garis miring (/) menjadi underscore (_) agar valid di Windows/Mac
     const elNomor = document.getElementById('resultNumberText');
     const teksNomor = elNomor.getAttribute('data-nomor') || "Surat_STAIIS";
@@ -708,4 +700,17 @@ function prosesLogout() {
     
     // Ganti location.href menjadi location.replace
     window.location.replace('login.html'); 
+}
+// Fungsi untuk memunculkan notifikasi Toast
+function showToast(message) {
+    const toast = document.getElementById("toastNotification");
+    const toastMsg = document.getElementById("toastMessage");
+    
+    toastMsg.innerText = message;
+    toast.className = "toast-notification show";
+    
+    // Notifikasi akan menghilang otomatis setelah 3 detik (3000 ms)
+    setTimeout(function() { 
+        toast.className = toast.className.replace("show", ""); 
+    }, 3000);
 }
