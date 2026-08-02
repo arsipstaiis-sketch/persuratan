@@ -40,11 +40,17 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); colo
 
 /* --- LAYOUT LOGO & JUDUL HEADER (Diperbarui dengan Jarak Ekstra) --- */
 .header-top-wrapper {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 45px; /* Nilai gap diperbesar secara signifikan */
+    justify-content: space-between;
     margin-bottom: 25px;
 }
+
+.logo-title-group {
+    display: flex;
+    align-items: center;
+    gap: 45px;
 
 .header-logo {
     width: 80px;
@@ -60,17 +66,68 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); colo
 .header-title-wrapper .overline { margin-bottom: 6px; }
 .header-title-wrapper .header-title { margin-bottom: 0; }
 
+    /* Desain Tombol Logout Minimalis (Desktop) */
+.btn-logout {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+    background: rgba(239, 68, 68, 0.9);
+    border-color: transparent;
+}
 /* Mengatur logo otomatis ke atas saat di layar HP */
 @media (max-width: 600px) {
     .header-top-wrapper { 
         flex-direction: column; 
         align-items: center; 
         justify-content: center;
-        text-align: center; 
+        text-align: center;
+    }
+    .logo-title-group {
+        flex-direction: column; /* Mengubah logo agar berada di atas judul */
+        align-items: center;
+        justify-content: center;
         gap: 20px; /* Jarak atas-bawah saat di HP */
+        width: 100%;
+        margin-top: 15px; /* Memberi ruang aman agar tidak tertimpa tombol logout */
     }
     .header-logo {
         margin-right: 0; /* Menghilangkan margin kanan saat di HP agar tetap di tengah */
+    }
+    .header-title-wrapper, .header-subtitle {
+        text-align: center; /* Memastikan subjudul juga rata tengah */
+    }
+
+    .header-subtitle {
+        margin: 10px auto 20px auto;
+        max-width: 90%;
+    }
+
+    /* Tombol Logout Menjadi Ikon Saja di Kanan Atas */
+    .btn-logout {
+        position: absolute;
+        top: -10px; /* Menyesuaikan posisi ke pojok atas */
+        right: 0;
+        padding: 8px; 
+        border-radius: 50%; /* Membuat tombol melingkar penuh */
+        border: none;
+        background: rgba(255, 255, 255, 0.2); 
+    }
+
+    /* Sembunyikan tulisan "Logout" di HP */
+    .btn-logout .logout-text {
+        display: none;
     }
 }
 .nav-tabs { display: flex; gap: 20px; border-bottom: 1px solid rgba(255,255,255,0.2); overflow-x: auto; }
