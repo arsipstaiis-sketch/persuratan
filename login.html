@@ -114,13 +114,23 @@
 
                 if (result.status === "success") {
                     showModernToast("Login berhasil! Mengalihkan...", "success");
-                    
-                    // MENGGUNAKAN SESSIONSTORAGE AGAR OTOMATIS LOGOUT SAAT TAB DITUTUP
                     sessionStorage.setItem('userRole', result.role);
                     
+                    // --- TAMBAHAN: Reset form & tombol sebelum pindah halaman ---
+                    document.getElementById('formLogin').reset();
+                    document.getElementById('password').type = "password"; // Kembalikan ke titik-titik
+                    document.getElementById('eyeIcon').classList.replace("bi-eye", "bi-eye-slash");
+                    
+                    submitBtn.innerText = originalText;
+                    submitBtn.disabled = false;
+                    submitBtn.style.cursor = "pointer";
+                    submitBtn.style.opacity = "1";
+                    // -----------------------------------------------------------
+
                     // Jeda agar notifikasi terbaca sebelum pindah halaman
                     setTimeout(() => {
-                        window.location.href = 'index.html';
+                        // Gunakan replace agar history login dihapus dari tombol Back
+                        window.location.replace('index.html'); 
                     }, 1500);
                 } else {
                     showModernToast(result.message, "error");
