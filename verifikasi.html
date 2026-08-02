@@ -8,6 +8,10 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background-color: #f4f7f6; color: #1f2937; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 40px 20px; }
+        /* Tombol Kembali ke Login di Pojok Kanan Atas */
+        .top-nav { width: 100%; max-width: 500px; display: flex; justify-content: flex-end; margin-bottom: 15px; }
+        .btn-back-login { display: inline-flex; align-items: center; gap: 6px; background: #ffffff; color: #0d5c3d; text-decoration: none; padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; border: 1px solid #e5e7eb; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s; }
+        .btn-back-login:hover { background: #f8fafc; border-color: #167a53; }
         .header { text-align: center; margin-bottom: 30px; }
         .header img { width: 80px; margin-bottom: 15px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
         .header h1 { font-size: 22px; color: #0d5c3d; }
@@ -29,12 +33,23 @@
         .detail-row { margin-bottom: 12px; }
         .detail-label { font-size: 11px; color: #6b7280; text-transform: uppercase; font-weight: 600; }
         .detail-value { font-size: 15px; color: #1f2937; font-weight: 500; margin-top: 2px; line-height: 1.4; }
-        
+        /* Tombol Preview File / Buka Dokumen */
+        .preview-container { margin-top: 20px; padding-top: 15px; border-top: 1px dashed #e5e7eb; text-align: center; }
+        .btn-preview { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; padding: 10px; border-radius: 8px; font-size: 13.5px; font-weight: 600; text-decoration: none; transition: background 0.2s; }
+        .btn-preview:hover { background: #dcfce7; }
+        .no-file-text { font-size: 12.5px; color: #9ca3af; font-style: italic; margin-top: 5px; }
         .footer { margin-top: 40px; font-size: 12px; color: #9ca3af; text-align: center; }
     </style>
 </head>
 <body>
 
+    <!-- Tombol Kembali ke Halaman Login -->
+    <div class="top-nav">
+        <a href="login.html" class="btn-back-login">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Kembali ke Login
+        </a>
+    </div>
     <div class="header">
         <!-- Pastikan path logo.png Anda sesuai -->
         <img src="logo.png" alt="Logo STAIIS">
@@ -57,12 +72,12 @@
                 <div class="detail-row"><div class="detail-label">Nomor Surat</div><div class="detail-value" id="resNomor"></div></div>
                 <div class="detail-row"><div class="detail-label">Divisi / Bagian</div><div class="detail-value" id="resDivisi"></div></div>
                 <div class="detail-row"><div class="detail-label">Perihal / Keterangan</div><div class="detail-value" id="resKet"></div></div>
-            </div>
+                <div class="preview-container"><div id="fileActionArea"></div></div>
         </div>
     </div>
 
     <div class="footer">
-        &copy; 2026 Layanan Administrasi Persuratan STAIIS
+        &copy; 2026 arsip.staiis
     </div>
 
     <script>
@@ -117,7 +132,18 @@
                         document.getElementById('resNomor').innerText = dokumenDitemukan.nomor;
                         document.getElementById('resDivisi').innerText = dokumenDitemukan.divisi;
                         document.getElementById('resKet').innerText = dokumenDitemukan.keterangan;
-                        
+                        // Menampilkan Tombol Preview File PDF jika tersedia di database
+                        const fileActionArea = document.getElementById('fileActionArea');
+                        if (dokumenDitemukan.fileUrl && dokumenDitemukan.fileUrl.trim() !== "") {
+                            fileActionArea.innerHTML = `
+                                <a href="${dokumenDitemukan.fileUrl}" target="_blank" class="btn-preview">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    Preview / Lihat Dokumen Scan PDF
+                                </a>
+                            `;
+                        } else {
+                            fileActionArea.innerHTML = `<div class="no-file-text">File scan PDF belum diunggah untuk surat ini.</div>`;
+                        }
                         detailSurat.style.display = "block";
                     } else {
                         statusBadge.className = "status-badge status-invalid";
