@@ -473,98 +473,105 @@ function copyNumber() {
 }
 const formPenomoran = document.getElementById('formPenomoran');
 if (formPenomoran) {
-   formPenomoran.addEventListener('submit', async function(e) {
-    e.preventDefault();
+    formPenomoran.addEventListener('submit', async function(e) {
+        e.preventDefault();
 
-    const tombol = document.getElementById('btnSubmitPenomoran');
-    const teksAsli = tombol.innerText;
-    tombol.innerHTML = '<span class="spinner"></span> Merekam...';
-    tombol.disabled = true;
-    tombol.style.opacity = "0.8";
-    tombol.style.cursor = "wait";
-
-    const elDivisi = document.getElementById('divisi');
-    const elJenis = document.getElementById('jenis');
-    
-    // 1. Menangkap Jumlah Surat (Default: 1 jika kosong)
-    const inputJumlah = document.getElementById('jumlahGenerate');
-    const jumlahTarget = inputJumlah && inputJumlah.value ? parseInt(inputJumlah.value) : 1;
-    
-    // 2. Mendapatkan Format Nomor Dasar
-    const nomorDasar = generateNomorOtomatisPreview(); 
-    const bagianNomor = nomorDasar.split('/'); // Memecah jadi array: ['001', 'DIV-SK', 'STAIIS', ...]
-    const urutanAwal = parseInt(bagianNomor[0], 10);
-    
-    let arrayDataBaru = [];
-    let nomorPertama = "";
-    let nomorTerakhir = "";
-
-    // 3. Looping untuk Membuat Nomor Sebanyak 'jumlahTarget'
-    for (let i = 0; i < jumlahTarget; i++) {
-        let urutanBaru = String(urutanAwal + i).padStart(3, '0');
-        let formatBaru = [...bagianNomor];
-        formatBaru[0] = urutanBaru; // Mengganti urutan awal dengan urutan yang sudah ditambah
-        let nomorFinal = formatBaru.join('/');
+        const tombol = document.getElementById('btnSubmitPenomoran');
         
-        if (i === 0) nomorPertama = nomorFinal;
-        if (i === jumlahTarget - 1) nomorTerakhir = nomorFinal;
-
-        arrayDataBaru.push({
-            nomor: nomorFinal,
-            tanggal: document.getElementById('tanggal').value,
-            divisi: elDivisi.options[elDivisi.selectedIndex].text,
-            jenis: elJenis.options[elJenis.selectedIndex].text,
-            // Menambahkan penanda pada keterangan jika digenerate massal
-            keterangan: jumlahTarget > 1 ? `${document.getElementById('keterangan').value} (${i + 1}/${jumlahTarget})` : document.getElementById('keterangan').value
-        });
-    }
-
-    // 4. Membungkus Data ke dalam Payload Bulk
-    const payload = {
-        action: "create_bulk",
-        data: arrayDataBaru
-    };
-
-    try {
-        await fetch(urlAPI, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
-        this.reset();
+        // PERBAIKAN 1: Gunakan innerHTML agar ikon bawaan tombol tidak terhapus
+        const teksAsli = tombol.innerHTML; 
         
-        // --- TAMPILAN GABUNGAN NOMOR DAN KETERANGAN ---
-        const resultNumberEl = document.getElementById('resultNumberText');
+        // Mengaktifkan spinner
+        tombol.innerHTML = '<span class="spinner"></span> Merekam...';
+        tombol.disabled = true;
+        tombol.style.opacity = "0.8";
+        tombol.style.cursor = "wait";
+
+        // PERBAIKAN 2: Memaksa browser untuk "menggambar" spinner ke layar terlebih dahulu
+        // sebelum lanjut mengeksekusi kode di bawahnya (Jeda 15 milidetik)
+        await new Promise(resolve => setTimeout(resolve, 15));
+
+        const elDivisi = document.getElementById('divisi');
+        const elJenis = document.getElementById('jenis');
         
-        // 1. Simpan nomor awal murni ke atribut tersembunyi untuk kebutuhan tombol Copy
-        resultNumberEl.setAttribute('data-nomor', nomorPertama);
-        // --- BARIS KODE BARU UNTUK MENGHASILKAN QR CODE ---
-        const urlVerifikasi = `https://persuratan-staiis.vercel.app/verifikasi.html?nomor=${encodeURIComponent(nomorPertama)}`;
-        document.getElementById('qrCodeImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${urlVerifikasi}&margin=0`;
-        // 2. Membersihkan teks keterangan dari embel-embel (1/50)
-        let deskripsiAsli = payload.data[0].keterangan.replace(" (1/" + jumlahTarget + ")", "");
+        // 1. Menangkap Jumlah Surat (Default: 1 jika kosong)
+        const inputJumlah = document.getElementById('jumlahGenerate');
+        const jumlahTarget = inputJumlah && inputJumlah.value ? parseInt(inputJumlah.value) : 1;
         
-        // 3. Menata tampilan Nomor dan Keterangan
-        if (jumlahTarget > 1) {
-            // Gabungkan nomor awal dan nomor akhir dalam 1 kotak secara visual
-            resultNumberEl.innerHTML = `${nomorPertama} <span style="color: var(--text-gray); font-size: 13px; font-weight: 500; font-style: italic; margin-left: 8px;">(s/d ${nomorTerakhir})</span>`;
+        // 2. Mendapatkan Format Nomor Dasar
+        const nomorDasar = generateNomorOtomatisPreview(); 
+        const bagianNomor = nomorDasar.split('/'); 
+        const urutanAwal = parseInt(bagianNomor[0], 10);
+        
+        let arrayDataBaru = [];
+        let nomorPertama = "";
+        let nomorTerakhir = "";
+
+        // 3. Looping untuk Membuat Nomor Sebanyak 'jumlahTarget'
+        for (let i = 0; i < jumlahTarget; i++) {
+            let urutanBaru = String(urutanAwal + i).padStart(3, '0');
+            let formatBaru = [...bagianNomor];
+            formatBaru[0] = urutanBaru; 
+            let nomorFinal = formatBaru.join('/');
             
-            // Keterangan kini hanya menampilkan teks aslinya saja
-            document.getElementById('resultDescText').innerText = deskripsiAsli;
-        } else {
-            // Jika generate hanya 1 (tunggal)
-            resultNumberEl.innerText = nomorPertama;
-            document.getElementById('resultDescText').innerText = deskripsiAsli;
-        }
-        
-        document.getElementById('resultBox').style.display = 'block';
+            if (i === 0) nomorPertama = nomorFinal;
+            if (i === jumlahTarget - 1) nomorTerakhir = nomorFinal;
 
-        muatDataReferensi();
-    } catch (err) {
-        alert("Terjadi kesalahan jaringan.");
-    } finally {
-        tombol.innerText = teksAsli;
-        tombol.disabled = false;
-        tombol.style.opacity = "1";
-        tombol.style.cursor = "pointer";
-    }
-});
+            arrayDataBaru.push({
+                nomor: nomorFinal,
+                tanggal: document.getElementById('tanggal').value,
+                divisi: elDivisi.options[elDivisi.selectedIndex].text,
+                jenis: elJenis.options[elJenis.selectedIndex].text,
+                // Menambahkan penanda pada keterangan jika digenerate massal
+                keterangan: jumlahTarget > 1 ? `${document.getElementById('keterangan').value} (${i + 1}/${jumlahTarget})` : document.getElementById('keterangan').value
+            });
+        }
+
+        // 4. Membungkus Data ke dalam Payload Bulk
+        const payload = {
+            action: "create_bulk",
+            data: arrayDataBaru
+        };
+
+        try {
+            await fetch(urlAPI, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
+            this.reset();
+            
+            // --- TAMPILAN GABUNGAN NOMOR DAN KETERANGAN ---
+            const resultNumberEl = document.getElementById('resultNumberText');
+            
+            // 1. Simpan nomor awal murni ke atribut tersembunyi untuk kebutuhan tombol Copy
+            resultNumberEl.setAttribute('data-nomor', nomorPertama);
+            
+            // --- BARIS KODE BARU UNTUK MENGHASILKAN QR CODE ---
+            const urlVerifikasi = `https://persuratan-staiis.vercel.app/verifikasi.html?nomor=${encodeURIComponent(nomorPertama)}`;
+            document.getElementById('qrCodeImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${urlVerifikasi}&margin=0`;
+            
+            // 2. Membersihkan teks keterangan dari embel-embel (1/50)
+            let deskripsiAsli = payload.data[0].keterangan.replace(" (1/" + jumlahTarget + ")", "");
+            
+            // 3. Menata tampilan Nomor dan Keterangan
+            if (jumlahTarget > 1) {
+                resultNumberEl.innerHTML = `${nomorPertama} <span style="color: var(--text-gray); font-size: 13px; font-weight: 500; font-style: italic; margin-left: 8px;">(s/d ${nomorTerakhir})</span>`;
+                document.getElementById('resultDescText').innerText = deskripsiAsli;
+            } else {
+                resultNumberEl.innerText = nomorPertama;
+                document.getElementById('resultDescText').innerText = deskripsiAsli;
+            }
+            
+            document.getElementById('resultBox').style.display = 'block';
+
+            muatDataReferensi();
+        } catch (err) {
+            alert("Terjadi kesalahan jaringan.");
+        } finally {
+            // PERBAIKAN 3: Gunakan innerHTML untuk mengembalikan keadaan
+            tombol.innerHTML = teksAsli;
+            tombol.disabled = false;
+            tombol.style.opacity = "1";
+            tombol.style.cursor = "pointer";
+        }
+    });
 }
 
 const formEdit = document.getElementById('formEdit');
