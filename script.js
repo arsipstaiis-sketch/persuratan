@@ -445,31 +445,6 @@ function copyNumber() {
         console.error('Gagal menyalin:', err);
         showToast("Gagal menyalin nomor. Silakan copy secara manual.");
     });
-    
-    // Proses mengambil (fetch) gambar dari API menjadi file yang siap diunduh
-    fetch(imgSrc)
-        .then(response => response.blob())
-        .then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            a.download = namaFile; // Menamai file yang diunduh
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-        })
-        .catch(() => {
-            // Jalur alternatif (fallback) jika sistem browser memblokir fetch langsung
-            const a = document.createElement('a');
-            a.href = imgSrc;
-            a.download = namaFile;
-            a.target = '_blank';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        });
 }
 const formPenomoran = document.getElementById('formPenomoran');
 if (formPenomoran) {
