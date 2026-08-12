@@ -38,11 +38,6 @@ function switchTab(tabId, btnElement) {
     
     const resultBox = document.getElementById('resultBox');
     if (resultBox) resultBox.style.display = 'none';
-    if (tabId === 'arsip') {
-        setTimeout(updateProxyWidth, 100);
-    } else {
-        document.getElementById('bottomScrollProxy').style.display = 'none';
-    }
     
     const formNomor = document.getElementById('formPenomoran');
     if (formNomor) formNomor.reset();
@@ -340,7 +335,6 @@ function renderTabelSesuaiHalaman() {
     if (badanTabel) badanTabel.innerHTML = htmlBaris || `<tr><td colspan="${colspanVal}" style="text-align:center; color:var(--text-gray); padding:30px;">Tidak ada arsip yang cocok.</td></tr>`;
     
     perbaruiInfoPagination();
-    setTimeout(updateProxyWidth, 50);
 }
 
 // --- FUNGSI KONTROL NAVIGASI HALAMAN (BARU) ---
