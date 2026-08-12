@@ -1,0 +1,289 @@
+:root {
+    --primary-dark: #0d5c3d;
+    --primary-light: #167a53;
+    --bg-color: #f4f7f6;
+    --text-dark: #1f2937;
+    --text-gray: #6b7280;
+    --border-color: #e5e7eb;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-accent-top-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 300px;
+    background: var(--primary-light);
+    border-bottom-left-radius: 100%;
+    z-index: 0;
+    opacity: 0.8;
+}
+
+.login-wrapper {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    width: 100%;
+    max-width: 900px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+/* --- PANEL KIRI --- */
+.login-left {
+    width: 45%;
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
+    color: white;
+    padding: 50px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 100px;
+}
+
+.login-title {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+.login-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    opacity: 0.95;
+}
+
+/* --- PANEL KANAN --- */
+.login-right {
+    width: 55%;
+    padding: 40px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #ffffff;
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.login-logo {
+    width: 75px;
+    height: auto;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+}
+
+.form-group {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #f1f5f9;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-size: 13.5px;
+    color: var(--text-dark);
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.form-control:focus {
+    outline: none;
+    background-color: #ffffff;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(22, 122, 83, 0.1);
+}
+
+.password-group .eye-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #94a3b8;
+    font-size: 16px;
+}
+
+.btn-login-submit {
+    width: 100%;
+    background: var(--primary-light);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s;
+}
+
+.btn-login-submit:hover {
+    background: var(--primary-dark);
+}
+
+.login-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    font-size: 11px;
+    color: var(--text-gray);
+}
+
+/* Responsivitas untuk Layar Kecil */
+@media (max-width: 800px) {
+    /* --- TAMBAHAN BARU: Mendorong form ke atas pada layar HP --- */
+    body {
+        align-items: flex-start; 
+        padding-top: 30px; /* Ubah angka ini jika masih kurang naik/turun */
+        padding-bottom: 30px;
+    }
+    .login-wrapper {
+        flex-direction: column;
+        width: 90%;
+    }
+    .login-left {
+        width: 100%;
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 16px;
+        padding: 40px 30px;
+    }
+    .login-right {
+        width: 100%;
+        padding: 40px 30px;
+        border-bottom-left-radius: 16px;
+    }
+    .bg-accent-top-right {
+        display: none;
+    }
+}
+
+/* ========================================= */
+/* --- TAMBAHAN ANIMASI SPINNER & TOAST  --- */
+/* ========================================= */
+
+/* --- ANIMASI SPINNER PADA TOMBOL --- */
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #ffffff;
+    animation: spin 0.8s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+    margin-top: -2px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* --- NOTIFIKASI TOAST MODERN (Tema Terang & Menyatu) --- */
+.modern-toast {
+    visibility: hidden;
+    min-width: 280px;
+    background-color: #ffffff; /* Latar belakang putih bersih */
+    color: #1f2937; /* Warna teks abu-abu gelap */
+    text-align: left; /* Rata kiri agar lebih rapi */
+    border-radius: 8px;
+    padding: 16px 20px;
+    position: fixed;
+    z-index: 9999;
+    left: 50%;
+    bottom: -60px;
+    transform: translateX(-50%);
+    font-size: 14px;
+    font-weight: 600;
+    
+    /* Bayangan lembut khas desain modern */
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb; /* Garis batas tipis */
+    
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    opacity: 0;
+}
+
+.modern-toast.show {
+    visibility: visible;
+    opacity: 1;
+    bottom: 40px; 
+}
+
+/* Indikator Warna (Garis kiri dan warna teks yang disesuaikan) */
+.modern-toast.success { 
+    border-left: 5px solid var(--primary-light, #167a53); 
+    color: var(--primary-dark, #0d5c3d); /* Teks menjadi hijau tua */
+}
+.modern-toast.error { 
+    border-left: 5px solid #ef4444; 
+    color: #991b1b; /* Teks menjadi merah tua */
+}
+.modern-toast.info { 
+    border-left: 5px solid #3b82f6; 
+    color: #1e40af; /* Teks menjadi biru tua */
+}
+/* --- TOMBOL VERIFIKASI DI PANEL KIRI (LOGIN) --- */
+.verifikasi-link-container {
+    margin-top: 40px; /* Memberikan jarak dengan teks deskripsi di atasnya */
+}
+
+.btn-verifikasi-login {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; /* Jarak antara ikon dan teks */
+    background: rgba(255, 255, 255, 0.15); /* Efek putih transparan */
+    color: #ffffff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    transition: all 0.3s ease;
+    width: fit-content; /* Lebar tombol menyesuaikan isi teks */
+}
+
+.btn-verifikasi-login:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-2px); /* Efek tombol terangkat sedikit saat disorot */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsivitas untuk Layar HP (Panel Kiri Login) */
+@media (max-width: 800px) {
+    .verifikasi-link-container {
+        margin-top: 30px;
+    }
+}
