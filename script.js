@@ -15,7 +15,7 @@ window.currentSort = 'terbaru';
 // --- VARIABEL PAGINATION (BARU) ---
 let dataArsipTampil = []; 
 let halamanSaatIni = 1;
-const barisPerHalaman = 50;
+const barisPerHalaman = 7;
 
 const tableWrapper = document.getElementById('tableScrollWrapper');
 const mainTable = document.getElementById('mainTable');
