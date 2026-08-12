@@ -188,9 +188,9 @@ form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     overflow-y: auto;
     position: relative;
     
-    /* Mengunci tinggi tabel agar batas bawahnya selalu sejajar dengan batas bawah layar */
-    height: calc(100vh - 280px); 
-    min-height: 300px; /* Batas aman agar tabel tidak terlalu menyusut di layar kecil */
+    height: auto !important;
+    min-height: 0 !important; 
+    margin-bottom: 0;
     
     border: 1px solid var(--border-light); 
     border-radius: 12px; 
