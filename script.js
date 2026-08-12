@@ -18,31 +18,7 @@ let halamanSaatIni = 1;
 const barisPerHalaman = 7;
 
 const tableWrapper = document.getElementById('tableScrollWrapper');
-const bottomProxy = document.getElementById('bottomScrollProxy');
-const bottomContent = document.getElementById('bottomScrollContent');
 const mainTable = document.getElementById('mainTable');
-
-function updateProxyWidth() {
-    if (mainTable && bottomContent) {
-        if (mainTable.scrollWidth > tableWrapper.clientWidth) {
-            bottomProxy.style.display = 'block';
-            bottomContent.style.width = mainTable.scrollWidth + 'px';
-        } else {
-            bottomProxy.style.display = 'none';
-        }
-    }
-}
-
-function syncScroll(source) {
-    if (source === 'proxy') {
-        tableWrapper.scrollLeft = bottomProxy.scrollLeft;
-    } else {
-        bottomProxy.scrollLeft = tableWrapper.scrollLeft;
-    }
-}
-
-tableWrapper.addEventListener('scroll', () => syncScroll('table'));
-window.addEventListener('resize', updateProxyWidth);
 
 function showToast(pesan) {
     const toast = document.getElementById("toastNotification") || document.getElementById("toast");
