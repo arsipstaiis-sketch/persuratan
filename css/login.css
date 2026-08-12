@@ -152,7 +152,6 @@ body {
 
 .login-footer {
     display: flex;
-    text-align: right;
     justify-content: flex-end;
     margin-top: 30px;
     font-size: 11px;
