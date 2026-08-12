@@ -12,6 +12,11 @@ const urlAPI = "https://script.google.com/macros/s/AKfycbyKRnIKopECo_pADMEP_Cw5s
 window.arsipGlobal = [];
 window.currentSort = 'terbaru';
 
+// --- VARIABEL PAGINATION (BARU) ---
+let dataArsipTampil = []; 
+let halamanSaatIni = 1;
+const barisPerHalaman = 7;
+
 const tableWrapper = document.getElementById('tableScrollWrapper');
 const bottomProxy = document.getElementById('bottomScrollProxy');
 const bottomContent = document.getElementById('bottomScrollContent');
@@ -40,10 +45,13 @@ tableWrapper.addEventListener('scroll', () => syncScroll('table'));
 window.addEventListener('resize', updateProxyWidth);
 
 function showToast(pesan) {
-    const toast = document.getElementById("toast");
-    toast.innerText = pesan;
-    toast.className = "show";
-    setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+    const toast = document.getElementById("toastNotification") || document.getElementById("toast");
+    const toastMsg = document.getElementById("toastMessage");
+    if (toastMsg) toastMsg.innerText = pesan;
+    else toast.innerText = pesan;
+    
+    toast.className = "toast-notification show";
+    setTimeout(() => { toast.className = toast.className.replace("show", "").trim(); }, 3000);
 }
 
 function switchTab(tabId, btnElement) {
@@ -52,7 +60,6 @@ function switchTab(tabId, btnElement) {
     document.getElementById(tabId).classList.add('active');
     btnElement.classList.add('active');
     
-    //document.getElementById('reminderBox').style.display = 'none';
     const resultBox = document.getElementById('resultBox');
     if (resultBox) resultBox.style.display = 'none';
     if (tabId === 'arsip') {
@@ -60,19 +67,16 @@ function switchTab(tabId, btnElement) {
     } else {
         document.getElementById('bottomScrollProxy').style.display = 'none';
     }
-    // A. Hapus Isian Form Penomoran
+    
     const formNomor = document.getElementById('formPenomoran');
     if (formNomor) formNomor.reset();
 
-    // B. Hapus Isian Form Upload (Sesuaikan ID form jika berbeda, misal 'formUpload')
     const formUpload = document.getElementById('formUpload');
     if (formUpload) formUpload.reset();
 
-    // C. Hapus Teks di Kotak Pencarian Arsip & Kembalikan Tabel
-    const pencarian = document.getElementById('searchInput'); // Sesuaikan ID jika berbeda
+    const pencarian = document.getElementById('searchInput');
     if (pencarian && pencarian.value !== '') {
         pencarian.value = '';
-        // Memanggil ulang tabel agar tidak tersangkut di hasil pencarian sebelumnya
         if (typeof renderTabelArsip === "function") {
             renderTabelArsip(); 
         }
@@ -171,7 +175,6 @@ function hitungTahunAkademik(tanggalStr) {
 
 async function muatDataReferensi() {
     try {
-        // 1. INGAT/SIMPAN STATUS FILTER SAAT INI SEBELUM DATA DI-REFRESH
         const filterDivisiEl = document.getElementById('filterDivisi');
         const filterJenisEl = document.getElementById('filterJenis');
         const filterTAEl = document.getElementById('filterTahunAkademik');
@@ -182,14 +185,12 @@ async function muatDataReferensi() {
         const valTA = filterTAEl ? filterTAEl.value : "";
         const valBerkas = filterBerkasEl ? filterBerkasEl.value : "";
 
-        // Mengambil data terbaru dari Google Sheet
         const res = await fetch(urlAPI);
         const hasil = await res.json();
         
         if (hasil.status === "success") {
             window.arsipGlobal = hasil.data;
 
-            // Memperbarui dropdown Form Penomoran
             const selDivisi = document.getElementById('divisi');
             if (selDivisi) {
                 selDivisi.innerHTML = `<option value="" disabled selected>-- Pilih Divisi --</option>` + 
@@ -202,34 +203,32 @@ async function muatDataReferensi() {
                     hasil.kode_surat.map(item => `<option value="${item.kode}">${item.nama}</option>`).join('');
             }
 
-            // Memperbarui dropdown Filter DAN MENGEMBALIKAN NILAI YANG DIINGAT (Disimpan)
             if (filterDivisiEl) {
                 filterDivisiEl.innerHTML = `<option value="">Semua Divisi</option>` + 
                     hasil.kode_divisi.map(item => `<option value="${item.nama}">${item.nama}</option>`).join('');
-                filterDivisiEl.value = valDivisi; // Kembalikan ke pilihan terakhir pengguna
+                filterDivisiEl.value = valDivisi; 
             }
 
             if (filterJenisEl) {
                 filterJenisEl.innerHTML = `<option value="">Semua Jenis</option>` + 
                     hasil.kode_surat.map(item => `<option value="${item.nama}">${item.nama}</option>`).join('');
-                filterJenisEl.value = valJenis; // Kembalikan ke pilihan terakhir pengguna
+                filterJenisEl.value = valJenis; 
             }
 
             const setTahunAkademik = [...new Set(hasil.data.map(item => hitungTahunAkademik(item.tanggal)))].filter(t => t !== "-").sort().reverse();
             if (filterTAEl) {
                 filterTAEl.innerHTML = `<option value="">Semua Tahun</option>` + 
                     setTahunAkademik.map(ta => `<option value="${ta}">${ta}</option>`).join('');
-                filterTAEl.value = valTA; // Kembalikan ke pilihan terakhir pengguna
+                filterTAEl.value = valTA; 
             }
 
             if (filterBerkasEl) {
-                filterBerkasEl.value = valBerkas; // Kembalikan status filter berkas
+                filterBerkasEl.value = valBerkas; 
             }
 
             const loading = document.getElementById('loadingStatus');
             if (loading) loading.style.display = 'none';
             
-            // Render tabel menggunakan kondisi filter yang sudah di-restore
             renderTabelArsip();
         }
     } catch (err) {
@@ -238,6 +237,7 @@ async function muatDataReferensi() {
     }
 }
 
+// --- FUNGSI RENDER (HANYA FILTER & SORT) ---
 function renderTabelArsip() {
     updateFilterButtonState();
     updateSortIcon();
@@ -257,6 +257,7 @@ function renderTabelArsip() {
     const filterBerkas = document.getElementById('filterBerkas');
     const fBerkas = filterBerkas ? filterBerkas.value : "";
 
+    // Menyaring data
     let dataFiltered = window.arsipGlobal.filter(item => {
         const matchKeyword = (item.nomor || "").toLowerCase().includes(keyword) || (item.keterangan || "").toLowerCase().includes(keyword);
         const matchDivisi = fDivisi === "" || item.divisi === fDivisi;
@@ -271,17 +272,26 @@ function renderTabelArsip() {
         return matchKeyword && matchDivisi && matchJenis && matchTA && matchBerkas;
     });
 
+    // Mengurutkan data
     dataFiltered.sort((a, b) => {
         const dateA = new Date(a.tanggal);
         const dateB = new Date(b.tanggal);
         return window.currentSort === 'terbaru' ? dateB - dateA : dateA - dateB;
     });
 
-    // --- [TAMBAHAN] CEK ROLE DARI BROWSER ---
+    // Simpan data final ke variabel pagination dan reset ke halaman 1
+    dataArsipTampil = dataFiltered;
+    halamanSaatIni = 1;
+    
+    // Panggil fungsi penggambaran tabel berdasarkan halaman
+    renderTabelSesuaiHalaman();
+}
+
+// --- FUNGSI MENGGAMBAR TABEL SESUAI HALAMAN (BARU) ---
+function renderTabelSesuaiHalaman() {
     const roleSaatIni = sessionStorage.getItem('userRole') || 'pengguna';
     const isAdmin = (roleSaatIni === 'admin');
 
-    // 1. Atur Header Tabel Secara Dinamis
     const headerRow = document.getElementById('tableHeaderRow');
     if (headerRow) {
         if (isAdmin) {
@@ -293,7 +303,7 @@ function renderTabelArsip() {
                 <th class="col-nomor">Nomor Surat</th>
                 <th class="col-keterangan">Keterangan</th>
                 <th class="col-berkas">Berkas</th>
-                <th class="col-aksi">Aksi</th> <!-- Judul kolom AKSI dikembalikan khusus untuk Admin -->
+                <th class="col-aksi">Aksi</th>
             `;
         } else {
             headerRow.innerHTML = `
@@ -308,13 +318,17 @@ function renderTabelArsip() {
         }
     }
 
-    const htmlBaris = dataFiltered.map(item => {
+    // Hitung indeks pemotongan array
+    const startIndex = (halamanSaatIni - 1) * barisPerHalaman;
+    const endIndex = startIndex + barisPerHalaman;
+    const dataHalamanIni = dataArsipTampil.slice(startIndex, endIndex);
+
+    const htmlBaris = dataHalamanIni.map(item => {
         let linkAman = item.link;
         if (linkAman && !linkAman.startsWith('http')) linkAman = 'https://' + linkAman;
         const tanggalFormatted = formatTanggalDDMMYYYY(item.tanggal);
         const tahunAkademik = hitungTahunAkademik(item.tanggal);
         
-        // --- [TAMBAHAN] LOGIKA TOMBOL EDIT ---
         let kolomAksiHtml = '';
         if (isAdmin) {
             kolomAksiHtml = `
@@ -347,10 +361,49 @@ function renderTabelArsip() {
     
     const colspanVal = isAdmin ? 8 : 7;
     const badanTabel = document.getElementById('badanTabel');
-    if (badanTabel) badanTabel.innerHTML = htmlBaris || '<tr><td colspan="8" style="text-align:center; color:var(--text-gray); padding:30px;">Tidak ada arsip yang cocok.</td></tr>';
+    if (badanTabel) badanTabel.innerHTML = htmlBaris || `<tr><td colspan="${colspanVal}" style="text-align:center; color:var(--text-gray); padding:30px;">Tidak ada arsip yang cocok.</td></tr>`;
+    
+    perbaruiInfoPagination();
     setTimeout(updateProxyWidth, 50);
 }
 
+// --- FUNGSI KONTROL NAVIGASI HALAMAN (BARU) ---
+function gantiHalaman(arah) {
+    const totalHalaman = Math.ceil(dataArsipTampil.length / barisPerHalaman);
+    halamanSaatIni += arah;
+    
+    if (halamanSaatIni < 1) halamanSaatIni = 1;
+    if (halamanSaatIni > totalHalaman) halamanSaatIni = totalHalaman;
+    
+    renderTabelSesuaiHalaman();
+}
+
+function perbaruiInfoPagination() {
+    const totalData = dataArsipTampil.length;
+    const totalHalaman = Math.ceil(totalData / barisPerHalaman);
+    
+    const btnPrev = document.getElementById('btnPrevPage');
+    const btnNext = document.getElementById('btnNextPage');
+    const info = document.getElementById('paginationInfo');
+
+    if (info) {
+        const start = totalData === 0 ? 0 : ((halamanSaatIni - 1) * barisPerHalaman) + 1;
+        const end = Math.min(halamanSaatIni * barisPerHalaman, totalData);
+        info.innerText = `Menampilkan ${start}-${end} dari ${totalData} data`;
+    }
+
+    if (btnPrev) {
+        btnPrev.disabled = (halamanSaatIni === 1 || totalData === 0);
+        btnPrev.style.opacity = btnPrev.disabled ? "0.5" : "1";
+    }
+    
+    if (btnNext) {
+        btnNext.disabled = (halamanSaatIni >= totalHalaman || totalData === 0);
+        btnNext.style.opacity = btnNext.disabled ? "0.5" : "1";
+    }
+}
+
+// --- SISA KODE LAINNYA ---
 function generateNomorOtomatisPreview() {
     const tglVal = document.getElementById('tanggal').value;
     const divisiKode = document.getElementById('divisi').value;
@@ -429,9 +482,6 @@ function tutupResultBox() {
 }
 function copyNumber() {
     const el = document.getElementById('resultNumberText');
-    
-    // KUNCI: Ambil teks dari atribut tersembunyi 'data-nomor' agar teks "s/d" tidak ikut tersalin. 
-    // Jika tidak ada, baru gunakan innerText standar.
     const teksNomor = el.getAttribute('data-nomor') || el.innerText;
     
     if (!teksNomor) {
@@ -452,28 +502,21 @@ if (formPenomoran) {
         e.preventDefault();
 
         const tombol = document.getElementById('btnSubmitPenomoran');
-        
-        // PERBAIKAN 1: Gunakan innerHTML agar ikon bawaan tombol tidak terhapus
         const teksAsli = tombol.innerHTML; 
         
-        // Mengaktifkan spinner
         tombol.innerHTML = `<svg style="animation: spin 1s linear infinite; margin-right: 8px; vertical-align: middle; margin-top: -2px;" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg> Merekam...`;
         tombol.disabled = true;
         tombol.style.opacity = "0.8";
         tombol.style.cursor = "wait";
 
-        // PERBAIKAN 2: Memaksa browser untuk "menggambar" spinner ke layar terlebih dahulu
-        // sebelum lanjut mengeksekusi kode di bawahnya (Jeda 15 milidetik)
         await new Promise(resolve => setTimeout(resolve, 15));
 
         const elDivisi = document.getElementById('divisi');
         const elJenis = document.getElementById('jenis');
         
-        // 1. Menangkap Jumlah Surat (Default: 1 jika kosong)
         const inputJumlah = document.getElementById('jumlahGenerate');
         const jumlahTarget = inputJumlah && inputJumlah.value ? parseInt(inputJumlah.value) : 1;
         
-        // 2. Mendapatkan Format Nomor Dasar
         const nomorDasar = generateNomorOtomatisPreview(); 
         const bagianNomor = nomorDasar.split('/'); 
         const urutanAwal = parseInt(bagianNomor[0], 10);
@@ -482,7 +525,6 @@ if (formPenomoran) {
         let nomorPertama = "";
         let nomorTerakhir = "";
 
-        // 3. Looping untuk Membuat Nomor Sebanyak 'jumlahTarget'
         for (let i = 0; i < jumlahTarget; i++) {
             let urutanBaru = String(urutanAwal + i).padStart(3, '0');
             let formatBaru = [...bagianNomor];
@@ -497,12 +539,10 @@ if (formPenomoran) {
                 tanggal: document.getElementById('tanggal').value,
                 divisi: elDivisi.options[elDivisi.selectedIndex].text,
                 jenis: elJenis.options[elJenis.selectedIndex].text,
-                // Menambahkan penanda pada keterangan jika digenerate massal
                 keterangan: jumlahTarget > 1 ? `${document.getElementById('keterangan').value} (${i + 1}/${jumlahTarget})` : document.getElementById('keterangan').value
             });
         }
 
-        // 4. Membungkus Data ke dalam Payload Bulk
         const payload = {
             action: "create_bulk",
             data: arrayDataBaru
@@ -512,20 +552,14 @@ if (formPenomoran) {
             await fetch(urlAPI, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
             this.reset();
             
-            // --- TAMPILAN GABUNGAN NOMOR DAN KETERANGAN ---
             const resultNumberEl = document.getElementById('resultNumberText');
-            
-            // 1. Simpan nomor awal murni ke atribut tersembunyi untuk kebutuhan tombol Copy
             resultNumberEl.setAttribute('data-nomor', nomorPertama);
             
-            // --- BARIS KODE BARU UNTUK MENGHASILKAN QR CODE ---
             const urlVerifikasi = `https://persuratan-staiis.vercel.app/verifikasi.html?nomor=${encodeURIComponent(nomorPertama)}`;
             document.getElementById('qrCodeImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${urlVerifikasi}&margin=0`;
             
-            // 2. Membersihkan teks keterangan dari embel-embel (1/50)
             let deskripsiAsli = payload.data[0].keterangan.replace(" (1/" + jumlahTarget + ")", "");
             
-            // 3. Menata tampilan Nomor dan Keterangan
             if (jumlahTarget > 1) {
                 resultNumberEl.innerHTML = `${nomorPertama} <span style="color: var(--text-gray); font-size: 13px; font-weight: 500; font-style: italic; margin-left: 8px;">(s/d ${nomorTerakhir})</span>`;
                 document.getElementById('resultDescText').innerText = deskripsiAsli;
@@ -540,7 +574,6 @@ if (formPenomoran) {
         } catch (err) {
             alert("Terjadi kesalahan jaringan.");
         } finally {
-            // PERBAIKAN 3: Gunakan innerHTML untuk mengembalikan keadaan
             tombol.innerHTML = teksAsli;
             tombol.disabled = false;
             tombol.style.opacity = "1";
@@ -553,7 +586,7 @@ const formEdit = document.getElementById('formEdit');
 if (formEdit) {
     formEdit.addEventListener('submit', async function(e) {
         e.preventDefault();
-        const tombolEdit = this.querySelector('button[type="submit"]'); // atau gunakan getElementById
+        const tombolEdit = this.querySelector('button[type="submit"]'); 
         const teksAsliEdit = tombolEdit.innerText;
     
         tombolEdit.innerHTML = '<span class="spinner"></span> Menyimpan...';
@@ -599,19 +632,15 @@ if (formUpload) {
     formUpload.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        // --- [BAGIAN BARU] TANGKAP FILE DARI HTML ---
-        // Catatan: Pastikan 'upload_file' di bawah ini sama dengan ID pada <input type="file"> di index.html Anda
         const fileInput = document.getElementById('upload_file'); 
         const file = fileInput.files[0];
 
-        // Mencegah proses lanjut jika user belum memilih file
         if (!file) {
             alert("Silakan pilih file hasil scan terlebih dahulu!");
             return;
         }
-        // ---------------------------------------------
 
-        const tombolUpload = this.querySelector('button[type="submit"]'); // atau gunakan getElementById
+        const tombolUpload = this.querySelector('button[type="submit"]'); 
         const teksAsliUpload = tombolUpload.innerText;
     
         tombolUpload.innerHTML = '<span class="spinner"></span> Mengunggah...';
@@ -620,7 +649,6 @@ if (formUpload) {
         tombolUpload.style.cursor = "wait";
 
         const reader = new FileReader();
-        // Sekarang sistem tahu 'file' itu berasal dari fileInput di atas
         reader.readAsDataURL(file); 
         
         reader.onload = async function () {
@@ -655,39 +683,19 @@ if (formUpload) {
     });
 }
 
-// Menjalankan fungsi muat referensi pertama kali saat script dimuat
 muatDataReferensi();
-// Fungsi untuk keluar dari sistem
-// Membuka modal khusus
+
 function logoutSistem() {
     const modal = document.getElementById('logoutModal');
     if(modal) modal.classList.add('show');
 }
 
-// Menutup modal tanpa logout
 function tutupLogoutModal() {
     const modal = document.getElementById('logoutModal');
     if(modal) modal.classList.remove('show');
 }
 
-// Eksekusi logout jika tombol "Keluar" ditekan
 function prosesLogout() {
-    // Hapus sesi
     sessionStorage.removeItem('userRole');
-    
-    // Ganti location.href menjadi location.replace
     window.location.replace('login.html'); 
-}
-// Fungsi untuk memunculkan notifikasi Toast
-function showToast(message) {
-    const toast = document.getElementById("toastNotification");
-    const toastMsg = document.getElementById("toastMessage");
-    
-    toastMsg.innerText = message;
-    toast.className = "toast-notification show";
-    
-    // Notifikasi akan menghilang otomatis setelah 3 detik (3000 ms)
-    setTimeout(function() { 
-        toast.className = toast.className.replace("show", ""); 
-    }, 3000);
 }
