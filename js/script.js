@@ -611,12 +611,16 @@ if (formUpload) {
         }
 
         const tombolUpload = this.querySelector('button[type="submit"]'); 
-        const teksAsliUpload = tombolUpload.innerText;
+        const teksAsliUpload = tombolUpload.innerHTML; // Gunakan innerHTML agar rapi
     
-        tombolUpload.innerHTML = '<span class="spinner"></span> Mengunggah...';
+        // 1. Ganti ke format SVG persis seperti tombol Login/Generate
+        tombolUpload.innerHTML = `<svg style="animation: spin 1s linear infinite; margin-right: 8px; vertical-align: middle; margin-top: -2px;" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg> Mengunggah...`;
         tombolUpload.disabled = true;
         tombolUpload.style.opacity = "0.8";
         tombolUpload.style.cursor = "wait";
+
+        // 2. Berikan jeda waktu agar browser sempat menggambar spinner ke layar (SANGAT PENTING)
+        await new Promise(resolve => setTimeout(resolve, 15));
 
         const reader = new FileReader();
         reader.readAsDataURL(file); 
@@ -644,7 +648,8 @@ if (formUpload) {
             } catch (err) {
                 showToast("Kesalahan jaringan saat mengupload file.");
             } finally {
-                tombolUpload.innerText = teksAsliUpload;
+                // 3. Kembalikan ke teks asli menggunakan innerHTML
+                tombolUpload.innerHTML = teksAsliUpload;
                 tombolUpload.disabled = false;
                 tombolUpload.style.opacity = "1";
                 tombolUpload.style.cursor = "pointer";
