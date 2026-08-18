@@ -686,12 +686,7 @@ function renderRiwayatPenomoran() {
         badanRiwayat.innerHTML = '<tr><td colspan="3" style="text-align:center; color: #94a3b8; padding: 15px;">Belum ada data arsip.</td></tr>';
         return;
     }
-
-    // Buat salinan data, urutkan dari yang paling baru (berdasarkan tanggal/waktu), lalu ambil 5 teratas
-    const dataTerbaru = [...window.arsipGlobal]
-        .sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal))
-        .slice(0, 5);
-
+    const dataTerbaru = [...window.arsipGlobal].reverse().slice(0, 5);
     const htmlRiwayat = dataTerbaru.map(item => {
         const tgl = formatTanggalDDMMYYYY(item.tanggal);
         return `
