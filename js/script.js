@@ -41,6 +41,8 @@ function switchTab(tabId, btnElement) {
     
     const formNomor = document.getElementById('formPenomoran');
     if (formNomor) formNomor.reset();
+    const previewContainer = document.getElementById('previewContainer');
+    if (previewContainer) previewContainer.style.display = 'none';
 
     const formUpload = document.getElementById('formUpload');
     if (formUpload) formUpload.reset();
@@ -700,3 +702,28 @@ function renderRiwayatPenomoran() {
 
     badanRiwayat.innerHTML = htmlRiwayat;
 }
+// --- FUNGSI UPDATE PRATINJAU NOMOR SECARA LANGSUNG (LIVE PREVIEW) ---
+function updateLivePreview() {
+    const tgl = document.getElementById('tanggal').value;
+    const div = document.getElementById('divisi').value;
+    const jen = document.getElementById('jenis').value;
+    const previewContainer = document.getElementById('previewContainer');
+    const teksPreview = document.getElementById('teksPreviewNomor');
+
+    // Kotak pratinjau hanya muncul jika ketiga kolom utama sudah diisi
+    if (tgl && div && jen) {
+        // Panggil fungsi bawaan yang sudah ada
+        const nomorSelanjutnya = generateNomorOtomatisPreview();
+        
+        teksPreview.innerText = nomorSelanjutnya;
+        previewContainer.style.display = 'block'; // Tampilkan kotak
+    } else {
+        previewContainer.style.display = 'none'; // Sembunyikan jika belum lengkap
+    }
+}
+
+// Memasang "pendengar" (listener) pada form. 
+// Jika elemen ini berubah, pratinjau langsung diperbarui!
+document.getElementById('tanggal').addEventListener('change', updateLivePreview);
+document.getElementById('divisi').addEventListener('change', updateLivePreview);
+document.getElementById('jenis').addEventListener('change', updateLivePreview);
