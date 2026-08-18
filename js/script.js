@@ -201,6 +201,7 @@ async function muatDataReferensi() {
             if (loading) loading.style.display = 'none';
             
             renderTabelArsip();
+            renderRiwayatPenomoran();
         }
     } catch (err) {
         const badanTabel = document.getElementById('badanTabel');
@@ -674,4 +675,33 @@ function tutupLogoutModal() {
 function prosesLogout() {
     sessionStorage.removeItem('userRole');
     window.location.replace('login.html'); 
+}
+// --- FUNGSI MENGGAMBAR RIWAYAT 5 NOMOR TERAKHIR ---
+function renderRiwayatPenomoran() {
+    const badanRiwayat = document.getElementById('badanRiwayat');
+    if (!badanRiwayat) return;
+
+    // Pastikan data global sudah termuat
+    if (!window.arsipGlobal || window.arsipGlobal.length === 0) {
+        badanRiwayat.innerHTML = '<tr><td colspan="3" style="text-align:center; color: #94a3b8; padding: 15px;">Belum ada data arsip.</td></tr>';
+        return;
+    }
+
+    // Buat salinan data, urutkan dari yang paling baru (berdasarkan tanggal/waktu), lalu ambil 5 teratas
+    const dataTerbaru = [...window.arsipGlobal]
+        .sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal))
+        .slice(0, 5);
+
+    const htmlRiwayat = dataTerbaru.map(item => {
+        const tgl = formatTanggalDDMMYYYY(item.tanggal);
+        return `
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+                <td style="padding: 10px; color: #475569;">${tgl}</td>
+                <td style="padding: 10px; font-weight: 600; color: #0f172a;">${item.nomor}</td>
+                <td style="padding: 10px; color: #475569;">${item.keterangan}</td>
+            </tr>
+        `;
+    }).join('');
+
+    badanRiwayat.innerHTML = htmlRiwayat;
 }
