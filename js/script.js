@@ -690,12 +690,14 @@ function renderRiwayatPenomoran() {
     }
     const dataTerbaru = [...window.arsipGlobal].reverse().slice(0, 5);
     const htmlRiwayat = dataTerbaru.map(item => {
-        const tgl = formatTanggalDDMMYYYY(item.tanggal);
+        const tgl = formatTanggalDDMMYYYY(item.tanggal); 
         return `
             <tr style="border-bottom: 1px solid #f1f5f9;">
-                <td style="padding: 10px; color: #475569;">${tgl}</td>
-                <td style="padding: 10px; font-weight: 600; color: #0f172a;">${item.nomor}</td>
-                <td style="padding: 10px; color: #475569;">${item.keterangan}</td>
+                <!-- Tambahkan white-space: nowrap di dua baris bawah ini -->
+                <td style="padding: 10px; color: #475569; white-space: nowrap;">${tgl}</td>
+                <td style="padding: 10px; font-weight: 600; color: #0f172a; white-space: nowrap;">${item.nomor}</td>
+                
+                <td style="padding: 10px; color: #475569; min-width: 200px;">${item.keterangan}</td>
             </tr>
         `;
     }).join('');
