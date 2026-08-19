@@ -173,11 +173,10 @@ function redirectToLogin() {
                     <label class="form-label">Keterangan (Wajib Diisi)</label>
                     <input type="text" id="keterangan" class="form-control" required placeholder="Catatan perihal surat..." autocomplete="off">
                 </div>
-                <div class="form-group full-width" id="previewContainer" style="display: none; margin-top: -5px; margin-bottom: 10px;">
-                    <div style="background: #f0fdf4; border: 1px dashed #22c55e; border-radius: 8px; padding: 10px 15px; text-align: center;">
-                        <span style="font-size: 11px; color: #166534; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Pratinjau Nomor Selanjutnya</span>
-                        <div id="teksPreviewNomor" style="font-size: 14.5px; font-weight: 700; color: #14532d; margin-top: 3px;">-</div>
-                    </div>
+                <div class="form-group full-width" id="previewContainer" style="display: none; margin-top: -12px; margin-bottom: 15px; text-align: right; transition: all 0.3s ease;">
+                    <span style="font-size: 11.5px; color: #64748b; font-style: italic;">
+                        Pratinjau: <strong id="teksPreviewNomor" style="color: #167a53; font-weight: 600;">-</strong>
+                    </span>
                 </div>
                 <button type="submit" id="btnSubmitPenomoran" class="btn-primary full-width">Buat Nomor</button>
             </form>
